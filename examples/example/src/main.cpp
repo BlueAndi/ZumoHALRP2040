@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2023 - 2026 Andreas Merkle <web@blue-andi.de>
+ * Copyright (c) 2026 - 2026 Andreas Merkle <web@blue-andi.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,14 @@
 *******************************************************************************/
 /**
  * @brief  Main entry point
- * @author 
+ * @author Felix Reitenauer
  */
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
 #include <Arduino.h>
+#include "App.h"
 
 /******************************************************************************
  * Macros
@@ -50,6 +51,10 @@
  * Variables
  *****************************************************************************/
 
+ /** The main application. */
+static App gApplication;
+
+
 /******************************************************************************
  * External functions
  *****************************************************************************/
@@ -58,9 +63,9 @@
  * Initialize the system.
  * This function is called once during startup.
  */
-void setup() 
+void setup() // cppcheck-suppress unusedFunction
 {
-
+    gApplication.setup();
 }
 
 
@@ -68,9 +73,9 @@ void setup()
  * Main program loop.
  * This function is called cyclic.
  */
-void loop() 
+void loop() // cppcheck-suppress unusedFunction
 {
-
+    gApplication.loop();
 }
 
 /******************************************************************************

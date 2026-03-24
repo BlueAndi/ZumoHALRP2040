@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2023 - 2026 Andreas Merkle <web@blue-andi.de>
+ * Copyright (c) 2026 - 2026 Andreas Merkle <web@blue-andi.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
- * @author 
+ * @brief  Example application
+ * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup Application
  *
  * @{
  */
@@ -43,6 +43,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
+#include <stdint.h>
 
 /******************************************************************************
  * Macros
@@ -51,6 +52,41 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** The example application. */
+class App
+{
+public:
+    /**
+     * Construct the application.
+     */
+    App()
+    {
+    }
+
+    /**
+     * Destroy the application.
+     */
+    ~App()
+    {
+    }
+
+    /**
+     * Setup the application.
+     */
+    void setup();
+
+    /**
+     * Process the application periodically.
+     */
+    void loop();
+
+private:
+
+    /* Not allowed. */
+    App(const App& app);            /**< Copy construction of an instance. */
+    App& operator=(const App& app); /**< Assignment of an instance. */
+};
 
 /******************************************************************************
  * Functions
