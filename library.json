@@ -19,5 +19,5 @@
         "version": "~1.4.0"
     }],
     "frameworks": "arduino",
-    "platforms": "*"
+    "platforms": "raspberrypi"
 }
