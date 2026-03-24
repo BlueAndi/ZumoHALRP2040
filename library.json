@@ -1,0 +1,23 @@
+{
+    "name": "ZumoHALRP2040",
+    "version": "0.0.1",
+    "description": "Zumo C++ hardware abstraction layer for the Pololu ZumoRP2040 simulation.",
+    "authors": [{
+        "name": "Andreas Merkle",
+        "email": "web@blue-andi.de",
+        "url": "https://github.com/BlueAndi",
+        "maintainer": true
+    }],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BlueAndi/ZumoHALRP2040"
+    },
+    "license": "MIT",
+    "dependencies": [{
+        "owner": "BlueAndi",
+        "name": "ZumoHALInterfaces",
+        "version": "~1.4.0"
+    }],
+    "frameworks": "arduino",
+    "platforms": "raspberrypi"
+}
