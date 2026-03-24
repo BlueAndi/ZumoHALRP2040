@@ -1,7 +1,7 @@
 {
     "name": "HAL",
     "version": "0.0.1",
-    "description": "...",
+    "description": "Example Zumo2040 HAL Library consumer.",
     "authors": [{
         "name": "Andreas Merkle",
         "email": "web@blue-andi.de",
