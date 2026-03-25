@@ -6,6 +6,9 @@
 		{
 			"path": "../../src"
 		},
+				{
+			"path": "../../include"
+		},
 		{
 			"path": "../../../ZumoHALRP2040"
 		}
