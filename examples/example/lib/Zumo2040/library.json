@@ -1,0 +1,15 @@
+{
+    "name": "Zumo2040",
+    "version": "0.0.1",
+    "description": "Zumo2040 HAL Library.",
+    "authors": [{
+        "name": "Felix Reitenauer",
+        "url": "https://github.com/FelixReite",
+        "maintainer": true
+    }],
+    "license": "MIT",
+    "dependencies": [{
+    }],
+    "frameworks": "arduino",
+    "platforms": "raspberrypi"
+}
