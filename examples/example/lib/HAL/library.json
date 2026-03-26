@@ -11,6 +11,9 @@
     "license": "MIT",
     "dependencies": [{
         "name": "Webots"
+    },{
+        "name": "ZumoHALRP2040",
+        "version": "0.0.1"
     }],
     "frameworks": "*",
     "platforms": "*"
