@@ -64,9 +64,9 @@
  *****************************************************************************/
 
 /**
- * @brief Enables/Disables the Yellow LED.
+ * @brief ON/OFF the Yellow LED.
  *
- * @param[in] on  Enable LED with true, disable it with false.
+ * @param[in] on  Turn on LED with true, turn it off with false.
  */
 
 void ledYellow(bool on);
@@ -74,7 +74,6 @@ void ledYellow(bool on);
 /**
  * @brief Updates all RGB LEDs based on the current LED state array.
  *        Sends the corresponding SPI frames to the APA102 LEDs.
- * 
  */
 
 void ledControl();

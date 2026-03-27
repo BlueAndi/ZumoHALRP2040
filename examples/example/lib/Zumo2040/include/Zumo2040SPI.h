@@ -61,7 +61,6 @@
 
 /**
  * @brief initialize the SPI for the LEDs
- * 
  */
 
 void initializeLED();

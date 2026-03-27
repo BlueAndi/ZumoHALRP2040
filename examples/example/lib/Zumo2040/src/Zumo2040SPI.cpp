@@ -56,8 +56,6 @@
  * Local Variables
  *****************************************************************************/
 
-static bool initializedLED = false;  /**< Mark SPI to prevent re-initialization */
-
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -73,21 +71,16 @@ static bool initializedLED = false;  /**< Mark SPI to prevent re-initialization 
 /******************************************************************************
  * External Functions
  *****************************************************************************/
+void initializeLED() 
+{
 
+    SPI.setSCK(RGB_CLOCK_PIN); /* Sets the right pin for the clock PIN */ 
+    SPI.setRX(NOPIN);          /* deactivate RX to make SPI output only */ 
+    SPI.setTX(RGB_DATA_PIN);   /* Sets right Pin for the Output */ 
+
+    SPI.begin();               /* initializes the SPI bus */      
+    
+}
 /******************************************************************************
  * Local Functions
  *****************************************************************************/
-void initializeLED() 
-{
-    if (false == initializedLED) // Checks if SPI for RGB is already initialized
-    {
-        SPI.setSCK(RGB_CLOCK_PIN); // Sets the right pin for the clock PIN
-        SPI.setRX(NOPIN);          // deactivate RX to make SPI output only
-        SPI.setTX(RGB_DATA_PIN);   // Sets right Pin for the Output
-
-        SPI.begin();               // initializes the SPI bus
-
-        initializedLED = true;        
-    }
-
-}
