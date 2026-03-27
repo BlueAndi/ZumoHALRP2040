@@ -25,17 +25,18 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  Example application
+ * @brief  APA102 RGB LED driver for the Zumo 2040.
  * @author Felix Reitenauer
  */
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include "App.h"
-#include "Board.h"
-#include "Zumo2040LED.h"
-#include <Arduino.h>
+
+#include <Zumo2040LED.h>
+#include <Zumo2040SPI.h>
+#include <SPI.h>
+
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -55,26 +56,24 @@
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
+static const uint8_t leds[NUM_LEDS][3] = {
+    {255, 80, 0}, // LED 0 Yellow
+    {0, 0, 0},    // LED 1
+    {0, 0, 0},    // LED 2
+    {0, 0, 0},    // LED 3
+    {0, 0, 0},    // LED 4
+    {0, 0, 0}     // LED 5
+};
+
+static bool ledstatus[NUM_LEDS] = {false, false, false, false, false, false};
+
+static const int8_t idx_led0 = 0;
+static const int8_t idx_led1 = 1;
+static const int8_t idx_led2 = 2;
 
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
-
- void App::setup()
-{
-    Board::getInstance().init();
-
-    /* Place your once executed code for the setup here.. */
-}
-
-void App::loop()
-{   
-    /* Place your periodically executed code here. */
-    ledYellow(true);
-    delay(100);
-    ledYellow(false);
-    delay(100);
-}
 
 /******************************************************************************
  * Protected Methods
@@ -91,3 +90,46 @@ void App::loop()
 /******************************************************************************
  * Local Functions
  *****************************************************************************/
+void ledYellow(bool on)
+{
+    ledstatus[idx_led0] = on;
+
+    initializeLED(); // initialize the SPI for the LEDs
+
+    ledControl(); // Controls the MOSI output according to the status of the LEDs
+
+};
+
+void ledControl()
+{
+
+    SPI.beginTransaction(
+        SPISettings(SPEEDHZ_LED, MSBFIRST, SPI_MODE0)); // configures the SPI bus with the specified settings
+
+    for (int i = 0; i < START_FRAME_BYTES; i++) // Sends the needed startframe
+    {
+        SPI.transfer(0x00);
+    }
+
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+        if (ledstatus[i])
+        {
+            SPI.transfer(0b11100111); // first 3 bits shall always be 1, the following 5 are controlling the brightness
+        }
+        else
+        {
+            SPI.transfer(0b11100000);
+        }
+        SPI.transfer(leds[i][2]); // sends the values for blue
+        SPI.transfer(leds[i][1]); // sends the values for green
+        SPI.transfer(leds[i][0]); // sends the values for red
+    }
+
+    for (int i = 0; i < END_FRAME_BYTES; i++) // Sends the needed endframe
+    {
+        SPI.transfer(0xFF);
+    }
+
+    SPI.endTransaction(); // releases exclusive control of the SPI bus
+}

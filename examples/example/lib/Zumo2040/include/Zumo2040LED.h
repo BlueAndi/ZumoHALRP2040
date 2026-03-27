@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  APA102 RGB LED driver for the Zumo 2040.
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup RGB
  *
  * @{
  */
@@ -44,9 +44,16 @@
  * Includes
  *****************************************************************************/
 
+#include <cstdint>
+
 /******************************************************************************
  * Macros
  *****************************************************************************/
+
+#define SPEEDHZ_LED       20000000 /**< Clock frequency for SPI */
+#define START_FRAME_BYTES 4        /**< Number of start frame bytes */
+#define NUM_LEDS          6        /**< Number of APA102 RGB LEDs on the Zumo 2040 */
+#define END_FRAME_BYTES   4        /**< Number of end frame bytes */
 
 /******************************************************************************
  * Types and Classes
@@ -55,6 +62,22 @@
 /******************************************************************************
  * Functions
  *****************************************************************************/
+
+/**
+ * @brief Enables/Disables the Yellow LED.
+ *
+ * @param[in] on  Enable LED with true, disable it with false.
+ */
+
+void ledYellow(bool on);
+
+/**
+ * @brief Updates all RGB LEDs based on the current LED state array.
+ *        Sends the corresponding SPI frames to the APA102 LEDs.
+ * 
+ */
+
+void ledControl();
 
 #endif /* ZUMO2040LED_H */
 /** @} */
