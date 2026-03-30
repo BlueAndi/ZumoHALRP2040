@@ -47,9 +47,10 @@
 /******************************************************************************
  * Macros
  *****************************************************************************/
-
-#define RGB_DATA_PIN  3  /**< SPI MOSI pin for APA102 data */
-#define RGB_CLOCK_PIN 6  /**< SPI SCK pin for APA102 clock */
+/** SPI MOSI pin for APA102 data */
+#define RGB_DATA_PIN  3  
+/** SPI SCK pin for APA102 clock */
+#define RGB_CLOCK_PIN 6  
 
 /******************************************************************************
  * Types and Classes

@@ -73,12 +73,14 @@
  *****************************************************************************/
 void initializeLED() 
 {
-
-    SPI.setSCK(RGB_CLOCK_PIN); /* Sets the right pin for the clock PIN */ 
-    SPI.setRX(NOPIN);          /* deactivate RX to make SPI output only */ 
-    SPI.setTX(RGB_DATA_PIN);   /* Sets right Pin for the Output */ 
-
-    SPI.begin();               /* initializes the SPI bus */      
+    /* Sets the right pin for the clock PIN */
+    SPI.setSCK(RGB_CLOCK_PIN);  
+    /* deactivate RX to make SPI output only */ 
+    SPI.setRX(NOPIN);    
+    /* Sets right Pin for the Output */
+    SPI.setTX(RGB_DATA_PIN);    
+    /* initializes the SPI bus */ 
+    SPI.begin();                    
     
 }
 /******************************************************************************

@@ -56,22 +56,41 @@
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
-static const uint8_t leds[NUM_LEDS][3] = {
-    {255, 80, 0}, /* LED 0 Yellow */
-    {0, 0, 0},    /* LED 1 */
-    {0, 0, 0},    /* LED 2 */
-    {0, 0, 0},    /* LED 3 */
-    {0, 0, 0},    /* LED 4 */
-    {0, 0, 0}     /* LED 5 */
+
+/** RGB color values for each LED [LED index][red, green, blue] */
+static const uint8_t g_LED_COLORS[NUM_LEDS][3] = {
+    {255, 80, 0}, 
+    {0, 0, 0},    
+    {0, 0, 0},   
+    {0, 0, 0},    
+    {0, 0, 0},    
+    {0, 0, 0}     
 };
 
-static bool ledstatus[NUM_LEDS] = {false, false, false, false, false, false};
+/** Status for each LED : false = off, true = on */
+static bool g_ledStatus[NUM_LEDS] = {false, false, false, false, false, false};
 
-static const int8_t idx_led0 = 0;
-static const int8_t idx_led1 = 1;
-static const int8_t idx_led2 = 2;
+/** Index for LED 0 */
+static const int8_t g_IDX_LED_0 = 0;
+/** Index for LED 1 */
+static const int8_t g_IDX_LED_1 = 1;
+/** Index for LED 2 */
+static const int8_t g_IDX_LED_2 = 2;
 
-static bool initializedLED = false; /**< Mark SPI to prevent re-initialization */
+/** Mark SPI to prevent re-initialization */
+static bool g_initializedLED = false; 
+
+/** Chunk of the start frame */
+static const uint8_t g_START_FRAME_CHUNK = 0x00;
+
+/** Chunk of the end frame */
+static const uint8_t g_END_FRAME_CHUNK = 0xFF;
+
+/** Value which controls the brightness of the LED : first 3 bits shall always be 1, the following 5 are controlling the brightness  */
+static const uint8_t g_SET_BRIGHTNESS_ON = 0b11100111;
+
+/** Value which turns the LED off*/
+static const uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
 
 /******************************************************************************
  * Public Methods
@@ -91,49 +110,51 @@ static bool initializedLED = false; /**< Mark SPI to prevent re-initialization *
 
 void ledYellow(bool on)
 {
-    ledstatus[idx_led0] = on;
-
-    if (!initializedLED) /* Checks if SPI for RGB is already initialized */
-    {
-        initializeLED(); /* initialize the SPI for the LEDs */
-        initializedLED = true;
+    g_ledStatus[g_IDX_LED_0] = on;
+    /* Checks if SPI for RGB is already initialized */
+    if (!g_initializedLED) 
+    {   /* initialize the SPI for the LEDs */
+        initializeLED(); 
+        g_initializedLED = true;
     }
-
-    ledControl(); /* Controls the MOSI output according to the status of the LEDs */
+    /* Controls the MOSI output according to the status of the LEDs */
+    ledControl(); 
 };
 
 void ledControl()
 {
-
-    SPI.beginTransaction(
-        SPISettings(SPEEDHZ_LED, MSBFIRST, SPI_MODE0)); /* configures the SPI bus with the specified settings */
-
-    for (int i = 0; i < START_FRAME_BYTES; i++) /* Sends the needed startframe */
+    /* configures the SPI bus with the specified settings */
+    SPI.beginTransaction(SPISettings(SPEEDHZ_LED, MSBFIRST, SPI_MODE0)); 
+    /* Sends the needed startframe */
+    for (int i = 0; i < START_FRAME_BYTES; i++) 
     {
-        SPI.transfer(0x00);
+        SPI.transfer(g_START_FRAME_CHUNK);
     }
 
     for (int i = 0; i < NUM_LEDS; i++)
     {
-        if (ledstatus[i])
+        if (g_ledStatus[i])
         {
-            SPI.transfer(0b11100111); /* first 3 bits shall always be 1, the following 5 are controlling the brightness */
+            SPI.transfer(g_SET_BRIGHTNESS_ON); 
         }
         else
         {
-            SPI.transfer(0b11100000);
+            SPI.transfer(g_SET_BRIGHTNESS_OFF);
         }
-        SPI.transfer(leds[i][2]); /* sends the values for blue */
-        SPI.transfer(leds[i][1]); /* sends the values for green */
-        SPI.transfer(leds[i][0]); /* sends the values for red */
+        /* sends the values for blue */
+        SPI.transfer(g_LED_COLORS[i][IDX_BLUE]); 
+        /* sends the values for green */
+        SPI.transfer(g_LED_COLORS[i][IDX_GREEN]); 
+        /* sends the values for red */
+        SPI.transfer(g_LED_COLORS[i][IDX_RED]); 
     }
-
-    for (int i = 0; i < END_FRAME_BYTES; i++) /* Sends the needed endframe */
+    /* Sends the needed endframe */
+    for (int i = 0; i < END_FRAME_BYTES; i++) 
     {
-        SPI.transfer(0xFF);
+        SPI.transfer(g_END_FRAME_CHUNK);
     }
-
-    SPI.endTransaction(); /* releases exclusive control of the SPI bus */
+    /* releases exclusive control of the SPI bus */
+    SPI.endTransaction(); 
 }
 
 /******************************************************************************

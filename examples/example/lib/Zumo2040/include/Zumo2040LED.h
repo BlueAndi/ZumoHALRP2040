@@ -49,11 +49,20 @@
 /******************************************************************************
  * Macros
  *****************************************************************************/
-
-#define SPEEDHZ_LED       20000000 /**< Clock frequency for SPI */
-#define START_FRAME_BYTES 4        /**< Number of start frame bytes */
-#define NUM_LEDS          6        /**< Number of APA102 RGB LEDs on the Zumo 2040 */
-#define END_FRAME_BYTES   4        /**< Number of end frame bytes */
+/** Clock frequency for SPI */
+#define SPEEDHZ_LED       20000000 
+/** Number of start frame bytes */
+#define START_FRAME_BYTES 4       
+/** Number of APA102 RGB LEDs on the Zumo 2040 */
+#define NUM_LEDS          6      
+/** Number of end frame bytes */  
+#define END_FRAME_BYTES   4    
+/** Index for the Blue LED Color in g_ledColors */
+#define IDX_BLUE              2
+/** Index for the Green LED Color in g_ledColors */
+#define IDX_GREEN             1
+/** Index for the Red LED Color in g_ledColors */
+#define IDX_RED               0
 
 /******************************************************************************
  * Types and Classes
