@@ -34,8 +34,8 @@
  *****************************************************************************/
 #include "App.h"
 #include "Board.h"
-#include "Zumo2040LED.h"
 #include <Arduino.h>
+#include <Zumo2040.h>
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -63,19 +63,18 @@
  void App::setup()
 {
     Board::getInstance().init();
-
     /* Place your once executed code for the setup here.. */
 }
 
 void App::loop()
-{   
+{
     /* Place your periodically executed code here. */
-    ledYellow(true);
-    delay(100);
-    ledYellow(false);
-    delay(100);
-}
+    setLedYellow(false);
+    delay(500);
+    setLedYellow(true);
+    delay(500);
 
+}
 /******************************************************************************
  * Protected Methods
  *****************************************************************************/

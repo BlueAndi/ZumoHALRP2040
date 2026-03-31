@@ -44,25 +44,9 @@
  * Includes
  *****************************************************************************/
 
-#include <cstdint>
-
 /******************************************************************************
  * Macros
  *****************************************************************************/
-/** Clock frequency for SPI */
-#define SPEEDHZ_LED       20000000 
-/** Number of start frame bytes */
-#define START_FRAME_BYTES 4       
-/** Number of APA102 RGB LEDs on the Zumo 2040 */
-#define NUM_LEDS          6      
-/** Number of end frame bytes */  
-#define END_FRAME_BYTES   4    
-/** Index for the Blue LED Color in g_ledColors */
-#define IDX_BLUE              2
-/** Index for the Green LED Color in g_ledColors */
-#define IDX_GREEN             1
-/** Index for the Red LED Color in g_ledColors */
-#define IDX_RED               0
 
 /******************************************************************************
  * Types and Classes
@@ -73,19 +57,12 @@
  *****************************************************************************/
 
 /**
- * @brief ON/OFF the Yellow LED.
+ * @brief Sets the yellow LED on or off.
  *
- * @param[in] on  Turn on LED with true, turn it off with false.
+ * @param[in] onOff  Turn on LED with true, turn it off with false.
  */
 
-void ledYellow(bool on);
-
-/**
- * @brief Updates all RGB LEDs based on the current LED state array.
- *        Sends the corresponding SPI frames to the APA102 LEDs.
- */
-
-void ledControl();
+void setLedYellow(bool onOff);
 
 #endif /* ZUMO2040LED_H */
 /** @} */

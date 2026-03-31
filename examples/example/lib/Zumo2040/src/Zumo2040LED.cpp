@@ -34,8 +34,8 @@
  *****************************************************************************/
 
 #include <Zumo2040LED.h>
-#include <Zumo2040SPI.h>
 #include <SPI.h>
+#include <cstdint>
 
 /******************************************************************************
  * Compiler Switches
@@ -49,36 +49,68 @@
  * Types and classes
  *****************************************************************************/
 
+ /** Class to access the SPI for the LEDs using RAII */
+ class LedSpiAccess
+ {
+    public:
+        /** Acquire SPI hardware for LEDs */
+        LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode dataMode);
+
+        /** Release SPI hardware from LEDs */
+        ~LedSpiAccess();
+
+        /** Exchange data with the SPI bus */
+        uint8_t transfer(byte data);
+ };
+
+ /** LED state structure */
+ struct LedState
+ {
+    uint8_t state;              /**< brightness state */
+    const struct RGBColor {
+        uint8_t red;            /**< Red color value   */
+        uint8_t green;          /**< Green color value */
+        uint8_t blue;           /**< Blue color value  */
+    } color;                    /**< RGB color values  */
+ };
+
 /******************************************************************************
  * Prototypes
  *****************************************************************************/
+
+/**
+ * @brief Updates all RGB LEDs based on the current LED state array.
+ *        Sends the corresponding SPI frames to the APA102 LEDs.
+ */
+
+static void refreshLeds();
 
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
 
-/** RGB color values for each LED [LED index][red, green, blue] */
-static const uint8_t g_LED_COLORS[NUM_LEDS][3] = {
-    {255, 80, 0}, 
-    {0, 0, 0},    
-    {0, 0, 0},   
-    {0, 0, 0},    
-    {0, 0, 0},    
-    {0, 0, 0}     
+/** Value which controls the brightness of the LED : first 3 bits shall always be 1, the following 5 are controlling the brightness  */
+static const uint8_t g_SET_BRIGHTNESS_ON = 0b11100111;
+
+/** Value which turns the LED off */
+static const uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
+
+/** Number of APA102 RGB LEDs on the Zumo 2040 */
+static const uint8_t g_NUM_LEDS = 6;
+
+/** Color values and state for the LEDs. */
+static LedState g_LedState[g_NUM_LEDS] = {
+    { g_SET_BRIGHTNESS_OFF, {255, 80, 0}},  /**< LED 0 - Yellow */
+    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 1 - Off */
+    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 2 - Off */
+    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 3 - Off */
+    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 4 - Off */
+    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}}      /**< LED 5 - Off */
 };
 
-/** Status for each LED : false = off, true = on */
-static bool g_ledStatus[NUM_LEDS] = {false, false, false, false, false, false};
 
 /** Index for LED 0 */
-static const int8_t g_IDX_LED_0 = 0;
-/** Index for LED 1 */
-static const int8_t g_IDX_LED_1 = 1;
-/** Index for LED 2 */
-static const int8_t g_IDX_LED_2 = 2;
-
-/** Mark SPI to prevent re-initialization */
-static bool g_initializedLED = false; 
+static const int8_t g_IDX_LED_YELLOW = 0;
 
 /** Chunk of the start frame */
 static const uint8_t g_START_FRAME_CHUNK = 0x00;
@@ -86,15 +118,47 @@ static const uint8_t g_START_FRAME_CHUNK = 0x00;
 /** Chunk of the end frame */
 static const uint8_t g_END_FRAME_CHUNK = 0xFF;
 
-/** Value which controls the brightness of the LED : first 3 bits shall always be 1, the following 5 are controlling the brightness  */
-static const uint8_t g_SET_BRIGHTNESS_ON = 0b11100111;
+/** Clock frequency for SPI */
+static const uint32_t g_SPEEDHZ_LED = 20000000;
 
-/** Value which turns the LED off*/
-static const uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
+/** Number of start frame bytes */
+static const uint8_t g_START_FRAME_BYTES = 4;
+
+/** Number of end frame bytes */
+static const uint8_t g_END_FRAME_BYTES = 4;
+
+/** SPI MOSI pin for APA102 data */
+static const uint8_t g_RGB_DATA_PIN = 3;
+
+/** SPI SCK pin for APA102 clock */
+static const uint8_t g_RGB_CLOCK_PIN = 6;
+
 
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
+
+LedSpiAccess::LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode dataMode)
+{
+    /* Switch SPI pins to leds. */
+    SPI.setSCK(g_RGB_CLOCK_PIN);
+    SPI.setTX(g_RGB_DATA_PIN);
+
+    SPI.begin();
+    SPI.beginTransaction(SPISettings(clock, bitOrder, dataMode));
+}
+
+LedSpiAccess::~LedSpiAccess()
+{
+    SPI.endTransaction();
+    SPI.end();
+
+}
+
+inline uint8_t LedSpiAccess::transfer(uint8_t data)
+{
+    return SPI.transfer(data);
+}
 
 /******************************************************************************
  * Protected Methods
@@ -108,55 +172,42 @@ static const uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
  * External Functions
  *****************************************************************************/
 
-void ledYellow(bool on)
+void setLedYellow(bool onOff)
 {
-    g_ledStatus[g_IDX_LED_0] = on;
-    /* Checks if SPI for RGB is already initialized */
-    if (!g_initializedLED) 
-    {   /* initialize the SPI for the LEDs */
-        initializeLED(); 
-        g_initializedLED = true;
-    }
-    /* Controls the MOSI output according to the status of the LEDs */
-    ledControl(); 
-};
+    g_LedState[g_IDX_LED_YELLOW].state =
+        onOff ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
 
-void ledControl()
-{
-    /* configures the SPI bus with the specified settings */
-    SPI.beginTransaction(SPISettings(SPEEDHZ_LED, MSBFIRST, SPI_MODE0)); 
-    /* Sends the needed startframe */
-    for (int i = 0; i < START_FRAME_BYTES; i++) 
-    {
-        SPI.transfer(g_START_FRAME_CHUNK);
-    }
-
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-        if (g_ledStatus[i])
-        {
-            SPI.transfer(g_SET_BRIGHTNESS_ON); 
-        }
-        else
-        {
-            SPI.transfer(g_SET_BRIGHTNESS_OFF);
-        }
-        /* sends the values for blue */
-        SPI.transfer(g_LED_COLORS[i][IDX_BLUE]); 
-        /* sends the values for green */
-        SPI.transfer(g_LED_COLORS[i][IDX_GREEN]); 
-        /* sends the values for red */
-        SPI.transfer(g_LED_COLORS[i][IDX_RED]); 
-    }
-    /* Sends the needed endframe */
-    for (int i = 0; i < END_FRAME_BYTES; i++) 
-    {
-        SPI.transfer(g_END_FRAME_CHUNK);
-    }
-    /* releases exclusive control of the SPI bus */
-    SPI.endTransaction(); 
+    refreshLeds();
 }
 
 /******************************************************************************
  * Local Functions
  *****************************************************************************/
+
+static void refreshLeds()
+{
+    LedSpiAccess ledAccess(g_SPEEDHZ_LED, MSBFIRST, SPI_MODE0);
+
+    /* Sends the needed startframe */
+    for (int chunk = 0; chunk < g_START_FRAME_BYTES; chunk++)
+    {
+        ledAccess.transfer(g_START_FRAME_CHUNK);
+    }
+
+    for (const auto& ledState : g_LedState) {
+        /* Send the LED brightness state. */
+        ledAccess.transfer(ledState.state);
+
+        /* Send RGB color values. */
+        ledAccess.transfer(ledState.color.blue);
+        ledAccess.transfer(ledState.color.green);
+        ledAccess.transfer(ledState.color.red);
+    }
+
+    /* Sends the needed endframe */
+    for (int chunk = 0; chunk < g_END_FRAME_BYTES; chunk++)
+    {
+        ledAccess.transfer(g_END_FRAME_CHUNK);
+    }
+
+}
