@@ -30,4 +30,4 @@ jobs:
         run: python -m pip install --upgrade pip platformio
 
       - name: Build project
-        run: pio run
+        run: pio run -d ./examples/example
