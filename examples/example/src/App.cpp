@@ -73,11 +73,14 @@ void App::loop()
     delay(100);
     setLedGreen(true);
     delay(100);
+    setLedRed(true);
+    delay(100);
     setLedYellow(false);
     delay(100);
     setLedGreen(false);
     delay(100);
-
+    setLedRed(false);
+    delay(100);
 }
 /******************************************************************************
  * Protected Methods

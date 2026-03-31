@@ -72,5 +72,13 @@ void setLedYellow(bool onOff);
 
 void setLedGreen(bool onOff);
 
+/**
+ * @brief Sets the red LED on or off.
+ *
+ * @param[in] onOff  Turn on LED with true, turn it off with false.
+ */
+
+void setLedRed(bool onOff);
+
 #endif /* ZUMO2040LED_H */
 /** @} */

@@ -102,7 +102,7 @@ static const uint8_t g_NUM_LEDS = 6;
 static LedState g_LedState[g_NUM_LEDS] = {
     { g_SET_BRIGHTNESS_OFF, {255, 80, 0}},  /**< LED 0 - Yellow */
     { g_SET_BRIGHTNESS_OFF, {0, 255, 0}},   /**< LED 1 - Green */
-    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 2 - Off */
+    { g_SET_BRIGHTNESS_OFF, {255, 0, 0}},   /**< LED 2 - RED */
     { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 3 - Off */
     { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 4 - Off */
     { g_SET_BRIGHTNESS_OFF, {0, 0, 0}}      /**< LED 5 - Off */
@@ -114,6 +114,9 @@ static const int8_t g_IDX_LED_YELLOW = 0;
 
 /** Index for LED 1 */
 static const int8_t g_IDX_LED_GREEN = 1;
+
+/** Index for LED 2 */
+static const int8_t g_IDX_LED_RED = 2;
 
 /** Chunk of the start frame */
 static const uint8_t g_START_FRAME_CHUNK = 0x00;
@@ -185,6 +188,14 @@ void setLedYellow(bool onOff)
 void setLedGreen(bool onOFF)
 {
     g_LedState[g_IDX_LED_GREEN].state =
+        onOFF ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
+
+    refreshLeds();
+}
+
+void setLedRed(bool onOFF)
+{
+    g_LedState[g_IDX_LED_RED].state =
         onOFF ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
 
     refreshLeds();
