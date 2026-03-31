@@ -101,7 +101,7 @@ static const uint8_t g_NUM_LEDS = 6;
 /** Color values and state for the LEDs. */
 static LedState g_LedState[g_NUM_LEDS] = {
     { g_SET_BRIGHTNESS_OFF, {255, 80, 0}},  /**< LED 0 - Yellow */
-    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 1 - Off */
+    { g_SET_BRIGHTNESS_OFF, {0, 255, 0}},   /**< LED 1 - Green */
     { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 2 - Off */
     { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 3 - Off */
     { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 4 - Off */
@@ -111,6 +111,9 @@ static LedState g_LedState[g_NUM_LEDS] = {
 
 /** Index for LED 0 */
 static const int8_t g_IDX_LED_YELLOW = 0;
+
+/** Index for LED 1 */
+static const int8_t g_IDX_LED_GREEN = 1;
 
 /** Chunk of the start frame */
 static const uint8_t g_START_FRAME_CHUNK = 0x00;
@@ -152,7 +155,6 @@ LedSpiAccess::~LedSpiAccess()
 {
     SPI.endTransaction();
     SPI.end();
-
 }
 
 inline uint8_t LedSpiAccess::transfer(uint8_t data)
@@ -176,6 +178,14 @@ void setLedYellow(bool onOff)
 {
     g_LedState[g_IDX_LED_YELLOW].state =
         onOff ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
+
+    refreshLeds();
+}
+
+void setLedGreen(bool onOFF)
+{
+    g_LedState[g_IDX_LED_GREEN].state =
+        onOFF ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
 
     refreshLeds();
 }

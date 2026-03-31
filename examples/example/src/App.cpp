@@ -69,10 +69,14 @@
 void App::loop()
 {
     /* Place your periodically executed code here. */
-    setLedYellow(false);
-    delay(500);
     setLedYellow(true);
-    delay(500);
+    delay(100);
+    setLedGreen(true);
+    delay(100);
+    setLedYellow(false);
+    delay(100);
+    setLedGreen(false);
+    delay(100);
 
 }
 /******************************************************************************
