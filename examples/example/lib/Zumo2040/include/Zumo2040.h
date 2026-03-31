@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup
  *
  * @{
  */
