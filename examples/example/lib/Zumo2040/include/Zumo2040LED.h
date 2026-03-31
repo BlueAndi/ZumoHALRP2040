@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  APA102 RGB LED driver for the Zumo 2040.
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup RGB
  *
  * @{
  */
@@ -55,6 +55,14 @@
 /******************************************************************************
  * Functions
  *****************************************************************************/
+
+/**
+ * @brief Sets the yellow LED on or off.
+ *
+ * @param[in] onOff  Turn on LED with true, turn it off with false.
+ */
+
+void setLedYellow(bool onOff);
 
 #endif /* ZUMO2040LED_H */
 /** @} */
