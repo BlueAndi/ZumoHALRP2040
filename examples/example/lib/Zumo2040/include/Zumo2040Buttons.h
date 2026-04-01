@@ -1,4 +1,5 @@
-/* MIT License
+/*
+ * MIT License
  *
  * Copyright (c) 2026 - 2026 Andreas Merkle <web@blue-andi.de>
  *
@@ -25,16 +26,16 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief
+ * @brief  Buttons driver
  * @author Felix Reitenauer
  *
- * @addtogroup
+ * @addtogroup Buttons
  *
  * @{
  */
 
-#ifndef ZUMO2040_H
-#define ZUMO2040_H
+#ifndef ZUMO2040BUTTONS_H
+#define ZUMO2040BUTTONS_H
 
 /******************************************************************************
  * Compile Switches
@@ -43,8 +44,6 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include "Zumo2040LED.h"
-#include "Zumo2040Buttons.h"
 
 /******************************************************************************
  * Macros
@@ -58,5 +57,12 @@
  * Functions
  *****************************************************************************/
 
-#endif /* ZUMO2040_H */
+/**
+ * @brief Checks whether button A is pressed.
+ *
+ * @return True if button A is pressed, otherwise false.
+ */
+bool isPressedButtonA();
+
+#endif /* ZUMO2040BUTTONS_H */
 /** @} */

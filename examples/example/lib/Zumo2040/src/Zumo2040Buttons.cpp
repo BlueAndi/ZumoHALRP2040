@@ -25,17 +25,20 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  Example application
+ * @brief  Buttons driver
  * @author Felix Reitenauer
+ *
+ * Implementation reuses information from PololuZumo2040 example code at
+ * https://github.com/pololu/zumo-2040-robot/tree/master/c/pololu_zumo_2040_robot
  */
+
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include "App.h"
-#include "Board.h"
+#include <Zumo2040Buttons.h>
 #include <Arduino.h>
-#include <Zumo2040.h>
+#include <cstdint>
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -48,6 +51,24 @@
  * Types and classes
  *****************************************************************************/
 
+/** Class to configure the Buttonpin using RAII */
+class ButtonPinAccess
+{
+    public:
+        /** Set Button Pin into the right mode */
+        ButtonPinAccess(uint8_t pin);
+
+        /** Set Button Pin into the standard mode */
+        ~ButtonPinAccess();
+
+        /** Read Button Pin */
+        bool readButton();
+
+    private:
+
+        uint8_t m_buttonPin;
+};
+
 /******************************************************************************
  * Prototypes
  *****************************************************************************/
@@ -56,35 +77,36 @@
  * Local Variables
  *****************************************************************************/
 
+/** PIN for the Button A */
+static const uint8_t g_PIN_BUTTON_A = 25;
+
+/** Time in ms for the pin to stabilize after switching the pin mode */
+static const uint8_t g_STABILIZATION_TIME = 1;
+
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
 
- void App::setup()
+ButtonPinAccess::ButtonPinAccess(uint8_t pin) : m_buttonPin(pin)
 {
-    Board::getInstance().init();
-    /* Place your once executed code for the setup here.. */
+    /* Pull-up needed as button pulls pin to GND when pressed */
+    pinMode(m_buttonPin, INPUT_PULLUP);
+    /* Give PIN time to stabilize */
+    delay(g_STABILIZATION_TIME);
 }
 
-void App::loop()
+ButtonPinAccess::~ButtonPinAccess()
 {
-    /* Place your periodically executed code here. */
-    if(isPressedButtonA())
-    {
-    setLedYellow(true);
-    delay(100);
-    setLedGreen(true);
-    delay(100);
-    setLedRed(true);
-    delay(100);
-    setLedYellow(false);
-    delay(100);
-    setLedGreen(false);
-    delay(100);
-    setLedRed(false);
-    delay(100);
-    }
+    /* switch back to the normal input mode */
+    pinMode(m_buttonPin, INPUT);
 }
+
+bool ButtonPinAccess::readButton()
+{
+    return !digitalRead(m_buttonPin);
+}
+
+
 /******************************************************************************
  * Protected Methods
  *****************************************************************************/
@@ -96,6 +118,13 @@ void App::loop()
 /******************************************************************************
  * External Functions
  *****************************************************************************/
+
+ bool isPressedButtonA()
+{
+    ButtonPinAccess buttonA(g_PIN_BUTTON_A);
+
+    return buttonA.readButton();
+}
 
 /******************************************************************************
  * Local Functions
