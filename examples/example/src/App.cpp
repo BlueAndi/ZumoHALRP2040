@@ -55,7 +55,7 @@
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
-
+Zumo2040ButtonA button_a;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -69,21 +69,23 @@
 void App::loop()
 {
     /* Place your periodically executed code here. */
-    if(isPressedButtonA())
+    static uint32_t counter = 0;
+
+    if (button_a.getSingleDebouncedPress())
     {
-    setLedYellow(true);
-    delay(100);
-    setLedGreen(true);
-    delay(100);
-    setLedRed(true);
-    delay(100);
-    setLedYellow(false);
-    delay(100);
-    setLedGreen(false);
-    delay(100);
-    setLedRed(false);
-    delay(100);
+        counter++;
+
+        if (counter % 2 == 0)
+        {
+            setLedYellow(true);
+        }
+        else
+        {
+            setLedYellow(false);
+        }
     }
+
+
 }
 /******************************************************************************
  * Protected Methods

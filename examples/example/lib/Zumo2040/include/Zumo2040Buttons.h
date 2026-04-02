@@ -1,5 +1,4 @@
-/*
- * MIT License
+/* MIT License
  *
  * Copyright (c) 2026 - 2026 Andreas Merkle <web@blue-andi.de>
  *
@@ -44,7 +43,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include <cstdint>
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -53,16 +52,77 @@
  * Types and Classes
  *****************************************************************************/
 
+/** States used in the debounce state machine. */
+enum class ButtonState : uint8_t
+{
+    compare,
+    debounceRising,
+};
+
+/** Class which represents the button base class. */
+class Zumo2040Button
+{
+    public:
+
+        Zumo2040Button() = default;
+
+        virtual ~Zumo2040Button() = default;
+
+        /**
+         * @brief Detects the button moving from released to pressed state.
+         *        This function also debounces.
+         *
+         * @return True if a debounced press was detected, otherwise false.
+         */
+        bool getSingleDebouncedPress();
+
+        /**
+         * @brief Detects the button moving from pressed to released state.
+         *        This function also debounces.
+         *
+         * @return True if a debounced release was detected, otherwise false.
+         */
+        bool getSingleDebouncedRelease();
+
+    protected:
+
+        /** Checks whether button is pressed */
+        virtual bool isPressed() = 0;
+
+    private:
+
+        /** Current state in the debounce state machine */
+        ButtonState m_pressState = ButtonState::compare;
+
+        /** Previous value of the Button */
+        bool m_pressPrevValue = false;
+
+        /** Timestamp for last rising edge occurrence */
+        uint32_t m_pressPrevTime = 0;
+
+        /** Current state in the debounce state machine */
+        ButtonState m_releaseState = ButtonState::compare;
+
+        /** Previous value of the Button */
+        bool m_releasePrevValue = false;
+
+        /** Timestamp for last falling edge occurrence */
+        uint32_t m_releasePrevTime = 0;
+
+};
+
+/** Class which represents the button A driver. */
+class Zumo2040ButtonA : public Zumo2040Button
+{
+    private:
+
+        /** Checks whether button is pressed */
+        bool isPressed() override;
+};
+
 /******************************************************************************
  * Functions
  *****************************************************************************/
-
-/**
- * @brief Checks whether button A is pressed.
- *
- * @return True if button A is pressed, otherwise false.
- */
-bool isPressedButtonA();
 
 #endif /* ZUMO2040BUTTONS_H */
 /** @} */

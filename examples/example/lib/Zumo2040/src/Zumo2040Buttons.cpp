@@ -27,9 +27,6 @@
 /**
  * @brief  Buttons driver
  * @author Felix Reitenauer
- *
- * Implementation reuses information from PololuZumo2040 example code at
- * https://github.com/pololu/zumo-2040-robot/tree/master/c/pololu_zumo_2040_robot
  */
 
 
@@ -38,7 +35,6 @@
  *****************************************************************************/
 #include <Zumo2040Buttons.h>
 #include <Arduino.h>
-#include <cstdint>
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -51,17 +47,18 @@
  * Types and classes
  *****************************************************************************/
 
-/** Class to configure the Buttonpin using RAII */
-class ButtonPinAccess
+/** Class to access the Button pin using RAII. */
+class ButtonAccess
 {
     public:
-        /** Set Button Pin into the right mode */
-        ButtonPinAccess(uint8_t pin);
 
-        /** Set Button Pin into the standard mode */
-        ~ButtonPinAccess();
+        /** Configure button pin as input with pull-up. */
+        ButtonAccess(uint8_t pin);
 
-        /** Read Button Pin */
+        /** Set Button Pin into the standard mode. */
+        ~ButtonAccess();
+
+        /** Read current button state. */
         bool readButton();
 
     private:
@@ -73,39 +70,94 @@ class ButtonPinAccess
  * Prototypes
  *****************************************************************************/
 
+/**
+ * @brief Detects a debounced rising edge of the input signal.
+ *
+ * @param value      Current input value of the button.
+ * @param prevValue  Previous input value.
+ * @param prevTime   Timestamp of the last edge.
+ * @param state      Current state of the debounce state machine.
+ *
+ * @return True if debounced rising edge is detected, otherwise false.
+ */
+static bool getSingleDebouncedRisingEdge(
+    bool value,
+    bool& prevValue,
+    uint32_t& prevTime,
+    ButtonState& state);
+
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
 
-/** PIN for the Button A */
+/** PIN for the Button A. */
 static const uint8_t g_PIN_BUTTON_A = 25;
 
-/** Time in ms for the pin to stabilize after switching the pin mode */
+/** Flag which is used to detect the BOOTSEL button */
+static const uint8_t g_BUTTON_B_IDENTIFIER = 99;
+
+/** Time in ms for the pin to stabilize after switching the pin mode. */
 static const uint8_t g_STABILIZATION_TIME = 1;
+
+/** Time for debouncing in ms. */
+static const uint8_t g_DEBOUNCE_TIME_MS = 15;
 
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
 
-ButtonPinAccess::ButtonPinAccess(uint8_t pin) : m_buttonPin(pin)
+ButtonAccess::ButtonAccess(uint8_t pin) : m_buttonPin(pin)
 {
-    /* Pull-up needed as button pulls pin to GND when pressed */
-    pinMode(m_buttonPin, INPUT_PULLUP);
-    /* Give PIN time to stabilize */
-    delay(g_STABILIZATION_TIME);
+    if (m_buttonPin != g_BUTTON_B_IDENTIFIER)
+    {
+        /* Pull-up needed as button pulls pin to GND when pressed */
+        pinMode(m_buttonPin, INPUT_PULLUP);
+        /* Give PIN time to stabilize */
+        delay(g_STABILIZATION_TIME);
+    }
 }
 
-ButtonPinAccess::~ButtonPinAccess()
+ButtonAccess::~ButtonAccess()
 {
-    /* switch back to the normal input mode */
-    pinMode(m_buttonPin, INPUT);
+    if (m_buttonPin != g_BUTTON_B_IDENTIFIER)
+    {
+        /* switch back to the normal input mode */
+        pinMode(m_buttonPin, INPUT);
+    }
 }
 
-bool ButtonPinAccess::readButton()
+bool ButtonAccess::readButton()
 {
-    return !digitalRead(m_buttonPin);
+
+    if (m_buttonPin != g_BUTTON_B_IDENTIFIER)
+    {
+        return !digitalRead(m_buttonPin);
+    }
+    else
+    {
+        /* BOOTSEL button is not connected to a standard GPIO,
+        so it is read via the Bootsel object provided by the framework */
+        return BOOTSEL;
+    }
+
 }
 
+bool Zumo2040Button::getSingleDebouncedPress()
+{
+    return getSingleDebouncedRisingEdge(isPressed(),
+                                        m_pressPrevValue,
+                                        m_pressPrevTime,
+                                        m_pressState);
+}
+
+bool Zumo2040Button::getSingleDebouncedRelease()
+{
+    /* Invert signal: release event is treated as rising edge on inverted input */
+    return getSingleDebouncedRisingEdge(!isPressed(),
+                                        m_releasePrevValue,
+                                        m_releasePrevTime,
+                                        m_releaseState);
+}
 
 /******************************************************************************
  * Protected Methods
@@ -115,17 +167,59 @@ bool ButtonPinAccess::readButton()
  * Private Methods
  *****************************************************************************/
 
-/******************************************************************************
- * External Functions
- *****************************************************************************/
-
- bool isPressedButtonA()
+bool Zumo2040ButtonA::isPressed()
 {
-    ButtonPinAccess buttonA(g_PIN_BUTTON_A);
+    ButtonAccess buttonA(g_PIN_BUTTON_A);
 
     return buttonA.readButton();
 }
 
 /******************************************************************************
+ * External Functions
+ *****************************************************************************/
+
+/******************************************************************************
  * Local Functions
  *****************************************************************************/
+
+static bool getSingleDebouncedRisingEdge(bool value, bool& prevValue, uint32_t& prevTime, ButtonState& state)
+{
+    uint32_t curTime = millis();
+
+    switch (state)
+    {
+    case ButtonState::compare:
+        /* Compare previous and current value to detect a possible rising edge */
+        if (false == prevValue && true == value)
+        {
+            /* Possible rising edge detected */
+            state = ButtonState::debounceRising;
+            /* Store timestamp for debounce timing */
+            prevTime = curTime;
+            prevValue = value;
+        }
+        else
+        {
+            prevValue = value;
+        }
+        break;
+    case ButtonState::debounceRising:
+
+        if (prevValue != value)
+        {
+            /* Bouncing detected */
+            state = ButtonState::compare;
+            prevValue = value;
+        }
+        else if (curTime - prevTime >= g_DEBOUNCE_TIME_MS)
+        {
+            state = ButtonState::compare;
+            prevValue = value;
+            /* Stable rising edge detected after debounce time */
+            return true;
+        }
+        break;
+    }
+
+    return false;
+}
