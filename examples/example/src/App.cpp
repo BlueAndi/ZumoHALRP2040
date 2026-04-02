@@ -71,7 +71,7 @@ void App::loop()
     /* Place your periodically executed code here. */
     static uint32_t counter = 0;
 
-    if (button_a.getSingleDebouncedPress())
+    if (button_a.getSingleDebouncedRelease())
     {
         counter++;
 

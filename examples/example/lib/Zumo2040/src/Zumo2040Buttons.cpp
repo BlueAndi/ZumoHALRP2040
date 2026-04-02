@@ -47,54 +47,13 @@
  * Types and classes
  *****************************************************************************/
 
-/** Class to access the Button pin using RAII. */
-class ButtonAccess
-{
-    public:
-
-        /** Configure button pin as input with pull-up. */
-        ButtonAccess(uint8_t pin);
-
-        /** Set Button Pin into the standard mode. */
-        ~ButtonAccess();
-
-        /** Read current button state. */
-        bool readButton();
-
-    private:
-
-        uint8_t m_buttonPin;
-};
-
 /******************************************************************************
  * Prototypes
  *****************************************************************************/
 
-/**
- * @brief Detects a debounced rising edge of the input signal.
- *
- * @param value      Current input value of the button.
- * @param prevValue  Previous input value.
- * @param prevTime   Timestamp of the last edge.
- * @param state      Current state of the debounce state machine.
- *
- * @return True if debounced rising edge is detected, otherwise false.
- */
-static bool getSingleDebouncedRisingEdge(
-    bool value,
-    bool& prevValue,
-    uint32_t& prevTime,
-    ButtonState& state);
-
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
-
-/** PIN for the Button A. */
-static const uint8_t g_PIN_BUTTON_A = 25;
-
-/** Flag which is used to detect the BOOTSEL button */
-static const uint8_t g_BUTTON_B_IDENTIFIER = 99;
 
 /** Time in ms for the pin to stabilize after switching the pin mode. */
 static const uint8_t g_STABILIZATION_TIME = 1;
@@ -106,45 +65,10 @@ static const uint8_t g_DEBOUNCE_TIME_MS = 15;
  * Public Methods
  *****************************************************************************/
 
-ButtonAccess::ButtonAccess(uint8_t pin) : m_buttonPin(pin)
-{
-    if (m_buttonPin != g_BUTTON_B_IDENTIFIER)
-    {
-        /* Pull-up needed as button pulls pin to GND when pressed */
-        pinMode(m_buttonPin, INPUT_PULLUP);
-        /* Give PIN time to stabilize */
-        delay(g_STABILIZATION_TIME);
-    }
-}
-
-ButtonAccess::~ButtonAccess()
-{
-    if (m_buttonPin != g_BUTTON_B_IDENTIFIER)
-    {
-        /* switch back to the normal input mode */
-        pinMode(m_buttonPin, INPUT);
-    }
-}
-
-bool ButtonAccess::readButton()
-{
-
-    if (m_buttonPin != g_BUTTON_B_IDENTIFIER)
-    {
-        return !digitalRead(m_buttonPin);
-    }
-    else
-    {
-        /* BOOTSEL button is not connected to a standard GPIO,
-        so it is read via the Bootsel object provided by the framework */
-        return BOOTSEL;
-    }
-
-}
-
 bool Zumo2040Button::getSingleDebouncedPress()
 {
-    return getSingleDebouncedRisingEdge(isPressed(),
+
+    return getSingleDebouncedRisingEdge(isPressed() ? BUTTONVALUE::pressed : BUTTONVALUE::released,
                                         m_pressPrevValue,
                                         m_pressPrevTime,
                                         m_pressState);
@@ -153,7 +77,7 @@ bool Zumo2040Button::getSingleDebouncedPress()
 bool Zumo2040Button::getSingleDebouncedRelease()
 {
     /* Invert signal: release event is treated as rising edge on inverted input */
-    return getSingleDebouncedRisingEdge(!isPressed(),
+    return getSingleDebouncedRisingEdge(isPressed() ? BUTTONVALUE::released : BUTTONVALUE::pressed,
                                         m_releasePrevValue,
                                         m_releasePrevTime,
                                         m_releaseState);
@@ -169,9 +93,18 @@ bool Zumo2040Button::getSingleDebouncedRelease()
 
 bool Zumo2040ButtonA::isPressed()
 {
-    ButtonAccess buttonA(g_PIN_BUTTON_A);
 
-    return buttonA.readButton();
+    /* Pull-up needed as button pulls pin to GND when pressed */
+    pinMode(m_pin, INPUT_PULLUP);
+    /* Give PIN time to stabilize */
+    delay(g_STABILIZATION_TIME);
+
+    bool buttonPressed = (digitalRead(m_pin) == LOW);
+
+    /* switch back to the normal input mode */
+    pinMode(m_pin, INPUT);
+
+    return buttonPressed;
 }
 
 /******************************************************************************
@@ -182,18 +115,18 @@ bool Zumo2040ButtonA::isPressed()
  * Local Functions
  *****************************************************************************/
 
-static bool getSingleDebouncedRisingEdge(bool value, bool& prevValue, uint32_t& prevTime, ButtonState& state)
+bool Zumo2040Button :: getSingleDebouncedRisingEdge(BUTTONVALUE value, BUTTONVALUE& prevValue, uint32_t& prevTime, BUTTONSTATE& state)
 {
     uint32_t curTime = millis();
 
     switch (state)
     {
-    case ButtonState::compare:
+    case BUTTONSTATE::compare:
         /* Compare previous and current value to detect a possible rising edge */
-        if (false == prevValue && true == value)
+        if (BUTTONVALUE::released == prevValue && BUTTONVALUE::pressed == value)
         {
             /* Possible rising edge detected */
-            state = ButtonState::debounceRising;
+            state = BUTTONSTATE::debounceRising;
             /* Store timestamp for debounce timing */
             prevTime = curTime;
             prevValue = value;
@@ -203,17 +136,17 @@ static bool getSingleDebouncedRisingEdge(bool value, bool& prevValue, uint32_t& 
             prevValue = value;
         }
         break;
-    case ButtonState::debounceRising:
+    case BUTTONSTATE::debounceRising:
 
         if (prevValue != value)
         {
             /* Bouncing detected */
-            state = ButtonState::compare;
+            state = BUTTONSTATE::compare;
             prevValue = value;
         }
         else if (curTime - prevTime >= g_DEBOUNCE_TIME_MS)
         {
-            state = ButtonState::compare;
+            state = BUTTONSTATE::compare;
             prevValue = value;
             /* Stable rising edge detected after debounce time */
             return true;

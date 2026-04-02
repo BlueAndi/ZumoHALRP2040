@@ -53,10 +53,16 @@
  *****************************************************************************/
 
 /** States used in the debounce state machine. */
-enum class ButtonState : uint8_t
+enum class BUTTONSTATE : uint8_t
 {
     compare,
     debounceRising,
+};
+/** States of the button. */
+enum class BUTTONVALUE : uint8_t
+{
+    released,
+    pressed
 };
 
 /** Class which represents the button base class. */
@@ -91,22 +97,30 @@ class Zumo2040Button
 
     private:
 
-        /** Current state in the debounce state machine */
-        ButtonState m_pressState = ButtonState::compare;
+        /** Detects a debounced rising edge of the input signal. */
+        static bool getSingleDebouncedRisingEdge(
+            BUTTONVALUE value,
+            BUTTONVALUE& prevValue,
+            uint32_t& prevTime,
+            BUTTONSTATE& state);
+
+        /** Current state in the debounce state machine. */
+        BUTTONSTATE m_pressState = BUTTONSTATE::compare;
 
         /** Previous value of the Button */
-        bool m_pressPrevValue = false;
+        BUTTONVALUE m_pressPrevValue = BUTTONVALUE::released;
 
-        /** Timestamp for last rising edge occurrence */
+        /** Timestamp for last rising edge occurrence. */
         uint32_t m_pressPrevTime = 0;
 
-        /** Current state in the debounce state machine */
-        ButtonState m_releaseState = ButtonState::compare;
+        /** Current state in the debounce state machine. */
+        BUTTONSTATE m_releaseState = BUTTONSTATE::compare;
 
-        /** Previous value of the Button */
-        bool m_releasePrevValue = false;
+        /** Previous button value. Initialized to pressed because release detection
+         *  reuses the rising edge function with an inverted input signal. */
+        BUTTONVALUE m_releasePrevValue = BUTTONVALUE::pressed;
 
-        /** Timestamp for last falling edge occurrence */
+        /** Timestamp for last falling edge occurrence. */
         uint32_t m_releasePrevTime = 0;
 
 };
@@ -116,8 +130,11 @@ class Zumo2040ButtonA : public Zumo2040Button
 {
     private:
 
-        /** Checks whether button is pressed */
+        /** Checks whether button is pressed. */
         bool isPressed() override;
+
+        /** PIN for the Button A. */
+        const uint8_t m_pin = 25;
 };
 
 /******************************************************************************
