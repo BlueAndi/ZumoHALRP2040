@@ -58,7 +58,7 @@
  *
  * @return PRESSED if value is RELEASED, otherwise RELEASED.
  */
-ButtonValue invert(ButtonValue value);
+static ButtonValue invert(ButtonValue value);
 
 /******************************************************************************
  * Local Variables
@@ -116,7 +116,7 @@ ButtonValue Zumo2040ButtonA::isPressed()
  * Private Methods
  *****************************************************************************/
 
-bool Zumo2040Button :: getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue& prevValue, uint32_t& prevTime, ButtonState& state)
+bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue& prevValue, uint32_t& prevTime, ButtonState& state)
 {
     uint32_t curTime = millis();
 
@@ -166,7 +166,7 @@ bool Zumo2040Button :: getSingleDebouncedRisingEdge(ButtonValue value, ButtonVal
  * Local Functions
  *****************************************************************************/
 
-ButtonValue invert(ButtonValue value)
+static ButtonValue invert(ButtonValue value)
 {
     return (value == ButtonValue::PRESSED)
            ? ButtonValue::RELEASED
