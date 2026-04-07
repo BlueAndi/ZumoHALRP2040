@@ -94,7 +94,7 @@ class Zumo2040Button
     protected:
 
         /** Checks whether button is pressed */
-        virtual bool isPressed() = 0;
+        virtual ButtonValue isPressed() = 0;
 
     private:
 
@@ -132,7 +132,7 @@ class Zumo2040ButtonA : public Zumo2040Button
     private:
 
         /** Checks whether button is pressed. */
-        bool isPressed() override;
+        ButtonValue isPressed() override;
 
 };
 
