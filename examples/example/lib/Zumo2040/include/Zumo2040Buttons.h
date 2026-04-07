@@ -134,7 +134,7 @@ class Zumo2040ButtonA : public Zumo2040Button
         bool isPressed() override;
 
         /** PIN for the Button A. */
-        const uint8_t m_pin = 25;
+        const uint8_t m_pin = 25u;
 };
 
 /******************************************************************************

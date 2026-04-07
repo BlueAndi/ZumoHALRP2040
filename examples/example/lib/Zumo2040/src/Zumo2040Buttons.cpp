@@ -56,10 +56,10 @@
  *****************************************************************************/
 
 /** Time in ms for the pin to stabilize after switching the pin mode. */
-static const uint8_t g_STABILIZATION_TIME = 1;
+static const uint8_t g_STABILIZATION_TIME_MS = 1u;
 
 /** Time for debouncing in ms. */
-static const uint8_t g_DEBOUNCE_TIME_MS = 15;
+static const uint8_t g_DEBOUNCE_TIME_MS = 15u;
 
 /******************************************************************************
  * Public Methods
@@ -97,7 +97,7 @@ bool Zumo2040ButtonA::isPressed()
     /* Pull-up needed as button pulls pin to GND when pressed */
     pinMode(m_pin, INPUT_PULLUP);
     /* Give PIN time to stabilize */
-    delay(g_STABILIZATION_TIME);
+    delay(g_STABILIZATION_TIME_MS);
     /* Buttons pin level is low when pressed, high otherwise */
     bool buttonPressed = (digitalRead(m_pin) == LOW);
     /* switch back to the normal input mode */
