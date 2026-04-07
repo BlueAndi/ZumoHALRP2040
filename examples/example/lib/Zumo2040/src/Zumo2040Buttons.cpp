@@ -95,13 +95,13 @@ bool Zumo2040ButtonA::isPressed()
 {
 
     /* Pull-up needed as button pulls pin to GND when pressed */
-    pinMode(m_pin, INPUT_PULLUP);
+    pinMode(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A), INPUT_PULLUP);
     /* Give PIN time to stabilize */
     delay(g_STABILIZATION_TIME_MS);
     /* Buttons pin level is low when pressed, high otherwise */
-    bool buttonPressed = (digitalRead(m_pin) == LOW);
+    bool buttonPressed = (digitalRead(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A)) == LOW);
     /* switch back to the normal input mode */
-    pinMode(m_pin, INPUT);
+    pinMode(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A), INPUT);
 
     return buttonPressed;
 }
