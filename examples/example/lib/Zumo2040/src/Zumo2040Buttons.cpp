@@ -64,8 +64,8 @@ ButtonValue invert(ButtonValue value);
  * Local Variables
  *****************************************************************************/
 
-/** Time in ms for the pin to stabilize after switching the pin mode. */
-static const uint8_t g_STABILIZATION_TIME_MS = 1u;
+/** Time in us for the pin to stabilize after switching the pin mode. */
+static const uint8_t g_STABILIZATION_TIME_US = 1u;
 
 /** Time for debouncing in ms. */
 static const uint8_t g_DEBOUNCE_TIME_MS = 15u;
@@ -101,7 +101,7 @@ ButtonValue Zumo2040ButtonA::isPressed()
     /* Pull-up needed as button pulls pin to GND when pressed */
     pinMode(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A), INPUT_PULLUP);
     /* Give PIN time to stabilize */
-    delay(g_STABILIZATION_TIME_MS);
+    delayMicroseconds(g_STABILIZATION_TIME_US);
     /* Buttons pin level is low when pressed, high otherwise */
     ButtonValue value = (digitalRead(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A)) == LOW)
                         ? ButtonValue::PRESSED
