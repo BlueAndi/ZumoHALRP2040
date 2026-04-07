@@ -53,16 +53,16 @@
  *****************************************************************************/
 
 /** States used in the debounce state machine. */
-enum class BUTTONSTATE : uint8_t
+enum class ButtonState : uint8_t
 {
-    compare,
-    debounceRising,
+    COMPARE,
+    DEBOUNCERISING,
 };
 /** States of the button. */
-enum class BUTTONVALUE : uint8_t
+enum class ButtonValue : uint8_t
 {
-    released,
-    pressed
+    RELEASED,
+    PRESSED
 };
 
 /** Class which represents the button base class. */
@@ -99,26 +99,26 @@ class Zumo2040Button
 
         /** Detects a debounced rising edge of the input signal. */
         static bool getSingleDebouncedRisingEdge(
-            BUTTONVALUE value,
-            BUTTONVALUE& prevValue,
+            ButtonValue value,
+            ButtonValue& prevValue,
             uint32_t& prevTime,
-            BUTTONSTATE& state);
+            ButtonState& state);
 
         /** Current state in the debounce state machine. */
-        BUTTONSTATE m_pressState = BUTTONSTATE::compare;
+        ButtonState m_pressState = ButtonState::COMPARE;
 
         /** Previous value of the Button */
-        BUTTONVALUE m_pressPrevValue = BUTTONVALUE::released;
+        ButtonValue m_pressPrevValue = ButtonValue::RELEASED;
 
         /** Timestamp for last rising edge occurrence. */
         uint32_t m_pressPrevTime = 0;
 
         /** Current state in the debounce state machine. */
-        BUTTONSTATE m_releaseState = BUTTONSTATE::compare;
+        ButtonState m_releaseState = ButtonState::COMPARE;
 
         /** Previous button value. Initialized to pressed because release detection
          *  reuses the rising edge function with an inverted input signal. */
-        BUTTONVALUE m_releasePrevValue = BUTTONVALUE::pressed;
+        ButtonValue m_releasePrevValue = ButtonValue::PRESSED;
 
         /** Timestamp for last falling edge occurrence. */
         uint32_t m_releasePrevTime = 0;

@@ -68,7 +68,7 @@ static const uint8_t g_DEBOUNCE_TIME_MS = 15;
 bool Zumo2040Button::getSingleDebouncedPress()
 {
 
-    return getSingleDebouncedRisingEdge(isPressed() ? BUTTONVALUE::pressed : BUTTONVALUE::released,
+    return getSingleDebouncedRisingEdge(isPressed() ? ButtonValue::PRESSED : ButtonValue::RELEASED,
                                         m_pressPrevValue,
                                         m_pressPrevTime,
                                         m_pressState);
@@ -77,7 +77,7 @@ bool Zumo2040Button::getSingleDebouncedPress()
 bool Zumo2040Button::getSingleDebouncedRelease()
 {
     /* Invert signal: release event is treated as rising edge on inverted input */
-    return getSingleDebouncedRisingEdge(isPressed() ? BUTTONVALUE::released : BUTTONVALUE::pressed,
+    return getSingleDebouncedRisingEdge(isPressed() ? ButtonValue::RELEASED : ButtonValue::PRESSED,
                                         m_releasePrevValue,
                                         m_releasePrevTime,
                                         m_releaseState);
@@ -98,9 +98,8 @@ bool Zumo2040ButtonA::isPressed()
     pinMode(m_pin, INPUT_PULLUP);
     /* Give PIN time to stabilize */
     delay(g_STABILIZATION_TIME);
-
+    /* Buttons pin level is low when pressed, high otherwise */
     bool buttonPressed = (digitalRead(m_pin) == LOW);
-
     /* switch back to the normal input mode */
     pinMode(m_pin, INPUT);
 
@@ -115,18 +114,18 @@ bool Zumo2040ButtonA::isPressed()
  * Local Functions
  *****************************************************************************/
 
-bool Zumo2040Button :: getSingleDebouncedRisingEdge(BUTTONVALUE value, BUTTONVALUE& prevValue, uint32_t& prevTime, BUTTONSTATE& state)
+bool Zumo2040Button :: getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue& prevValue, uint32_t& prevTime, ButtonState& state)
 {
     uint32_t curTime = millis();
 
     switch (state)
     {
-    case BUTTONSTATE::compare:
+    case ButtonState::COMPARE:
         /* Compare previous and current value to detect a possible rising edge */
-        if (BUTTONVALUE::released == prevValue && BUTTONVALUE::pressed == value)
+        if (ButtonValue::RELEASED == prevValue && ButtonValue::PRESSED == value)
         {
             /* Possible rising edge detected */
-            state = BUTTONSTATE::debounceRising;
+            state = ButtonState::DEBOUNCERISING;
             /* Store timestamp for debounce timing */
             prevTime = curTime;
             prevValue = value;
@@ -136,17 +135,17 @@ bool Zumo2040Button :: getSingleDebouncedRisingEdge(BUTTONVALUE value, BUTTONVAL
             prevValue = value;
         }
         break;
-    case BUTTONSTATE::debounceRising:
+    case ButtonState::DEBOUNCERISING:
 
         if (prevValue != value)
         {
             /* Bouncing detected */
-            state = BUTTONSTATE::compare;
+            state = ButtonState::COMPARE;
             prevValue = value;
         }
         else if (curTime - prevTime >= g_DEBOUNCE_TIME_MS)
         {
-            state = BUTTONSTATE::compare;
+            state = ButtonState::COMPARE;
             prevValue = value;
             /* Stable rising edge detected after debounce time */
             return true;
