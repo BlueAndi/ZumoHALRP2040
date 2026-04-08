@@ -112,7 +112,7 @@ class Zumo2040Button
         ButtonValue m_pressPrevValue = ButtonValue::RELEASED;
 
         /** Timestamp for last rising edge occurrence. */
-        uint32_t m_pressPrevTime = 0;
+        uint32_t m_pressPrevTime = 0u;
 
         /** Current state in the debounce state machine. */
         ButtonState m_releaseState = ButtonState::COMPARE;
@@ -122,7 +122,7 @@ class Zumo2040Button
         ButtonValue m_releasePrevValue = ButtonValue::PRESSED;
 
         /** Timestamp for last falling edge occurrence. */
-        uint32_t m_releasePrevTime = 0;
+        uint32_t m_releasePrevTime = 0u;
 
 };
 

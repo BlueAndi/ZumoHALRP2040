@@ -54,11 +54,11 @@
 
 namespace Zumo2040Pins
 {
-    constexpr uint8_t BUTTON_A = 25;
+    constexpr uint8_t BUTTON_A = 25u;
     /** SPI MOSI pin for APA102 data */
-    constexpr uint8_t RGB_DATA_PIN = 3;
+    constexpr uint8_t RGB_DATA_PIN = 3u;
     /** SPI SCK pin for APA102 clock */
-    constexpr uint8_t RGB_CLOCK_PIN = 6;
+    constexpr uint8_t RGB_CLOCK_PIN = 6u;
 }
 
 /******************************************************************************
