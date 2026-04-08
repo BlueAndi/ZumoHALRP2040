@@ -51,14 +51,16 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
-enum class Zumo2040Pins : uint8_t
+
+namespace Zumo2040Pins
 {
-    BUTTON_A = 25,
+    constexpr uint8_t BUTTON_A = 25;
     /** SPI MOSI pin for APA102 data */
-    RGB_DATA_PIN = 3,
+    constexpr uint8_t RGB_DATA_PIN = 3;
     /** SPI SCK pin for APA102 clock */
-    RGB_CLOCK_PIN = 6
-};
+    constexpr uint8_t RGB_CLOCK_PIN = 6;
+}
+
 /******************************************************************************
  * Functions
  *****************************************************************************/

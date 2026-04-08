@@ -129,6 +129,10 @@ class Zumo2040Button
 /** Class which represents the button A driver. */
 class Zumo2040ButtonA : public Zumo2040Button
 {
+    public:
+        /** Initializes the button input with internal pull-up. */
+        Zumo2040ButtonA();
+
     private:
 
         /** Checks whether button is pressed. */

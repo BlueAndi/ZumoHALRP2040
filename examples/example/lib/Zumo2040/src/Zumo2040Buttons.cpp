@@ -92,25 +92,15 @@ bool Zumo2040Button::getSingleDebouncedRelease()
                                         m_releaseState);
 }
 
+Zumo2040ButtonA::Zumo2040ButtonA()
+{
+    /* Pull-up needed as button pulls pin to GND when pressed */
+    pinMode(Zumo2040Pins::BUTTON_A, INPUT_PULLUP);
+}
+
 /******************************************************************************
  * Protected Methods
  *****************************************************************************/
-
-ButtonValue Zumo2040ButtonA::isPressed()
-{
-    /* Pull-up needed as button pulls pin to GND when pressed */
-    pinMode(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A), INPUT_PULLUP);
-    /* Give PIN time to stabilize */
-    delayMicroseconds(g_STABILIZATION_TIME_US);
-    /* Buttons pin level is low when pressed, high otherwise */
-    ButtonValue value = (digitalRead(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A)) == LOW)
-                        ? ButtonValue::PRESSED
-                        : ButtonValue::RELEASED;
-    /* switch back to the normal input mode */
-    pinMode(static_cast<uint8_t>(Zumo2040Pins::BUTTON_A), INPUT);
-
-    return value;
-}
 
 /******************************************************************************
  * Private Methods
@@ -157,6 +147,17 @@ bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue
 
     return false;
 }
+
+ButtonValue Zumo2040ButtonA::isPressed()
+{
+    /* Buttons pin level is low when pressed, high otherwise */
+    ButtonValue value = (digitalRead(Zumo2040Pins::BUTTON_A) == LOW)
+                        ? ButtonValue::PRESSED
+                        : ButtonValue::RELEASED;
+
+    return value;
+}
+
 
 /******************************************************************************
  * External Functions
