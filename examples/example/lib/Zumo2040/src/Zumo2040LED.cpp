@@ -91,13 +91,13 @@ static void refreshLeds();
  *****************************************************************************/
 
 /** Value which controls the brightness of the LED : first 3 bits shall always be 1, the following 5 are controlling the brightness  */
-static const uint8_t g_SET_BRIGHTNESS_ON = 0b11100111;
+constexpr uint8_t g_SET_BRIGHTNESS_ON = 0b11100111;
 
 /** Value which turns the LED off */
-static const uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
+constexpr uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
 
 /** Number of APA102 RGB LEDs on the Zumo 2040 */
-static const uint8_t g_NUM_LEDS = 6;
+constexpr uint8_t g_NUM_LEDS = 6;
 
 /** Color values and state for the LEDs. */
 static LedState g_LedState[g_NUM_LEDS] = {
@@ -111,28 +111,28 @@ static LedState g_LedState[g_NUM_LEDS] = {
 
 
 /** Index for LED 0 */
-static const int8_t g_IDX_LED_YELLOW = 0;
+constexpr int8_t g_IDX_LED_YELLOW = 0;
 
 /** Index for LED 1 */
-static const int8_t g_IDX_LED_GREEN = 1;
+constexpr int8_t g_IDX_LED_GREEN = 1;
 
 /** Index for LED 2 */
-static const int8_t g_IDX_LED_RED = 2;
+constexpr int8_t g_IDX_LED_RED = 2;
 
 /** Chunk of the start frame */
-static const uint8_t g_START_FRAME_CHUNK = 0x00;
+constexpr uint8_t g_START_FRAME_CHUNK = 0x00;
 
 /** Chunk of the end frame */
-static const uint8_t g_END_FRAME_CHUNK = 0xFF;
+constexpr uint8_t g_END_FRAME_CHUNK = 0xFF;
 
 /** Clock frequency for SPI */
-static const uint32_t g_SPEEDHZ_LED = 20000000;
+constexpr uint32_t g_SPEEDHZ_LED = 20000000;
 
 /** Number of start frame bytes */
-static const uint8_t g_START_FRAME_BYTES = 4;
+constexpr uint8_t g_START_FRAME_BYTES = 4;
 
 /** Number of end frame bytes */
-static const uint8_t g_END_FRAME_BYTES = 4;
+constexpr uint8_t g_END_FRAME_BYTES = 4;
 
 /******************************************************************************
  * Public Methods
@@ -141,8 +141,8 @@ static const uint8_t g_END_FRAME_BYTES = 4;
 LedSpiAccess::LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode dataMode)
 {
     /* Switch SPI pins to leds. */
-    SPI.setSCK(static_cast<uint8_t>(Zumo2040Pins::RGB_CLOCK_PIN));
-    SPI.setTX(static_cast<uint8_t>(Zumo2040Pins::RGB_DATA_PIN));
+    SPI.setSCK(Zumo2040Pins::RGB_CLOCK_PIN);
+    SPI.setTX(Zumo2040Pins::RGB_DATA_PIN);
 
     SPI.begin();
     SPI.beginTransaction(SPISettings(clock, bitOrder, dataMode));
