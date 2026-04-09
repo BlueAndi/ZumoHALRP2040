@@ -34,6 +34,7 @@
  *****************************************************************************/
 
 #include <Zumo2040LED.h>
+#include <Zumo2040Pin.h>
 #include <SPI.h>
 #include <cstdint>
 
@@ -133,13 +134,6 @@ static const uint8_t g_START_FRAME_BYTES = 4;
 /** Number of end frame bytes */
 static const uint8_t g_END_FRAME_BYTES = 4;
 
-/** SPI MOSI pin for APA102 data */
-static const uint8_t g_RGB_DATA_PIN = 3;
-
-/** SPI SCK pin for APA102 clock */
-static const uint8_t g_RGB_CLOCK_PIN = 6;
-
-
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -147,8 +141,8 @@ static const uint8_t g_RGB_CLOCK_PIN = 6;
 LedSpiAccess::LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode dataMode)
 {
     /* Switch SPI pins to leds. */
-    SPI.setSCK(g_RGB_CLOCK_PIN);
-    SPI.setTX(g_RGB_DATA_PIN);
+    SPI.setSCK(static_cast<uint8_t>(Zumo2040Pins::RGB_CLOCK_PIN));
+    SPI.setTX(static_cast<uint8_t>(Zumo2040Pins::RGB_DATA_PIN));
 
     SPI.begin();
     SPI.beginTransaction(SPISettings(clock, bitOrder, dataMode));

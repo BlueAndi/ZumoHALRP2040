@@ -25,16 +25,16 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief
+ * @brief  Defines all hardware pins used by the peripherals.
  * @author Felix Reitenauer
  *
- * @addtogroup
+ * @addtogroup Pin
  *
  * @{
  */
 
-#ifndef ZUMO2040_H
-#define ZUMO2040_H
+#ifndef ZUMO2040PIN_H
+#define ZUMO2040PIN_H
 
 /******************************************************************************
  * Compile Switches
@@ -43,9 +43,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include "Zumo2040LED.h"
-#include "Zumo2040Buttons.h"
-
+#include <cstdint>
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -54,9 +52,18 @@
  * Types and Classes
  *****************************************************************************/
 
+namespace Zumo2040Pins
+{
+    constexpr uint8_t BUTTON_A = 25u;
+    /** SPI MOSI pin for APA102 data */
+    constexpr uint8_t RGB_DATA_PIN = 3u;
+    /** SPI SCK pin for APA102 clock */
+    constexpr uint8_t RGB_CLOCK_PIN = 6u;
+}
+
 /******************************************************************************
  * Functions
  *****************************************************************************/
 
-#endif /* ZUMO2040_H */
+#endif /* ZUMO2040PIN_H */
 /** @} */
