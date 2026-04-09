@@ -65,10 +65,10 @@ static ButtonValue invert(ButtonValue value);
  *****************************************************************************/
 
 /** Time in us for the pin to stabilize after switching the pin mode. */
-static const uint8_t g_STABILIZATION_TIME_US = 1u;
+constexpr uint8_t STABILIZATION_TIME_US = 1u;
 
 /** Time for debouncing in ms. */
-static const uint8_t g_DEBOUNCE_TIME_MS = 15u;
+constexpr uint8_t DEBOUNCE_TIME_MS = 15u;
 
 /******************************************************************************
  * Public Methods
@@ -135,7 +135,7 @@ bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue
             state = ButtonState::COMPARE;
             prevValue = value;
         }
-        else if (curTime - prevTime >= g_DEBOUNCE_TIME_MS)
+        else if (curTime - prevTime >= DEBOUNCE_TIME_MS)
         {
             state = ButtonState::COMPARE;
             prevValue = value;

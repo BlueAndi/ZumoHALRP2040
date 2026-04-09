@@ -91,48 +91,48 @@ static void refreshLeds();
  *****************************************************************************/
 
 /** Value which controls the brightness of the LED : first 3 bits shall always be 1, the following 5 are controlling the brightness  */
-static const uint8_t g_SET_BRIGHTNESS_ON = 0b11100111;
+constexpr uint8_t SET_BRIGHTNESS_ON = 0b11100111;
 
 /** Value which turns the LED off */
-static const uint8_t g_SET_BRIGHTNESS_OFF = 0b11100000;
+constexpr uint8_t SET_BRIGHTNESS_OFF = 0b11100000;
 
 /** Number of APA102 RGB LEDs on the Zumo 2040 */
-static const uint8_t g_NUM_LEDS = 6;
+constexpr uint8_t NUM_LEDS = 6;
 
 /** Color values and state for the LEDs. */
-static LedState g_LedState[g_NUM_LEDS] = {
-    { g_SET_BRIGHTNESS_OFF, {255, 80, 0}},  /**< LED 0 - Yellow */
-    { g_SET_BRIGHTNESS_OFF, {0, 255, 0}},   /**< LED 1 - Green */
-    { g_SET_BRIGHTNESS_OFF, {255, 0, 0}},   /**< LED 2 - RED */
-    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 3 - Off */
-    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 4 - Off */
-    { g_SET_BRIGHTNESS_OFF, {0, 0, 0}}      /**< LED 5 - Off */
+static LedState g_LedState[NUM_LEDS] = {
+    { SET_BRIGHTNESS_OFF, {255, 80, 0}},  /**< LED 0 - Yellow */
+    { SET_BRIGHTNESS_OFF, {0, 255, 0}},   /**< LED 1 - Green */
+    { SET_BRIGHTNESS_OFF, {255, 0, 0}},   /**< LED 2 - RED */
+    { SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 3 - Off */
+    { SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 4 - Off */
+    { SET_BRIGHTNESS_OFF, {0, 0, 0}}      /**< LED 5 - Off */
 };
 
 
 /** Index for LED 0 */
-static const int8_t g_IDX_LED_YELLOW = 0;
+constexpr int8_t IDX_LED_YELLOW = 0;
 
 /** Index for LED 1 */
-static const int8_t g_IDX_LED_GREEN = 1;
+constexpr int8_t IDX_LED_GREEN = 1;
 
 /** Index for LED 2 */
-static const int8_t g_IDX_LED_RED = 2;
+constexpr int8_t IDX_LED_RED = 2;
 
 /** Chunk of the start frame */
-static const uint8_t g_START_FRAME_CHUNK = 0x00;
+constexpr uint8_t START_FRAME_CHUNK = 0x00;
 
 /** Chunk of the end frame */
-static const uint8_t g_END_FRAME_CHUNK = 0xFF;
+constexpr uint8_t END_FRAME_CHUNK = 0xFF;
 
 /** Clock frequency for SPI */
-static const uint32_t g_SPEEDHZ_LED = 20000000;
+constexpr uint32_t SPEEDHZ_LED = 20000000;
 
 /** Number of start frame bytes */
-static const uint8_t g_START_FRAME_BYTES = 4;
+constexpr uint8_t START_FRAME_BYTES = 4;
 
 /** Number of end frame bytes */
-static const uint8_t g_END_FRAME_BYTES = 4;
+constexpr uint8_t END_FRAME_BYTES = 4;
 
 /******************************************************************************
  * Public Methods
@@ -141,8 +141,8 @@ static const uint8_t g_END_FRAME_BYTES = 4;
 LedSpiAccess::LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode dataMode)
 {
     /* Switch SPI pins to leds. */
-    SPI.setSCK(static_cast<uint8_t>(Zumo2040Pins::RGB_CLOCK_PIN));
-    SPI.setTX(static_cast<uint8_t>(Zumo2040Pins::RGB_DATA_PIN));
+    SPI.setSCK(Zumo2040Pins::RGB_CLOCK_PIN);
+    SPI.setTX(Zumo2040Pins::RGB_DATA_PIN);
 
     SPI.begin();
     SPI.beginTransaction(SPISettings(clock, bitOrder, dataMode));
@@ -173,24 +173,24 @@ inline uint8_t LedSpiAccess::transfer(uint8_t data)
 
 void setLedYellow(bool onOff)
 {
-    g_LedState[g_IDX_LED_YELLOW].state =
-        onOff ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
+    g_LedState[IDX_LED_YELLOW].state =
+        onOff ? SET_BRIGHTNESS_ON : SET_BRIGHTNESS_OFF;
 
     refreshLeds();
 }
 
 void setLedGreen(bool onOFF)
 {
-    g_LedState[g_IDX_LED_GREEN].state =
-        onOFF ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
+    g_LedState[IDX_LED_GREEN].state =
+        onOFF ? SET_BRIGHTNESS_ON : SET_BRIGHTNESS_OFF;
 
     refreshLeds();
 }
 
 void setLedRed(bool onOFF)
 {
-    g_LedState[g_IDX_LED_RED].state =
-        onOFF ? g_SET_BRIGHTNESS_ON : g_SET_BRIGHTNESS_OFF;
+    g_LedState[IDX_LED_RED].state =
+        onOFF ? SET_BRIGHTNESS_ON : SET_BRIGHTNESS_OFF;
 
     refreshLeds();
 }
@@ -201,12 +201,12 @@ void setLedRed(bool onOFF)
 
 static void refreshLeds()
 {
-    LedSpiAccess ledAccess(g_SPEEDHZ_LED, MSBFIRST, SPI_MODE0);
+    LedSpiAccess ledAccess(SPEEDHZ_LED, MSBFIRST, SPI_MODE0);
 
     /* Sends the needed startframe */
-    for (int chunk = 0; chunk < g_START_FRAME_BYTES; chunk++)
+    for (int chunk = 0; chunk < START_FRAME_BYTES; chunk++)
     {
-        ledAccess.transfer(g_START_FRAME_CHUNK);
+        ledAccess.transfer(START_FRAME_CHUNK);
     }
 
     for (const auto& ledState : g_LedState) {
@@ -220,9 +220,9 @@ static void refreshLeds()
     }
 
     /* Sends the needed endframe */
-    for (int chunk = 0; chunk < g_END_FRAME_BYTES; chunk++)
+    for (int chunk = 0; chunk < END_FRAME_BYTES; chunk++)
     {
-        ledAccess.transfer(g_END_FRAME_CHUNK);
+        ledAccess.transfer(END_FRAME_CHUNK);
     }
 
 }
