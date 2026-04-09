@@ -35,6 +35,7 @@
  *****************************************************************************/
 #include <Zumo2040Buttons.h>
 #include <Arduino.h>
+#include <hardware/gpio.h>
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -95,7 +96,7 @@ bool Zumo2040Button::getSingleDebouncedRelease()
 Zumo2040ButtonA::Zumo2040ButtonA()
 {
     /* Pull-up needed as button pulls pin to GND when pressed */
-    pinMode(Zumo2040Pins::BUTTON_A, INPUT_PULLUP);
+    pinMode(Zumo2040Pins::BUTTON_A_PIN, INPUT_PULLUP);
 }
 
 /******************************************************************************
@@ -151,13 +152,47 @@ bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue
 ButtonValue Zumo2040ButtonA::isPressed()
 {
     /* Buttons pin level is low when pressed, high otherwise */
-    ButtonValue value = (digitalRead(Zumo2040Pins::BUTTON_A) == LOW)
+    ButtonValue value = (digitalRead(Zumo2040Pins::BUTTON_A_PIN) == LOW)
                         ? ButtonValue::PRESSED
                         : ButtonValue::RELEASED;
 
     return value;
 }
 
+ButtonValue Zumo2040ButtonB::isPressed()
+{
+    /* Button B is not connected to a standard GPIO and therefore cannot be read
+     * using the usual digitalRead() function. It can, however, be read via
+     * BOOTSEL.
+     */
+    ButtonValue value = BOOTSEL ? ButtonValue::PRESSED
+                                : ButtonValue::RELEASED;
+
+    return value;
+}
+
+ButtonValue Zumo2040ButtonC::isPressed()
+{
+    /* Save the previously configured output level of the pin.
+     * This is required because pinMode() (via gpio_init()) clears the output value,
+     * so it must be restored after temporarily switching the pin to input mode.
+     */
+    PinStatus prevLevel = gpio_get_out_level(Zumo2040Pins::BUTTON_C_OLED_DATA_COMMAND_PIN) ? PinStatus::HIGH
+                                                                                           : PinStatus::LOW;
+    /* Pull-up needed as button pulls pin to GND when pressed */
+    pinMode(Zumo2040Pins::BUTTON_C_OLED_DATA_COMMAND_PIN, INPUT_PULLUP);
+    delayMicroseconds(STABILIZATION_TIME_US);
+    /* Buttons pin level is low when pressed, high otherwise */
+    ButtonValue value = (digitalRead(Zumo2040Pins::BUTTON_C_OLED_DATA_COMMAND_PIN) == LOW)
+                        ? ButtonValue::PRESSED
+                        : ButtonValue::RELEASED;
+    /* Restore output mode so that the OLED works properly. */
+    pinMode(Zumo2040Pins::BUTTON_C_OLED_DATA_COMMAND_PIN, OUTPUT);
+    /* Restore previous output level. */
+    digitalWrite(Zumo2040Pins::BUTTON_C_OLED_DATA_COMMAND_PIN, prevLevel);
+
+    return value;
+}
 
 /******************************************************************************
  * External Functions
