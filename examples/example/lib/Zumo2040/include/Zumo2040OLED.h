@@ -114,6 +114,7 @@ class Zumo2040OLEDcore
          */
         void sh1106Write(uint8_t data);
 
+    private:
         /** SPI SCK pin for OLED clock. */
         uint8_t m_clkPin;
         /** SPI MOSI pin for the OLED data. */
