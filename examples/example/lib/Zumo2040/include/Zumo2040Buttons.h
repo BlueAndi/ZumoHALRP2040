@@ -123,7 +123,6 @@ class Zumo2040Button
 
         /** Timestamp for last falling edge occurrence. */
         uint32_t m_releasePrevTime = 0u;
-
 };
 
 /** Class which represents the button A driver. */
@@ -137,7 +136,44 @@ class Zumo2040ButtonA : public Zumo2040Button
 
         /** Checks whether button is pressed. */
         ButtonValue isPressed() override;
+};
 
+/** Class which represents the button B driver.
+ *
+ * Button B is connected to the BOOTSEL function of the RP2040 and is not a
+ * regular GPIO input. It is tied to the flash chip select (CS) line.
+ *
+ * Reading its state requires temporarily suspending flash access and executing
+ * code from RAM.
+ *
+ * As a result, accessing this button is significantly more expensive than a
+ * standard GPIO read and may interfere with normal program execution.
+ *
+ * Therefore, it should not be polled continuously in time-critical loops,
+ * such as fast control tasks, for example when used as an abort condition in
+ * a line follower.
+ */
+class Zumo2040ButtonB : public Zumo2040Button
+{
+    private:
+        /** Checks whether button is pressed. */
+        ButtonValue isPressed() override;
+};
+
+/** Class which represents the button C driver.
+ *
+ * This button implementation internally uses a delay, unlike the other buttons.
+ * As a result, polling functions such as isPressed() may block for a short time.
+ *
+ * Therefore, this button is not well suited for time-critical polling scenarios,
+ * such as using it as an abort condition in a line follower, where the input
+ * must be checked continuously and without delay.
+ */
+class Zumo2040ButtonC : public Zumo2040Button
+{
+    private:
+        /** Checks whether button is pressed. */
+        ButtonValue isPressed() override;
 };
 
 /******************************************************************************

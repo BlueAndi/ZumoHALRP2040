@@ -56,6 +56,8 @@
  * Local Variables
  *****************************************************************************/
 Zumo2040ButtonA button_a;
+Zumo2040ButtonB button_b;
+Zumo2040ButtonC button_c;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -69,19 +71,49 @@ Zumo2040ButtonA button_a;
 void App::loop()
 {
     /* Place your periodically executed code here. */
-    static uint32_t counter = 0;
+    static uint32_t counter1 = 0u;
+    static uint32_t counter2 = 0u;
+    static uint32_t counter3 = 0u;
 
     if (button_a.getSingleDebouncedPress())
     {
-        counter++;
+        counter1++;
 
-        if (counter % 2 == 0)
+        if (counter1 % 2 == 0)
         {
             setLedYellow(true);
         }
         else
         {
             setLedYellow(false);
+        }
+    }
+
+    if (button_b.getSingleDebouncedPress())
+    {
+        counter2++;
+
+        if (counter2 % 2 == 0)
+        {
+            setLedGreen(true);
+        }
+        else
+        {
+            setLedGreen(false);
+        }
+    }
+
+    if (button_c.getSingleDebouncedPress())
+    {
+        counter3++;
+
+        if (counter3 % 2 == 0)
+        {
+            setLedRed(true);
+        }
+        else
+        {
+            setLedRed(false);
         }
     }
 
