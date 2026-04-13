@@ -74,16 +74,16 @@ void Zumo2040OLEDcore::setPins(uint8_t clk, uint8_t mos, uint8_t res, uint8_t dc
 {
     m_clkPin = clk;
     m_mosPin = mos;
-    m_resPin = res;
+    m_resetPin = res;
     m_dcPin = dc;
     m_csPin = cs;
 }
 
 void Zumo2040OLEDcore::initPins()
 {
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resPin)
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resetPin)
     {
-        pinMode(m_resPin, OUTPUT);
+        pinMode(m_resetPin, OUTPUT);
     }
 
     pinMode(m_clkPin, OUTPUT);
@@ -102,15 +102,13 @@ void Zumo2040OLEDcore::initPins()
 
 void Zumo2040OLEDcore::reset()
 {
-    if (Zumo2040Pins::UNUSED_OLED_PIN == m_resPin)
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resetPin)
     {
-        return;
+        digitalWrite(m_resetPin, LOW);
+        delayMicroseconds(STABILIZATION_TIME_US);
+        digitalWrite(m_resetPin, HIGH);
+        delayMicroseconds(STABILIZATION_TIME_US);
     }
-
-    digitalWrite(m_resPin, LOW);
-    delayMicroseconds(STABILIZATION_TIME_US);
-    digitalWrite(m_resPin, HIGH);
-    delayMicroseconds(STABILIZATION_TIME_US);
 }
 
 void Zumo2040OLEDcore::sh1106TransferStart()

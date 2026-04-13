@@ -120,7 +120,7 @@ class Zumo2040OLEDcore
         /** SPI MOSI pin for the OLED data. */
         uint8_t m_mosPin;
         /** OLED reset pin. */
-        uint8_t m_resPin;
+        uint8_t m_resetPin;
         /** OLED data/not command pin. */
         uint8_t m_dcPin;
         /** Chip-select pin. */
