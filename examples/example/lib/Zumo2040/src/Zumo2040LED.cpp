@@ -142,7 +142,7 @@ LedSpiAccess::LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode d
 {
     /* Switch SPI pins to leds. */
     SPI.setSCK(Zumo2040Pins::RGB_CLOCK_PIN);
-    SPI.setTX(Zumo2040Pins::RGB_DATA_PIN);
+    SPI.setTX(Zumo2040Pins::RGB_OLED_DATA_PIN);
 
     SPI.begin();
     SPI.beginTransaction(SPISettings(clock, bitOrder, dataMode));

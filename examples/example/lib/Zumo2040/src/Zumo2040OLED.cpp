@@ -25,17 +25,15 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  Example application
+ * @brief  OLED driver
  * @author Felix Reitenauer
  */
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include "App.h"
-#include "Board.h"
-#include <Arduino.h>
-#include <Zumo2040.h>
+#include "Zumo2040OLED.h"
+#include "SPI.h"
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -55,118 +53,124 @@
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
-Zumo2040ButtonA button_a;
-Zumo2040ButtonB button_b;
-Zumo2040ButtonC button_c;
-Zumo2040OLED oled;
+namespace Sh1106Modes
+{
+    /** Indicates the command mode. */
+    constexpr bool COMMAND = 0;
+    /** Indicates the data mode. */
+    constexpr bool DATA = 1;
+}
+
+/** Stabilization time in us for the OLED reset. */
+constexpr uint8_t STABILIZATION_TIME_US = 10u;
+/** Clock frequency for the SPI. */
+constexpr uint32_t OLED_CLOCK_FREQUENCY = 20000000u;
+
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
 
- void App::setup()
+void Zumo2040OLEDcore::setPins(uint8_t clk, uint8_t mos, uint8_t res, uint8_t dc, uint8_t cs)
 {
-    Board::getInstance().init();
-    /* Place your once executed code for the setup here.. */
+    m_clkPin = clk;
+    m_mosPin = mos;
+    m_resetPin = res;
+    m_dcPin = dc;
+    m_csPin = cs;
 }
 
-void App::loop()
+void Zumo2040OLEDcore::initPins()
 {
-    /* Place your periodically executed code here. */
-    static uint32_t counter = 0u;
-
-    static uint8_t x = 2;
-    static uint8_t y =1;
-    static const char t1[] = "hello";
-    static uint8_t t2 = 255;
-    static uint16_t t3 = 65535;
-    static uint32_t t4 = 4294967295;
-    static int8_t t5 = -128;
-    static int16_t t6 = -32768;
-    static int32_t t7 = -2147483648;
-
-
-    static bool isSet = false;
-
-    if (button_c.getSingleDebouncedPress())
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resetPin)
     {
-        counter++;
-        setLedYellow(false);
-        setLedGreen(false);
-        setLedRed(false);
+        pinMode(m_resetPin, OUTPUT);
     }
 
-    if (counter % 2 == 0)
+    pinMode(m_clkPin, OUTPUT);
+    digitalWrite(m_clkPin, LOW);
+    pinMode(m_mosPin, OUTPUT);
+
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_dcPin)
     {
-        oled.clear();
-        isSet = false;
-        setLedYellow(true);
-        setLedGreen(true);
-        setLedRed(true);
+        pinMode(m_dcPin, OUTPUT);
+    }
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_csPin)
+    {
+        pinMode(m_csPin, OUTPUT);
+    }
+}
+
+void Zumo2040OLEDcore::reset()
+{
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resetPin)
+    {
+        digitalWrite(m_resetPin, LOW);
+        delayMicroseconds(STABILIZATION_TIME_US);
+        digitalWrite(m_resetPin, HIGH);
+        delayMicroseconds(STABILIZATION_TIME_US);
+    }
+}
+
+void Zumo2040OLEDcore::sh1106TransferStart()
+{
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_csPin)
+    {
+        /* Select the SH1106 controller */
+        digitalWrite(m_csPin, LOW);
     }
 
-    if (1 == counter)
+    /* Switch SPI pins to the OLED. */
+    SPI.setSCK(m_clkPin);
+    SPI.setTX(m_mosPin);
+
+    SPI.begin();
+    SPI.beginTransaction(SPISettings(OLED_CLOCK_FREQUENCY, MSBFIRST, SPI_MODE0));
+}
+
+void Zumo2040OLEDcore::sh1106TransferEnd()
+{
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_csPin)
     {
-        if(!isSet)
-        {
-            oled.gotoXY(x, y);
-            oled.print(t1);
-            isSet = true;
-        }
+        /* Deselect the SH1106 controller */
+        digitalWrite(m_csPin, HIGH);
     }
 
-    if (3 == counter)
-    {
-        if(!isSet)
-        {
-            oled.print(t2);
-            isSet = true;
-        }
-    }
+    SPI.endTransaction();
+    SPI.end();
+}
 
-    if (5 == counter)
-    {
-        if(!isSet)
-        {
-            oled.print(t3);
-            isSet = true;
-        }
-    }
+void Zumo2040OLEDcore::sh1106CommandMode()
+{
+    m_dataMode = Sh1106Modes::COMMAND;
 
-    if (7 == counter)
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_dcPin)
     {
-        if(!isSet)
-        {
-            oled.print(t4);
-            isSet = true;
-        }
+        /* Set command mode */
+        digitalWrite(m_dcPin, LOW);
     }
+}
 
-    if (9 == counter)
-    {
-        if(!isSet)
-        {
-            oled.print(t5);
-            isSet = true;
-        }
-    }
+void Zumo2040OLEDcore::sh1106DataMode()
+{
+    m_dataMode = Sh1106Modes::DATA;
 
-    if (11 == counter)
+    if (Zumo2040Pins::UNUSED_OLED_PIN != m_dcPin)
     {
-        if(!isSet)
-        {
-            oled.print(t6);
-            isSet = true;
-        }
+        /* Set data mode */
+        digitalWrite(m_dcPin, HIGH);
     }
+}
 
-    if (13 == counter)
-    {
-        if(!isSet)
-        {
-            oled.print(t7);
-            isSet = true;
-        }
-    }
+void Zumo2040OLEDcore::sh1106Write(uint8_t data)
+{
+    SPI.transfer(data);
+}
+
+Zumo2040OLED::Zumo2040OLED(uint8_t clk, uint8_t mos, uint8_t res, uint8_t dc, uint8_t cs)
+{
+    core.setPins(clk, mos, res, dc, cs);
+    /* Configure layout to support displaying 32-bit values. */
+    setLayout11x4();
 }
 
 /******************************************************************************

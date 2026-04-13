@@ -54,13 +54,20 @@
 
 namespace Zumo2040Pins
 {
+    /** Pin for Button A. */
     constexpr uint8_t BUTTON_A_PIN = 25u;
-    /** SPI MOSI pin for APA102 data */
-    constexpr uint8_t RGB_DATA_PIN = 3u;
-    /** SPI SCK pin for APA102 clock */
+    /** SPI MOSI pin for APA102 and OLED data. */
+    constexpr uint8_t RGB_OLED_DATA_PIN = 3u;
+    /** SPI SCK pin for APA102 clock. */
     constexpr uint8_t RGB_CLOCK_PIN = 6u;
-    /** OLED D/C pin, reused to read Button C */
+    /** SPI SCK pin for OLED clock. */
+    constexpr uint8_t OLED_CLOCK_PIN = 2u;
+    /** OLED D/C pin, reused to read Button C. */
     constexpr uint8_t BUTTON_C_OLED_DATA_COMMAND_PIN = 0u;
+    /** Pin used to reset the OLED.  */
+    constexpr uint8_t OLED_RESET_PIN = 1u;
+    /** Value used to indicate unused PIN. */
+    constexpr uint8_t UNUSED_OLED_PIN = 255u;
 }
 
 /******************************************************************************

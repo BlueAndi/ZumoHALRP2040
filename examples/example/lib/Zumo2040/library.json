@@ -9,6 +9,9 @@
     }],
     "license": "MIT",
     "dependencies": [{
+        "owner": "pololu",
+        "name": "PololuOLED",
+        "version": "^2.0.0"
     }],
     "frameworks": "arduino",
     "platforms": "raspberrypi"
