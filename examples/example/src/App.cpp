@@ -59,6 +59,7 @@ Zumo2040ButtonA button_a;
 Zumo2040ButtonB button_b;
 Zumo2040ButtonC button_c;
 Zumo2040OLED oled;
+Zumo2040Motors motor;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -66,107 +67,100 @@ Zumo2040OLED oled;
  void App::setup()
 {
     Board::getInstance().init();
+    oled.setLayout21x8();
     /* Place your once executed code for the setup here.. */
 }
 
 void App::loop()
 {
     /* Place your periodically executed code here. */
-    static uint32_t counter = 0u;
+    int32_t speed;
 
-    static uint8_t x = 2;
-    static uint8_t y =1;
-    static const char t1[] = "hello";
-    static uint8_t t2 = 255;
-    static uint16_t t3 = 65535;
-    static uint32_t t4 = 4294967295;
-    static int8_t t5 = -128;
-    static int16_t t6 = -32768;
-    static int32_t t7 = -2147483648;
-
-
-    static bool isSet = false;
-
-    if (button_c.getSingleDebouncedPress())
+    oled.print("Left forward\n");
+    delay(1000);
+    speed = 0;
+    while (speed <= 400)
     {
-        counter++;
-        setLedYellow(false);
-        setLedGreen(false);
-        setLedRed(false);
+      motor.setLeftSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed += 10;
     }
-
-    if (counter % 2 == 0)
+    while (speed >= 0)
     {
-        oled.clear();
-        isSet = false;
-        setLedYellow(true);
-        setLedGreen(true);
-        setLedRed(true);
+      motor.setLeftSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed -= 10;
     }
-
-    if (1 == counter)
+    motor.setSpeeds(0, 0);
+    oled.clear();
+    oled.print("Left reverse\n");
+    delay(1000);
+    speed = 0;
+    while (speed >= -400)
     {
-        if(!isSet)
-        {
-            oled.gotoXY(x, y);
-            oled.print(t1);
-            isSet = true;
-        }
+      motor.setLeftSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed -= 10;
     }
-
-    if (3 == counter)
+    while (speed <= 0)
     {
-        if(!isSet)
-        {
-            oled.print(t2);
-            isSet = true;
-        }
+      motor.setLeftSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed += 10;
     }
-
-    if (5 == counter)
+    motor.setSpeeds(0, 0);
+    oled.clear();
+    printf("Right forward\n");
+    delay(1000);
+    speed = 0;
+    while (speed <= 400)
     {
-        if(!isSet)
-        {
-            oled.print(t3);
-            isSet = true;
-        }
+      motor.setRightSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed += 10;
     }
-
-    if (7 == counter)
+    while (speed >= 0)
     {
-        if(!isSet)
-        {
-            oled.print(t4);
-            isSet = true;
-        }
+      motor.setRightSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed -= 10;
     }
-
-    if (9 == counter)
+    motor.setSpeeds(0, 0);
+    oled.clear();
+    oled.print("Right reverse\n");
+    delay(1000);
+    speed = 0;
+    while (speed >= -400)
     {
-        if(!isSet)
-        {
-            oled.print(t5);
-            isSet = true;
-        }
+      motor.setRightSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed -= 10;
     }
-
-    if (11 == counter)
+    while (speed <= 0)
     {
-        if(!isSet)
-        {
-            oled.print(t6);
-            isSet = true;
-        }
+      motor.setRightSpeed(speed);
+      oled.clear();
+      oled.print(speed);
+      delay(50);
+      speed += 10;
     }
-
-    if (13 == counter)
-    {
-        if(!isSet)
-        {
-            oled.print(t7);
-            isSet = true;
-        }
-    }
+    oled.clear();
+    motor.setSpeeds(0, 0);
+    delay(100);
 }
 
 /******************************************************************************
