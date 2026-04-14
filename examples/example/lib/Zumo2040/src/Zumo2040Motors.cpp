@@ -32,10 +32,12 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
+
 #include <Zumo2040Motors.h>
 #include <Zumo2040Pin.h>
 #include <Arduino.h>
 #include <hardware/pwm.h>
+
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -72,27 +74,10 @@ constexpr bool ENABLED = true;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
+
 Zumo2040Motors::Zumo2040Motors()
 {
     init();
-}
-
-void Zumo2040Motors::init()
-{
-    /* Initialize the direction PINs */
-    gpio_init(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN);
-    gpio_init(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN);
-    gpio_set_dir(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,GPIO_OUT);
-    gpio_set_dir(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,GPIO_OUT);
-    gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,LOW);
-    gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,LOW);
-    /* Initialize the PWM slice 7 */
-    gpio_set_function(Zumo2040Pins::RIGHT_MOTOR_PWM_PIN,GPIO_FUNC_PWM);
-    gpio_set_function(Zumo2040Pins::LEFT_MOTOR_PWM_PIN,GPIO_FUNC_PWM);
-    /* PWM frequency = 125 MHz / 4 / 400 = 78.1 kHz */
-    pwm_set_clkdiv_int_frac4(PWM_SLICE_MOTORS,PWM_CLK_DIV_INT, PWM_CLK_DIV_FRAC4);
-    pwm_set_wrap(PWM_SLICE_MOTORS,PWM_RANGE);
-    pwm_set_enabled(PWM_SLICE_MOTORS,ENABLED);
 }
 
 void Zumo2040Motors::flipLeftMotor(bool flip)
@@ -152,6 +137,24 @@ void Zumo2040Motors::setSpeeds(int16_t leftSpeed,int16_t rightSpeed)
 /******************************************************************************
  * Private Methods
  *****************************************************************************/
+
+void Zumo2040Motors::init()
+{
+    /* Initialize the direction PINs */
+    gpio_init(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN);
+    gpio_init(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN);
+    gpio_set_dir(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,GPIO_OUT);
+    gpio_set_dir(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,GPIO_OUT);
+    gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,LOW);
+    gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,LOW);
+    /* Initialize the PWM slice 7 */
+    gpio_set_function(Zumo2040Pins::RIGHT_MOTOR_PWM_PIN,GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040Pins::LEFT_MOTOR_PWM_PIN,GPIO_FUNC_PWM);
+    /* PWM frequency = 125 MHz / 4 / 400 = 78.1 kHz */
+    pwm_set_clkdiv_int_frac4(PWM_SLICE_MOTORS,PWM_CLK_DIV_INT, PWM_CLK_DIV_FRAC4);
+    pwm_set_wrap(PWM_SLICE_MOTORS,PWM_RANGE);
+    pwm_set_enabled(PWM_SLICE_MOTORS,ENABLED);
+}
 
 uint16_t Zumo2040Motors::checkSpeed(int16_t speed,PwmChannel side)
 {
