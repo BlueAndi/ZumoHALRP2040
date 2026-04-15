@@ -77,7 +77,12 @@ constexpr bool ENABLED = true;
 
 Zumo2040Motors::Zumo2040Motors()
 {
-    /* Initialize the direction PINs */
+   /* Initialize the direction pins.
+    * The Pico SDK is used instead of the Arduino API because the Arduino API
+    * only supports a single global PWM frequency. This would require repeatedly
+    * reconfiguring the PWM frequency when multiple peripherals use PWM, which is
+    * undesirable for stable hardware operation.
+    */
     gpio_init(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN);
     gpio_init(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN);
     gpio_set_dir(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN, GPIO_OUT);
@@ -107,13 +112,17 @@ void Zumo2040Motors::setLeftSpeed(int16_t speed)
 {
     if (ZERO > speed)
     {
-        speed = (speed < -PWM_RANGE) ? PWM_RANGE : -speed;
+        /* Cap absolute speed value at 400 */
+        speed = (speed < (-PWM_RANGE)) ? PWM_RANGE : -speed;
+        /* Set direction pin for backward driving */
         gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,
                  m_flipLeftMotor ? LOW : HIGH);
     }
-    else if (ZERO <= speed)
+    else
     {
+        /* Cap absolute speed value at 400 */
         speed = (speed > PWM_RANGE) ? PWM_RANGE : speed;
+        /* Set direction pin for forward driving */
         gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,
                  m_flipLeftMotor ? HIGH : LOW);
     }
@@ -127,13 +136,17 @@ void Zumo2040Motors::setRightSpeed(int16_t speed)
 {
     if (ZERO > speed)
     {
-        speed = (speed < -PWM_RANGE) ? PWM_RANGE : -speed;
+        /* Cap absolute speed value at 400 */
+        speed = (speed < (-PWM_RANGE)) ? PWM_RANGE : -speed;
+        /* Set direction pin for backward driving */
         gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,
                  m_flipRightMotor ? LOW : HIGH);
     }
-    else if (ZERO <= speed)
+    else
     {
+        /* Cap absolute speed value at 400 */
         speed = (speed > PWM_RANGE) ? PWM_RANGE : speed;
+        /* Set direction pin for forward driving */
         gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,
                  m_flipRightMotor ? HIGH : LOW);
     }
