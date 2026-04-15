@@ -77,54 +77,73 @@ constexpr bool ENABLED = true;
 
 Zumo2040Motors::Zumo2040Motors()
 {
-    init();
+    /* Initialize the direction PINs */
+    gpio_init(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN);
+    gpio_init(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN);
+    gpio_set_dir(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN, GPIO_OUT);
+    gpio_set_dir(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN, GPIO_OUT);
+    gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN, LOW);
+    gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN, LOW);
+    /* Initialize the PWM slice 7 */
+    gpio_set_function(Zumo2040Pins::RIGHT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040Pins::LEFT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
+    /* PWM frequency = 125 MHz / 4 / 400 = 78.1 kHz */
+    pwm_set_clkdiv_int_frac4(PWM_SLICE_MOTORS, PWM_CLK_DIV_INT, PWM_CLK_DIV_FRAC4);
+    pwm_set_wrap(PWM_SLICE_MOTORS, PWM_RANGE);
+    pwm_set_enabled(PWM_SLICE_MOTORS, ENABLED);
 }
 
 void Zumo2040Motors::flipLeftMotor(bool flip)
 {
-    MotorsDirection flipCommand = flip ? FLIP
-                                       : DONT_FLIP;
-    if (FLIP == flipCommand)
-    {
-        gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,HIGH);
-        m_directionLeftMotor = FLIP;
-    }
-    else if (DONT_FLIP == flipCommand)
-    {
-        gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,LOW);
-        m_directionLeftMotor = DONT_FLIP;
-    }
+    m_flipLeftMotor = flip;
 }
 
 void Zumo2040Motors::flipRightMotor(bool flip)
 {
-    MotorsDirection flipCommand = flip ? FLIP
-                                       : DONT_FLIP;
-    if (FLIP == flipCommand)
-    {
-        gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,HIGH);
-        m_directionRightMotor = FLIP;
-    }
-    else if (DONT_FLIP == flipCommand)
-    {
-        gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,LOW);
-        m_directionRightMotor = DONT_FLIP;
-    }
+    m_flipRightMotor = flip;
 }
 
 void Zumo2040Motors::setLeftSpeed(int16_t speed)
 {
+    if (ZERO > speed)
+    {
+        speed = (speed < -PWM_RANGE) ? PWM_RANGE : -speed;
+        gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,
+                 m_flipLeftMotor ? LOW : HIGH);
+    }
+    else if (ZERO <= speed)
+    {
+        speed = (speed > PWM_RANGE) ? PWM_RANGE : speed;
+        gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,
+                 m_flipLeftMotor ? HIGH : LOW);
+    }
     /* Set the current PWM counter compare value for the left motor channel */
-    pwm_set_chan_level(PWM_SLICE_MOTORS, PwmChannel::LEFT_MOTOR,checkSpeed(speed,PwmChannel::LEFT_MOTOR));
+    pwm_set_chan_level(PWM_SLICE_MOTORS,
+                       PwmChannel::LEFT_MOTOR,
+                       static_cast<uint16_t>(speed));
 }
 
 void Zumo2040Motors::setRightSpeed(int16_t speed)
 {
+    if (ZERO > speed)
+    {
+        speed = (speed < -PWM_RANGE) ? PWM_RANGE : -speed;
+        gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,
+                 m_flipRightMotor ? LOW : HIGH);
+    }
+    else if (ZERO <= speed)
+    {
+        speed = (speed > PWM_RANGE) ? PWM_RANGE : speed;
+        gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,
+                 m_flipRightMotor ? HIGH : LOW);
+    }
     /* Set the current PWM counter compare value for the right motor channel */
-    pwm_set_chan_level(PWM_SLICE_MOTORS, PwmChannel::RIGHT_MOTOR,checkSpeed(speed,PwmChannel::RIGHT_MOTOR));
+    pwm_set_chan_level(PWM_SLICE_MOTORS,
+                       PwmChannel::RIGHT_MOTOR,
+                       static_cast<uint16_t>(speed));
 }
 
-void Zumo2040Motors::setSpeeds(int16_t leftSpeed,int16_t rightSpeed)
+void Zumo2040Motors::setSpeeds(int16_t leftSpeed, int16_t rightSpeed)
 {
     setLeftSpeed(leftSpeed);
     setRightSpeed(rightSpeed);
@@ -137,72 +156,6 @@ void Zumo2040Motors::setSpeeds(int16_t leftSpeed,int16_t rightSpeed)
 /******************************************************************************
  * Private Methods
  *****************************************************************************/
-
-void Zumo2040Motors::init()
-{
-    /* Initialize the direction PINs */
-    gpio_init(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN);
-    gpio_init(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN);
-    gpio_set_dir(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,GPIO_OUT);
-    gpio_set_dir(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,GPIO_OUT);
-    gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,LOW);
-    gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,LOW);
-    /* Initialize the PWM slice 7 */
-    gpio_set_function(Zumo2040Pins::RIGHT_MOTOR_PWM_PIN,GPIO_FUNC_PWM);
-    gpio_set_function(Zumo2040Pins::LEFT_MOTOR_PWM_PIN,GPIO_FUNC_PWM);
-    /* PWM frequency = 125 MHz / 4 / 400 = 78.1 kHz */
-    pwm_set_clkdiv_int_frac4(PWM_SLICE_MOTORS,PWM_CLK_DIV_INT, PWM_CLK_DIV_FRAC4);
-    pwm_set_wrap(PWM_SLICE_MOTORS,PWM_RANGE);
-    pwm_set_enabled(PWM_SLICE_MOTORS,ENABLED);
-}
-
-uint16_t Zumo2040Motors::checkSpeed(int16_t speed,PwmChannel side)
-{
-    /* Use a 32-bit value because the absolute value of int16_t can exceed its positive range. */
-    int32_t absoluteSpeed = speed;
-
-    if (ZERO > absoluteSpeed)
-    {
-        absoluteSpeed = -absoluteSpeed;
-        if (LEFT_MOTOR == side)
-        {
-            if (DONT_FLIP == m_directionLeftMotor)
-            {
-                flipLeftMotor(FLIP);
-            }
-        }
-        else if (RIGHT_MOTOR == side)
-        {
-            if (DONT_FLIP == m_directionRightMotor)
-            {
-                flipRightMotor(FLIP);
-            }
-        }
-    }
-    else if (ZERO < absoluteSpeed)
-    {
-        if (LEFT_MOTOR == side)
-        {
-            if (FLIP == m_directionLeftMotor)
-            {
-                flipLeftMotor(DONT_FLIP);
-            }
-        }
-        else if (RIGHT_MOTOR == side)
-        {
-            if (FLIP == m_directionRightMotor)
-            {
-                flipRightMotor(DONT_FLIP);
-            }
-        }
-    }
-    if (PWM_RANGE < absoluteSpeed)
-    {
-        absoluteSpeed = PWM_RANGE;
-    }
-
-    return static_cast<uint16_t>(absoluteSpeed);
-}
 
 /******************************************************************************
  * External Functions

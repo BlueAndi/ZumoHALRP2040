@@ -54,14 +54,6 @@
  * Types and Classes
  *****************************************************************************/
 
-enum MotorsDirection
-{
-    /** Motor direction is inverted. */
-    FLIP = true,
-    /** Default motor direction. */
-    DONT_FLIP = false
-};
-
 enum PwmChannel
 {
     /** Index for the right motor channel on the PWM slice 7 */
@@ -125,25 +117,17 @@ class Zumo2040Motors
         void setSpeeds(int16_t leftSpeed, int16_t rightSpeed);
 
     private:
-        /** Initialize the PWM and direction PINs. */
-        void init();
+        /**
+         * Indicates whether the left motor direction pin logic is inverted.
+         * Default: LOW = forward, HIGH = reverse.
+         */
+        bool m_flipLeftMotor = false;
 
         /**
-         * @brief Updates the motor direction according to the sign of the speed and
-         * returns the absolute speed value, capped at 400.
-         *
-         * @param speed Motor speed value..
-         *
-         * @param side Selects the motor PWM channel.
-         *
-         * @return Absolute value of the speed, capped at 400.
+         * Indicates whether the right motor direction pin logic is inverted.
+         * Default: LOW = forward, HIGH = reverse.
          */
-        uint16_t checkSpeed(int16_t speed, PwmChannel side);
-
-        /** Indicates whether the left motor direction is inverted. */
-        MotorsDirection m_directionLeftMotor = DONT_FLIP;
-        /** Indicates whether the right motor direction is inverted. */
-        MotorsDirection m_directionRightMotor = DONT_FLIP;
+        bool m_flipRightMotor = false;
 };
 
 /******************************************************************************
