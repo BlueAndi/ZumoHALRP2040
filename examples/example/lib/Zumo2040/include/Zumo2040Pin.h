@@ -66,8 +66,16 @@ namespace Zumo2040Pins
     constexpr uint8_t BUTTON_C_OLED_DATA_COMMAND_PIN = 0u;
     /** Pin used to reset the OLED.  */
     constexpr uint8_t OLED_RESET_PIN = 1u;
-    /** Value used to indicate unused PIN. */
+    /** Value used to indicate unused pin. */
     constexpr uint8_t UNUSED_OLED_PIN = 255u;
+    /** Left motor direction pin. */
+    constexpr uint8_t LEFT_MOTOR_DIRECTION_PIN = 11u;
+    /** Right motor direction pin. */
+    constexpr uint8_t RIGHT_MOTOR_DIRECTION_PIN = 10u;
+    /** Left motor PWM pin. */
+    constexpr uint8_t LEFT_MOTOR_PWM_PIN = 15u;
+    /** Right motor PWM pin. */
+    constexpr uint8_t RIGHT_MOTOR_PWM_PIN = 14u;
 }
 
 /******************************************************************************
