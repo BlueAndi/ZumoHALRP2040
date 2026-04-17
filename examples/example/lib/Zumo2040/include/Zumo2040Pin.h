@@ -76,6 +76,14 @@ namespace Zumo2040Pins
     constexpr uint8_t LEFT_MOTOR_PWM_PIN = 15u;
     /** Right motor PWM pin. */
     constexpr uint8_t RIGHT_MOTOR_PWM_PIN = 14u;
+    /** Left encoder A pin. */
+    constexpr uint8_t LEFT_ENCODER_A_PIN = 12u;
+    /** Left encoder B pin. */
+    constexpr uint8_t LEFT_ENCODER_B_PIN = 13u;
+    /** Right encoder A pin. */
+    constexpr uint8_t RIGHT_ENCODER_A_PIN = 8u;
+    /** Right encoder B pin. */
+    constexpr uint8_t RIGHT_ENCODER_B_PIN = 9u;
 }
 
 /******************************************************************************

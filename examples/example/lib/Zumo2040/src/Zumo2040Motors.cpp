@@ -65,7 +65,7 @@ constexpr uint8_t PWM_CLK_DIV_INT = 4u;
 /** 4 bit fractional part of the clock divider. */
 constexpr uint8_t PWM_CLK_DIV_FRAC4 = 0u;
 /** PWM counter wrap value. */
-constexpr uint16_t PWM_RANGE = 400u;
+constexpr int16_t PWM_RANGE = 400u;
 /** 8 bit integer zero. */
 constexpr uint8_t ZERO = 0u;
 /** State for the PWM slice. */
