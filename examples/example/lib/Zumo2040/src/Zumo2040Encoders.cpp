@@ -25,7 +25,7 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  Example application
+ * @brief Encoders driver
  * @author Felix Reitenauer
  */
 
@@ -33,10 +33,7 @@
  * Includes
  *****************************************************************************/
 
-#include "App.h"
-#include "Board.h"
-#include <Arduino.h>
-#include <Zumo2040.h>
+#include "Zumo2040Encoders.h"
 
 /******************************************************************************
  * Compiler Switches
@@ -57,58 +54,33 @@
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
-Zumo2040ButtonA button_a;
-Zumo2040ButtonB button_b;
-Zumo2040ButtonC button_c;
-Zumo2040OLED oled;
-Zumo2040Motors motor;
-Zumo2040Encoder encoder;
+
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
 
- void App::setup()
+int32_t Zumo2040Encoder::getCountsLeft()
 {
-    Board::getInstance().init();
-    /* Place your once executed code for the setup here.. */
-    oled.setLayout21x8();
+    return m_core.getCount(LEFT);
 }
 
-void App::loop()
+int32_t Zumo2040Encoder::getCountsRight()
 {
-  /* Place your periodically executed code here. */
-  static int32_t speed = 0;
-  static int32_t countL = 0;
-  static int32_t countR = 0;
+    return m_core.getCount(RIGHT);
+}
 
-  countL = encoder.getCountsLeft();
-  countR = encoder.getCountsRight();
-  if (button_a.getSingleDebouncedPress())
-  {
-    speed += 50;
-    motor.setLeftSpeed(speed);
-    motor.setRightSpeed(speed);
-  }
-  if (button_b.getSingleDebouncedPress())
-  {
-    speed -= 50;
-    motor.setLeftSpeed(speed);
-    motor.setRightSpeed(speed);
-  }
-  if(button_c.getSingleDebouncedPress())
-  {
-    encoder.getCountsAndResetLeft();
-    encoder.getCountsAndResetRight();
-  }
+int32_t Zumo2040Encoder::getCountsAndResetLeft()
+{
+    int32_t count = m_core.getCount(LEFT);
+    m_core.resetCount(LEFT);
+    return count;
+}
 
-  oled.clear();
-  oled.print("countL: ");
-  oled.print(countL);
-  oled.gotoXY(0, 1);
-  oled.print("countR: ");
-  oled.print(countR);
-  oled.gotoXY(0, 2);
-  delay(10);
+int32_t Zumo2040Encoder::getCountsAndResetRight()
+{
+    int32_t count = m_core.getCount(RIGHT);
+    m_core.resetCount(RIGHT);
+    return count;
 }
 
 /******************************************************************************
