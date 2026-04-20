@@ -70,6 +70,7 @@ Zumo2040Encoder encoder;
  void App::setup()
 {
     Board::getInstance().init();
+    encoder.init();
     /* Place your once executed code for the setup here.. */
     oled.setLayout21x8();
 }
@@ -80,9 +81,12 @@ void App::loop()
   static int32_t speed = 0;
   static int32_t countL = 0;
   static int32_t countR = 0;
+  static EncoderError code = NONE;
 
-  countL = encoder.getCountsLeft();
-  countR = encoder.getCountsRight();
+  countL = encoder.getCountLeft();
+  countR = encoder.getCountRight();
+  code = encoder.getError();
+
   if (button_a.getSingleDebouncedPress())
   {
     speed += 50;
@@ -97,8 +101,8 @@ void App::loop()
   }
   if(button_c.getSingleDebouncedPress())
   {
-    encoder.getCountsAndResetLeft();
-    encoder.getCountsAndResetRight();
+    encoder.getCountAndResetLeft();
+    encoder.getCountAndResetRight();
   }
 
   oled.clear();
@@ -108,6 +112,8 @@ void App::loop()
   oled.print("countR: ");
   oled.print(countR);
   oled.gotoXY(0, 2);
+  oled.print("Error?: ");
+  oled.print(code);
   delay(10);
 }
 
