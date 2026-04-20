@@ -84,14 +84,41 @@ enum EncoderSide
 class EncoderCore
 {
     public:
-        /** Initialize the PIO state machines for both encoders. */
+        /**
+         * Creates an encoder core object in an uninitialized state.
+         * Call init() before using the encoder.
+         */
         EncoderCore();
 
         /** Destructor disables and unclaims both state machines. */
         ~EncoderCore();
 
+        /** Delete copy constructor. */
+        EncoderCore(const EncoderCore&) = delete;
+
+        /** Delete copy assignment operator. */
+        EncoderCore& operator=(const EncoderCore&) = delete;
+
+        /**
+         * @brief Initializes the PIO state machines for both encoders.
+         *
+         * @return The error code of the initialization.
+         */
+        EncoderError init();
+
         /**
          * @brief Get the count of the selected encoder.
+         *
+         * The encoders provide a resolution of 12 counts per revolution of the
+         * motor shaft. To compute the counts per revolution of a wheel, multiply
+         * the motor gear ratio by 12.
+         *
+         * For example, the 75:1 motors are specified more accurately with a gear
+         * ratio of 75.81:1. This results in 75.81 * 12 = 909.72 counts per wheel
+         * revolution.
+         *
+         * The exact gear ratios of the different motors can be found here:
+         * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
          *
          * @param side LEFT for the left encoder, RIGHT for the right encoder.
          *
@@ -115,15 +142,15 @@ class EncoderCore
 
     private:
         /** Encoder error code. */
-        EncoderError m_errorCode = NONE;
+        EncoderError m_errorCode;
         /** Selected PIO instance. */
-        PIO m_pio = pio0;
+        PIO m_pio;
         /** State machine used for the left encoder. */
         uint m_smLeft;
         /** State machine used for the right encoder. */
         uint m_smRight;
         /** Program offset of the public entry point in the PIO program. */
-        uint m_programEntry = rp2040encoder_offset_entry_point;
+        uint m_programEntry;
         /** Configuration of the left state machine. */
         pio_sm_config m_configLeft;
         /** Configuration of the right state machine. */

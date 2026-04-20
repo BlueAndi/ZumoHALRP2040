@@ -58,33 +58,103 @@
 class Zumo2040Encoder
 {
     public:
+        /** Default constructor. */
+        Zumo2040Encoder() = default;
+
+        /** Default destructor. */
+        ~Zumo2040Encoder() = default;
+
+        /** Delete copy constructor. */
+        Zumo2040Encoder(const Zumo2040Encoder&) = delete;
+
+        /** Delete copy assignment operator. */
+        Zumo2040Encoder& operator=(const Zumo2040Encoder&) = delete;
+
+        /**
+         * @brief Initializes the PIO state machines for both encoders.
+         *
+         * @return The error code of the initialization.
+         */
+        EncoderError init();
+
         /**
          * @brief Gets the count of the left encoder.
          *
+         * The encoders provide a resolution of 12 counts per revolution of the
+         * motor shaft. To compute the counts per revolution of a wheel, multiply
+         * the motor gear ratio by 12.
+         *
+         * For example, the 75:1 motors are specified more accurately with a gear
+         * ratio of 75.81:1. This results in 75.81 * 12 = 909.72 counts per wheel
+         * revolution.
+         *
+         * The exact gear ratios of the different motors can be found here:
+         * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
+         *
          * @return The left encoder count.
          */
-        int32_t getCountsLeft();
+        int32_t getCountLeft();
 
         /**
          * @brief Gets the count of the right encoder.
          *
+         * The encoders provide a resolution of 12 counts per revolution of the
+         * motor shaft. To compute the counts per revolution of a wheel, multiply
+         * the motor gear ratio by 12.
+         *
+         * For example, the 75:1 motors are specified more accurately with a gear
+         * ratio of 75.81:1. This results in 75.81 * 12 = 909.72 counts per wheel
+         * revolution.
+         *
+         * The exact gear ratios of the different motors can be found here:
+         * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
+         *
          * @return The right encoder count.
          */
-        int32_t getCountsRight();
+        int32_t getCountRight();
 
         /**
          * @brief Gets the count of the left encoder and resets it.
          *
+         * The encoders provide a resolution of 12 counts per revolution of the
+         * motor shaft. To compute the counts per revolution of a wheel, multiply
+         * the motor gear ratio by 12.
+         *
+         * For example, the 75:1 motors are specified more accurately with a gear
+         * ratio of 75.81:1. This results in 75.81 * 12 = 909.72 counts per wheel
+         * revolution.
+         *
+         * The exact gear ratios of the different motors can be found here:
+         * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
+         *
          * @return The left encoder count.
          */
-        int32_t getCountsAndResetLeft();
+        int32_t getCountAndResetLeft();
 
         /**
          * @brief Gets the count of the right encoder and resets it.
          *
+         * The encoders provide a resolution of 12 counts per revolution of the
+         * motor shaft. To compute the counts per revolution of a wheel, multiply
+         * the motor gear ratio by 12.
+         *
+         * For example, the 75:1 motors are specified more accurately with a gear
+         * ratio of 75.81:1. This results in 75.81 * 12 = 909.72 counts per wheel
+         * revolution.
+         *
+         * The exact gear ratios of the different motors can be found here:
+         * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
+         *
          * @return The right encoder count.
          */
-        int32_t getCountsAndResetRight();
+        int32_t getCountAndResetRight();
+
+        /**
+         * @brief Get the current error code.
+         *
+         * @return Current error code.
+         */
+        EncoderError getError();
 
     private:
         /** Low-level encoder driver. */

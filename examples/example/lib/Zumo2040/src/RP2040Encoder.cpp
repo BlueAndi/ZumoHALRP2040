@@ -96,7 +96,23 @@ constexpr bool DISABLE = false;
  * Public Methods
  *****************************************************************************/
 
-EncoderCore::EncoderCore()
+EncoderCore::EncoderCore() : m_errorCode(NONE),
+                             m_pio(pio0),
+                             m_programEntry(rp2040encoder_offset_entry_point)
+{}
+
+EncoderCore::~EncoderCore()
+{
+    /* Disable and unclaim the state machine used by the left encoder. */
+    pio_sm_set_enabled(m_pio, m_smLeft, DISABLE);
+    pio_sm_unclaim(m_pio, m_smLeft);
+
+    /* Disable and unclaim the state machine used by the right encoder. */
+    pio_sm_set_enabled(m_pio, m_smRight, DISABLE);
+    pio_sm_unclaim(m_pio, m_smRight);
+}
+
+EncoderError EncoderCore::init()
 {
     /* Check whether the PIO program can be loaded at offset 0.
      * Offset 0 is required because the PIO program uses 'mov pc, isr'.
@@ -104,7 +120,7 @@ EncoderCore::EncoderCore()
     if (!pio_can_add_program_at_offset(m_pio, &rp2040encoder_program, OFFSET_ZERO))
     {
         m_errorCode = CANT_ADD_PROGRAM;
-        return;
+        return m_errorCode;
     }
 
     /* Load the program into the selected PIO instance. */
@@ -117,7 +133,7 @@ EncoderCore::EncoderCore()
     if (m_smLeft == PICO_ERROR_GENERIC)
     {
         m_errorCode = CANT_CLAIM_SM_LEFT;
-        return;
+        return m_errorCode;
     }
 
     /* Configure the left encoder pins for PIO input usage. */
@@ -147,7 +163,7 @@ EncoderCore::EncoderCore()
     if (m_smRight == PICO_ERROR_GENERIC)
     {
         m_errorCode = CANT_CLAIM_SM_RIGHT;
-        return;
+        return m_errorCode;
     }
 
     /* Configure the right encoder pins as PIO inputs. */
@@ -170,17 +186,8 @@ EncoderCore::EncoderCore()
 
     pio_sm_init(m_pio, m_smRight, m_programEntry, &m_configRight);
     pio_sm_set_enabled(m_pio, m_smRight, ENABLE);
-}
 
-EncoderCore::~EncoderCore()
-{
-    /* Disable and unclaim the state machine used by the left encoder. */
-    pio_sm_set_enabled(m_pio, m_smLeft, DISABLE);
-    pio_sm_unclaim(m_pio, m_smLeft);
-
-    /* Disable and unclaim the state machine used by the right encoder. */
-    pio_sm_set_enabled(m_pio, m_smRight, DISABLE);
-    pio_sm_unclaim(m_pio, m_smRight);
+    return NONE;
 }
 
 int32_t EncoderCore::getCount(EncoderSide side)
@@ -193,7 +200,7 @@ int32_t EncoderCore::getCount(EncoderSide side)
     /* Drain all currently buffered FIFO entries. */
     while (count > INTEGER_ZERO)
     {
-        raw = pio_sm_get(m_pio, sm);
+        pio_sm_get(m_pio, sm);
         count--;
     }
     /* Read a fresh encoder count value. This call blocks until a new value is available. */

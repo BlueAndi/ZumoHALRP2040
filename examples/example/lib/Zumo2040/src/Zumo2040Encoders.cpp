@@ -59,28 +59,38 @@
  * Public Methods
  *****************************************************************************/
 
-int32_t Zumo2040Encoder::getCountsLeft()
+EncoderError Zumo2040Encoder::init()
+{
+    return m_core.init();
+}
+
+int32_t Zumo2040Encoder::getCountLeft()
 {
     return m_core.getCount(LEFT);
 }
 
-int32_t Zumo2040Encoder::getCountsRight()
+int32_t Zumo2040Encoder::getCountRight()
 {
     return m_core.getCount(RIGHT);
 }
 
-int32_t Zumo2040Encoder::getCountsAndResetLeft()
+int32_t Zumo2040Encoder::getCountAndResetLeft()
 {
     int32_t count = m_core.getCount(LEFT);
     m_core.resetCount(LEFT);
     return count;
 }
 
-int32_t Zumo2040Encoder::getCountsAndResetRight()
+int32_t Zumo2040Encoder::getCountAndResetRight()
 {
     int32_t count = m_core.getCount(RIGHT);
     m_core.resetCount(RIGHT);
     return count;
+}
+
+EncoderError Zumo2040Encoder::getError()
+{
+    return m_core.getError();
 }
 
 /******************************************************************************
