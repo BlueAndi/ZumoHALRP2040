@@ -14,6 +14,7 @@
 
 #define rp2040encoder_wrap_target 19
 #define rp2040encoder_wrap 29
+#define rp2040encoder_pio_version 0
 
 #define rp2040encoder_offset_entry_point 16u
 
@@ -42,9 +43,9 @@ static const uint16_t rp2040encoder_program_instructions[] = {
     0xa040, // 20: mov    y, pins
     0x4042, // 21: in     y, 2
     0xa0a6, // 22: mov    pc, isr
-    0xa029, // 23: mov    x, !x
+    0xa029, // 23: mov    x, ~x
     0x0059, // 24: jmp    x--, 25
-    0xa029, // 25: mov    x, !x
+    0xa029, // 25: mov    x, ~x
     0x001c, // 26: jmp    28
     0x005c, // 27: jmp    x--, 28
     0xa0c1, // 28: mov    isr, x
@@ -57,6 +58,10 @@ static const struct pio_program rp2040encoder_program = {
     .instructions = rp2040encoder_program_instructions,
     .length = 30,
     .origin = 0,
+    .pio_version = rp2040encoder_pio_version,
+#if PICO_PIO_VERSION > 0
+    .used_gpio_ranges = 0x0
+#endif
 };
 
 static inline pio_sm_config rp2040encoder_program_get_default_config(uint offset) {

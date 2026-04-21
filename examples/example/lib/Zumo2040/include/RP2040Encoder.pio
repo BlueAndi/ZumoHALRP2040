@@ -25,6 +25,27 @@
  * (https://github.com/adamgreen/pololu-3pi-plus-2040-arduino-library/blob/main/src/RP2040Encoders.pio).
  */
 
+/*
+* -----------------------------------------------------------------------------
+* Build note
+*
+* Generate the corresponding header with:
+* pioasm -o c-sdk rp2040encoder.pio rp2040encoder.pio.h
+*
+* Example in PowerShell on Windows:
+* & "C:\Users\<USERNAME>\.platformio\packages\tool-pioasm-rp2040-earlephilhower\pioasm.exe" -o c-sdk rp2040encoder.pio rp2040encoder.pio.h
+*
+* Run this command in the directory that contains this .pio file.
+* If the terminal is opened in a different directory, use absolute paths for
+* the input and output files as well.
+*
+* Include the generated header in the matching C++ source file:
+* #include "rp2040encoder.pio.h"
+*
+* The header must be regenerated whenever this .pio file is changed.
+* ------------------------------------------------------------------------------
+*/
+
 .program rp2040encoder
 
 .origin 0
@@ -58,8 +79,8 @@ public entry_point:
 
 increment:
     mov x, ~x       ; Increment x using x = ~(~x - 1).
-    jmp x-- next
-next:
+    jmp x-- increment_part2
+increment_part2:
     mov x, ~x
     jmp output
 
