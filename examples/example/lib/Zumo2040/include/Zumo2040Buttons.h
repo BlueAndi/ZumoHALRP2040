@@ -59,6 +59,7 @@ enum class ButtonState : uint8_t
     COMPARE,
     DEBOUNCERISING,
 };
+
 /** States of the button. */
 enum class ButtonValue : uint8_t
 {
