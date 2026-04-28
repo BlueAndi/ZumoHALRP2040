@@ -111,7 +111,11 @@ oled.print(info.m_calibratedSensorValues[4]);
 oled.gotoXY(0,5);
 oled.print("Position: ");
 oled.print(pos);
-
+oled.gotoXY(0, 6);
+oled.print(info.m_linesensorError);
+oled.gotoXY(0, 7);
+for (int idx = 0; idx < SENSOR_COUNT; idx++)
+oled.print(info.m_sensorError[idx]);
 delay(30);
 oled.clear();
 }

@@ -234,7 +234,7 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
     uint8_t idx = U_INTEGER_ZERO;
     uint8_t newValueCount = U_INTEGER_ZERO;
 
-    for (int8_t sensorIdx = U_INTEGER_ZERO; idx < SENSOR_COUNT; idx++)
+    for (int8_t sensorIdx = U_INTEGER_ZERO; sensorIdx < SENSOR_COUNT; sensorIdx++)
     {
         sensorValues[sensorIdx] = TIMER_RANGE;
     }
