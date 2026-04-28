@@ -34,6 +34,7 @@
  *****************************************************************************/
 #include "RP2040Encoder.h"
 #include "Zumo2040Pin.h"
+#include "RP2040Encoder.pio.h"
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -112,7 +113,7 @@ EncoderCore::~EncoderCore()
     pio_sm_unclaim(m_pio, m_smRight);
 }
 
-EncoderError EncoderCore::init()
+ErrorCode EncoderCore::init()
 {
     /* Check whether the PIO program can be loaded at offset 0.
      * Offset 0 is required because the PIO program uses 'mov pc, isr'.
@@ -132,7 +133,7 @@ EncoderError EncoderCore::init()
      */
     if (m_smLeft == PICO_ERROR_GENERIC)
     {
-        m_errorCode = CANT_CLAIM_SM_LEFT;
+        m_errorCode = ENCODER_CANT_CLAIM_SM_LEFT;
         return m_errorCode;
     }
 
@@ -162,7 +163,7 @@ EncoderError EncoderCore::init()
 
     if (m_smRight == PICO_ERROR_GENERIC)
     {
-        m_errorCode = CANT_CLAIM_SM_RIGHT;
+        m_errorCode = ENCODER_CANT_CLAIM_SM_RIGHT;
         return m_errorCode;
     }
 
@@ -216,7 +217,7 @@ void EncoderCore::resetCount(EncoderSide side)
     pio_sm_exec(m_pio, sm, PIO_RESET_COUNTER_COMMAND);
 }
 
-EncoderError EncoderCore::getError()
+ErrorCode EncoderCore::getError()
 {
     return m_errorCode;
 }

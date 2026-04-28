@@ -32,12 +32,11 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
 #include "App.h"
 #include "Board.h"
 #include <Arduino.h>
 #include <Zumo2040.h>
-
+#include "RP2040Linesensors.h"
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -63,58 +62,58 @@ Zumo2040ButtonC button_c;
 Zumo2040OLED oled;
 Zumo2040Motors motor;
 Zumo2040Encoder encoder;
+Zumo2040Linesensors linesensor;
+LinesensorsInfo info;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
 
  void App::setup()
 {
-    Board::getInstance().init();
-    encoder.init();
     /* Place your once executed code for the setup here.. */
+    Board::getInstance().init();
+    linesensor.init();
+    int i = 0;
+
+    while (i < 300)
+    {
+        linesensor.calibrate();
+        i++;
+    }
+
     oled.setLayout21x8();
+    delay(500);
 }
 
 void App::loop()
 {
-  /* Place your periodically executed code here. */
-  static int32_t speed = 0;
-  static int32_t countL = 0;
-  static int32_t countR = 0;
-  static EncoderError code = NONE;
+/* Place your periodically executed code here. */
 
-  countL = encoder.getCountLeft();
-  countR = encoder.getCountRight();
-  code = encoder.getError();
+static uint32_t pos = 0;
 
-  if (button_a.getSingleDebouncedPress())
-  {
-    speed += 50;
-    motor.setLeftSpeed(speed);
-    motor.setRightSpeed(speed);
-  }
-  if (button_b.getSingleDebouncedPress())
-  {
-    speed -= 50;
-    motor.setLeftSpeed(speed);
-    motor.setRightSpeed(speed);
-  }
-  if(button_c.getSingleDebouncedPress())
-  {
-    encoder.getCountAndResetLeft();
-    encoder.getCountAndResetRight();
-  }
+pos = linesensor.readLine();
+info = linesensor.getInfo();
 
-  oled.clear();
-  oled.print("countL: ");
-  oled.print(countL);
-  oled.gotoXY(0, 1);
-  oled.print("countR: ");
-  oled.print(countR);
-  oled.gotoXY(0, 2);
-  oled.print("Error?: ");
-  oled.print(code);
-  delay(10);
+oled.print("Sensor 0: ");
+oled.print(info.m_calibratedSensorValues[0]);
+oled.gotoXY(0, 1);
+oled.print("Sensor 1: ");
+oled.print(info.m_calibratedSensorValues[1]);
+oled.gotoXY(0, 2);
+oled.print("Sensor 2: ");
+oled.print(info.m_calibratedSensorValues[2]);
+oled.gotoXY(0, 3);
+oled.print("Sensor 3: ");
+oled.print(info.m_calibratedSensorValues[3]);
+oled.gotoXY(0, 4);
+oled.print("Sensor 4: ");
+oled.print(info.m_calibratedSensorValues[4]);
+oled.gotoXY(0,5);
+oled.print("Position: ");
+oled.print(pos);
+
+delay(30);
+oled.clear();
 }
 
 /******************************************************************************
