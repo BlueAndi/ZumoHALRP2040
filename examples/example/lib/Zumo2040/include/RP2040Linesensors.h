@@ -28,7 +28,7 @@
  * @brief Low-level linesensors driver
  * @author Felix Reitenauer
  *
- * @addtogroup Linesensors
+ * @addtogroup Line sensor
  *
  * @{
  */
