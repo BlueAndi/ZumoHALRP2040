@@ -1,0 +1,62 @@
+/* MIT License
+ *
+ * Copyright (c) 2026 - 2026 Andreas Merkle <web@blue-andi.de>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+.program rp2040linesensor
+
+initial:
+    mov y, null      ; clear y
+    mov osr, ~null
+    out pins, 5      ; preload HIGH level before enabling output drivers
+    out pindirs, 5   ; drive all five sensor pins as outputs
+    out y, 8         ; y = 255
+
+charge:              ; at 125 MHz and clkdiv = 1.0: 3840 cycles = 30.72 us
+    nop [13]
+    jmp y-- charge   ; charge
+
+set_timer:
+    mov y, null      ; clear y
+    set pindirs, 0   ; release all five pins, start RC discharge measurement
+    mov osr, ~null
+    out y, 15        ; y = 32767, start value for timeout counter
+    mov x, pins      ; store initial input states in x
+
+measure:
+    mov osr, y       ; move counter in osr
+    mov y, pins      ; move current pin values in y
+    jmp x!=y change
+    mov y, osr       ; move counter back in y
+    jmp y-- measure
+    jmp end          ; timeout reached
+
+change:
+    mov x, y         ; update previous pin states
+    in y, 5          ; shift the current pin states into ISR
+    mov y, osr       ; move counter into y
+    in osr, 15       ; shift 15 timer bits into ISR, triggers autopush at 20 bits
+    jmp !x end       ; all sensor pins are low, measurement is complete
+    jmp y-- measure
+
+end:
+    mov y, ~null     ; ensure that the end marker is all ones
+    in y, 32         ; send 0xFFFFFFFF to signal end of measurement
