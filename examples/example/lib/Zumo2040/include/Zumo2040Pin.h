@@ -84,6 +84,26 @@ namespace Zumo2040Pins
     constexpr uint8_t RIGHT_ENCODER_A_PIN = 8u;
     /** Right encoder B pin. */
     constexpr uint8_t RIGHT_ENCODER_B_PIN = 9u;
+    /** Line sensor 1 pin. */
+    constexpr uint8_t LINE_SENSOR_1_PIN = 22u;
+    /** Line sensor 2 pin. */
+    constexpr uint8_t LINE_SENSOR_2_PIN = 21u;
+    /** Line sensor 3 pin. */
+    constexpr uint8_t LINE_SENSOR_3_PIN = 20u;
+    /** Line sensor 4 pin. */
+    constexpr uint8_t LINE_SENSOR_4_PIN = 19u;
+    /** Line sensor 5 pin. */
+    constexpr uint8_t LINE_SENSOR_5_PIN = 18u;
+    /** Line sensor emitter control pin. */
+    constexpr uint8_t LINE_SENSOR_EMITTER_PIN = 26u;
+}
+
+namespace PinLevel
+{
+    /** Pin level low. */
+    constexpr bool LOW = false;
+    /** Pin level high. */
+    constexpr bool HIGH = true;
 }
 
 /******************************************************************************
