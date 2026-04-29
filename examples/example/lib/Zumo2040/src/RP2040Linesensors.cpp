@@ -68,12 +68,6 @@ constexpr bool ENABLE = true;
 /** Disables the PIO state machine. */
 constexpr bool DISABLE = false;
 
-/** Integer value zero. */
-constexpr uint8_t U_INTEGER_ZERO = 0u;
-
-/** Integer value one. */
-constexpr uint8_t U_INTEGER_ONE = 1u;
-
 /** Configures ISR shifting to the left. */
 constexpr bool SHIFT_LEFT_ISR = false;
 
@@ -85,6 +79,12 @@ constexpr bool ENABLE_AUTOPUSH = true;
 
 /** Disable OSR autopull. */
 constexpr bool DISABLE_AUTOPULL = false;
+
+/** Integer value zero. */
+constexpr uint8_t U_INTEGER_ZERO = 0u;
+
+/** Integer value one. */
+constexpr uint8_t U_INTEGER_ONE = 1u;
 
 /** Bit threshold for ISR autopush. */
 constexpr uint8_t PUSH_THRESHOLD_ISR = 20u;
@@ -117,9 +117,6 @@ constexpr uint32_t TIMER_MASK = 0b111111111111111;
 /** Count of the timer bits in the data word from the state machine. */
 constexpr uint8_t TIMER_BIT_COUNT = 15u;
 
-/** Constant for the measurement loop condition. */
-constexpr bool MEASUREMENT = true;
-
 /** Delay which is used when emitter state is changed. */
 constexpr uint8_t EMITTER_DELAY_US = 30u;
 
@@ -135,11 +132,24 @@ LinesensorsCore::LinesensorsCore() : m_errorCode(NONE),
 
 LinesensorsCore::~LinesensorsCore()
 {
-    /* Unclaim the state machine used by the line sensors. */
-    pio_sm_unclaim(m_pio, m_sm);
+   /* Check whether m_sm is not PICO_ERROR_GENERIC (-1) before calling
+    * pio_sm_is_claimed(), because pio_sm_is_claimed() expects an unsigned
+    * state machine index.
+    */
+    if (m_sm != PICO_ERROR_GENERIC)
+    {
+        if (pio_sm_is_claimed(m_pio, m_sm))
+        {
+            /* Unclaim the state machine used by the line sensors. */
+            pio_sm_unclaim(m_pio, m_sm);
+        }
+    }
 
-    /* Deactivate the line sensor emitter. */
-    gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::LOW);
+    if (gpio_get(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN) == PinLevel::HIGH)
+    {
+        /* Deactivate the line sensor emitter. */
+        gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::LOW);
+    }
 }
 
 ErrorCode LinesensorsCore::init()
@@ -148,6 +158,22 @@ ErrorCode LinesensorsCore::init()
     gpio_init(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN);
     gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::HIGH);
     gpio_set_dir(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, GPIO_OUT);
+
+    /* Initialize the line sensor pins for the state machine. */
+    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_5_PIN);
+    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_4_PIN);
+    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_3_PIN);
+    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_2_PIN);
+    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_1_PIN);
+
+    /* Disable the pulls of the line sensors pins, to guarantee
+    *  that the capacitor is only drained by the phototransistors.
+    */
+    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_5_PIN);
+    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_4_PIN);
+    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_3_PIN);
+    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_2_PIN);
+    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_1_PIN);
 
     /* State machine initialization. */
     if (!pio_can_add_program(m_pio, &rp2040linesensor_program))
@@ -171,23 +197,6 @@ ErrorCode LinesensorsCore::init()
                                    Zumo2040Pins::LINE_SENSOR_5_PIN,
                                    SENSOR_COUNT,
                                    OUTPUT);
-
-    /* Initialize the line sensor pins for the state machine. */
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_5_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_4_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_3_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_2_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_1_PIN);
-
-    /* Disable the pulls of the line sensors pins, to guarantee
-    *  that the capacitor is only drained by the phototransistors.
-    */
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_5_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_4_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_3_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_2_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_1_PIN);
-
 
     m_config = rp2040linesensor_program_get_default_config(m_programEntry);
 
@@ -220,7 +229,8 @@ ErrorCode LinesensorsCore::init()
     /* Initialize the state machine. */
     pio_sm_init(m_pio, m_sm, m_programEntry, &m_config);
 
-    return NONE;
+    m_errorCode = NONE;
+    return m_errorCode;
 }
 
 void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
@@ -231,38 +241,35 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
     uint32_t oldPinValues = INITIAL_PIN_VALUE;
     uint32_t newPinValues = INITIAL_PIN_VALUE;
     uint32_t data = U_INTEGER_ZERO;
-    uint8_t idx = U_INTEGER_ZERO;
     uint8_t newValueCount = U_INTEGER_ZERO;
 
-    for (int8_t sensorIdx = U_INTEGER_ZERO; sensorIdx < SENSOR_COUNT; sensorIdx++)
+    for (uint8_t idx = U_INTEGER_ZERO; idx < SENSOR_COUNT; idx++)
     {
-        sensorValues[sensorIdx] = TIMER_RANGE;
+        sensorValues[idx] = TIMER_RANGE;
     }
 
-    while (MEASUREMENT)
+    while (true)
     {
         /* Get the next result from the state machine.
          * Data format: 5-bit pin value + 15-bit timer value.
          */
         data = pio_sm_get_blocking(m_pio, m_sm);
-        idx = U_INTEGER_ZERO;
 
         if (SM_END_CONDITION == data)
         {
             break;
         }
 
-        newPinValues = data >> TIMER_BIT_COUNT & VALUES_MASK;
+        newPinValues = (data >> TIMER_BIT_COUNT) & VALUES_MASK;
 
         /* Compare the old and new pin values. */
-        while (SENSOR_COUNT > idx)
+        for (uint8_t idx = U_INTEGER_ZERO; idx < SENSOR_COUNT; idx++)
         {
-            if ((newPinValues >> idx & VALUE_MASK) != (oldPinValues >> idx & VALUE_MASK))
+            if (((newPinValues >> idx) & VALUE_MASK) != ((oldPinValues >> idx) & VALUE_MASK))
             {
                 sensorValues[idx] = (TIMER_RANGE - (data & TIMER_MASK));
                 newValueCount++ ;
             }
-            idx++ ;
         }
         oldPinValues = newPinValues;
 

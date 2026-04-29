@@ -21,6 +21,27 @@
  * SOFTWARE.
  */
 
+/*
+* -----------------------------------------------------------------------------
+* Build note
+*
+* Generate the corresponding header with:
+* pioasm -o c-sdk RP2040Linesensors.pio RP2040Linesensors.pio.h
+*
+* Example in PowerShell on Windows:
+* & "C:\Users\<USERNAME>\.platformio\packages\tool-pioasm-rp2040-earlephilhower\pioasm.exe" -o c-sdk RP2040Linesensors.pio RP2040Linesensors.pio.h
+*
+* Run this command in the directory that contains this .pio file.
+* If the terminal is opened in a different directory, use absolute paths for
+* the input and output files as well.
+*
+* Include the generated header in the matching C++ source file:
+* #include "RP2040Linesensors.pio.h"
+*
+* The header must be regenerated whenever this .pio file is changed.
+* ------------------------------------------------------------------------------
+*/
+
 .program rp2040linesensor
 
 initial:
@@ -30,7 +51,10 @@ initial:
     out pindirs, 5   ; drive all five sensor pins as outputs
     out y, 8         ; y = 255
 
-charge:              ; at 125 MHz and clkdiv = 1.0: 3840 cycles = 30.72 us
+; The charge loop consists of 15 instruction operations (14x nop [no operation] + jmp).
+; With 256 loop iterations, this results in 256 * 15 = 3840 operations.
+; At a clock rate of 125 MHz, this results in a charge time of 30.72 us.
+charge:
     nop [13]
     jmp y-- charge   ; charge
 
