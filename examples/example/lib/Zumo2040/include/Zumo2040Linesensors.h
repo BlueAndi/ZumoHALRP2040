@@ -86,7 +86,7 @@ struct LinesensorsInfo
      *  [3] = right-center sensor
      *  [4] = rightmost sensor
      */
-    uint32_t m_sensorValues[SENSOR_COUNT];
+    uint32_t m_sensorValuesOn[SENSOR_COUNT];
 
     /** Buffer for sensor values with disabled emitter.
      * Sensor index order when looking at the robot from the front:
@@ -96,7 +96,7 @@ struct LinesensorsInfo
      *  [3] = right-center sensor
      *  [4] = rightmost sensor
      */
-    uint32_t m_offValues[SENSOR_COUNT];
+    uint32_t m_sensorValuesOff[SENSOR_COUNT];
 
     /** Minimum values of the sensors.
      * Sensor index order when looking at the robot from the front:
@@ -308,7 +308,7 @@ class Zumo2040Linesensors
          *  [3] = right-center sensor
          *  [4] = rightmost sensor
          */
-        uint32_t m_sensorValues[SENSOR_COUNT];
+        uint32_t m_sensorValuesOn[SENSOR_COUNT];
 
         /** Buffer for sensor values measured with the emitter disabled.
          * Sensor index order when looking at the robot from the front:
@@ -318,7 +318,7 @@ class Zumo2040Linesensors
          *  [3] = right-center sensor
          *  [4] = rightmost sensor
          */
-        uint32_t m_offValues[SENSOR_COUNT];
+        uint32_t m_sensorValuesOff[SENSOR_COUNT];
 
         /** Minimum values of the sensors.
          * Sensor index order when looking at the robot from the front:

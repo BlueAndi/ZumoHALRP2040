@@ -62,22 +62,22 @@ constexpr uint32_t MAX_VALUE = 32767u;
 constexpr uint32_t MIN_VALUE = 0u;
 
 /** Unsigned 32-bit integer one used in several places. */
-constexpr uint32_t U_INTEGER_ONE = 1u;
+constexpr uint32_t U_INTEGER_32_ONE = 1u;
 
-/** Unsigned 8-bit integer zero used in several places. */
-constexpr uint8_t U_INTEGER_8_ZERO = 0u;
+/** Signed 32-bit integer one used in several places. */
+constexpr int32_t INTEGER_32_ONE = 1;
 
 /** Unsigned 32-bit integer zero used in several places. */
 constexpr uint32_t U_INTEGER_32_ZERO = 0u;
 
 /** Signed 64-bit integer zero used in several places. */
-constexpr int64_t INTEGER_64_ZERO = 0;
+constexpr int32_t INTEGER_32_ZERO = 0;
 
 /** Scaling factor for the position calculation of the line sensors. */
-constexpr int64_t SCALE_FACTOR = 1000;
+constexpr int32_t SCALE_FACTOR = 1000;
 
 /** Round limit for one calibration cycle. */
-constexpr uint8_t ROUND_LIMIT = 10u;
+constexpr uint32_t ROUND_LIMIT = 10u;
 
 /** Noise threshold which sensor values have to exceed to be used for position calculation. */
 constexpr uint32_t NOISE_THRESHOLD = 50u;
@@ -86,7 +86,7 @@ constexpr uint32_t NOISE_THRESHOLD = 50u;
 constexpr uint32_t ACCEPT_LINE_THRESHOLD = 200u;
 
 /** Center divisor for edge case calculation in readLine(). */
-constexpr int64_t CENTER_DIVISOR = 2;
+constexpr int32_t CENTER_DIVISOR = 2;
 
 /** Divisor used for checking the calibration range. */
 constexpr uint32_t CALIBRATION_CONTROL_DIVISOR = 6u;
@@ -119,7 +119,7 @@ Zumo2040Linesensors::Zumo2040Linesensors() : m_isCalibrated(NOT_CALIBRATED),
                                              m_lastSeen(U_INTEGER_32_ZERO),
                                              m_linesensorError(NONE)
 {
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         m_sensorError[idx] = NONE;
         m_minValues[idx] = MAX_VALUE;
@@ -128,11 +128,11 @@ Zumo2040Linesensors::Zumo2040Linesensors() : m_isCalibrated(NOT_CALIBRATED),
         m_maxValues[idx] = MIN_VALUE;
         m_calibratedMaxValuesOff[idx] = MIN_VALUE;
         m_calibratedMaxValuesOn[idx] = MIN_VALUE;
-        m_sensorValues[idx] = MIN_VALUE;
+        m_sensorValuesOn[idx] = MIN_VALUE;
         m_calMin[idx] = MAX_VALUE;
         m_calMax[idx] = MIN_VALUE;
         m_calibratedSensorValues[idx] = MIN_VALUE;
-        m_offValues[idx] = MIN_VALUE;
+        m_sensorValuesOff[idx] = MIN_VALUE;
     }
 }
 
@@ -153,26 +153,26 @@ void Zumo2040Linesensors::calibrate()
     m_curBounds = OUTDATED_BOUNDS;
 
     /* Read the line sensor values with the emitter disabled and determine the maximum and minimum values. */
-    for (uint8_t rounds = U_INTEGER_8_ZERO; rounds < ROUND_LIMIT; rounds++)
+    for (uint32_t rounds = U_INTEGER_32_ZERO; rounds < ROUND_LIMIT; rounds++)
     {
-        m_core.emitterControl(EMITTER_OFF);
-        m_core.read(m_offValues);
-        for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+        m_core.setEmitter(EMITTER_OFF);
+        m_core.read(m_sensorValuesOff);
+        for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
         {
-            if (m_maxValues[idx] < m_offValues[idx])
+            if (m_maxValues[idx] < m_sensorValuesOff[idx])
             {
-                m_maxValues[idx] = m_offValues[idx];
+                m_maxValues[idx] = m_sensorValuesOff[idx];
             }
 
-            if (m_minValues[idx] > m_offValues[idx])
+            if (m_minValues[idx] > m_sensorValuesOff[idx])
             {
-                m_minValues[idx] = m_offValues[idx];
+                m_minValues[idx] = m_sensorValuesOff[idx];
             }
         }
     }
 
     /* Determine the calibrated maximum and minimum values for the disabled emitter. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         if (m_calibratedMinValuesOff[idx] > m_maxValues[idx])
         {
@@ -186,33 +186,33 @@ void Zumo2040Linesensors::calibrate()
     }
 
     /* Reset the minimum and maximum buffer. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         m_maxValues[idx] = MIN_VALUE;
         m_minValues[idx] = MAX_VALUE;
     }
 
     /* Read the line sensor values with the emitter enabled and determine the maximum and minimum values. */
-    for (uint8_t rounds = U_INTEGER_8_ZERO; rounds < ROUND_LIMIT; rounds++)
+    for (uint32_t rounds = U_INTEGER_32_ZERO; rounds < ROUND_LIMIT; rounds++)
     {
-        m_core.emitterControl(EMITTER_ON);
-        m_core.read(m_sensorValues);
-        for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+        m_core.setEmitter(EMITTER_ON);
+        m_core.read(m_sensorValuesOn);
+        for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
         {
-            if (m_maxValues[idx] < m_sensorValues[idx])
+            if (m_maxValues[idx] < m_sensorValuesOn[idx])
             {
-                m_maxValues[idx] = m_sensorValues[idx];
+                m_maxValues[idx] = m_sensorValuesOn[idx];
             }
 
-            if (m_minValues[idx] > m_sensorValues[idx])
+            if (m_minValues[idx] > m_sensorValuesOn[idx])
             {
-                m_minValues[idx] = m_sensorValues[idx];
+                m_minValues[idx] = m_sensorValuesOn[idx];
             }
         }
     }
 
     /* Determine the calibrated maximum and minimum values for the enabled emitter. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         if  (m_calibratedMinValuesOn[idx] > m_maxValues[idx])
         {
@@ -226,7 +226,7 @@ void Zumo2040Linesensors::calibrate()
     }
 
     /* Reset the minimum and maximum buffer. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         m_maxValues[idx] = MIN_VALUE;
         m_minValues[idx] = MAX_VALUE;
@@ -251,7 +251,7 @@ uint32_t Zumo2040Linesensors::readLine()
     }
 
     /* Calculate the weighted sum and the denominator for the position calculation. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         uint32_t sensorValue = m_calibratedSensorValues[idx];
 
@@ -278,13 +278,13 @@ uint32_t Zumo2040Linesensors::readLine()
 
     if (OFF_LINE == m_position)
     {
-        if (m_lastSeen < (static_cast<uint32_t>(SENSOR_COUNT) - U_INTEGER_ONE) * static_cast<uint32_t>(SCALE_FACTOR / CENTER_DIVISOR))
+        if (m_lastSeen < ((SENSOR_COUNT - U_INTEGER_32_ONE) * static_cast<uint32_t>(SCALE_FACTOR / CENTER_DIVISOR)))
         {
-            return U_INTEGER_8_ZERO;
+            return U_INTEGER_32_ZERO;
         }
         else
         {
-            return (static_cast<uint32_t>(SENSOR_COUNT) - U_INTEGER_ONE) * static_cast<uint32_t>(SCALE_FACTOR);
+            return (SENSOR_COUNT - U_INTEGER_32_ONE) * static_cast<uint32_t>(SCALE_FACTOR);
         }
     }
 
@@ -309,7 +309,7 @@ void Zumo2040Linesensors::reset()
     m_lastSeen = U_INTEGER_32_ZERO;
     m_linesensorError = NONE;
 
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         m_sensorError[idx] = NONE;
         m_minValues[idx] = MAX_VALUE;
@@ -318,11 +318,11 @@ void Zumo2040Linesensors::reset()
         m_maxValues[idx] = MIN_VALUE;
         m_calibratedMaxValuesOff[idx] = MIN_VALUE;
         m_calibratedMaxValuesOn[idx] = MIN_VALUE;
-        m_sensorValues[idx] = MIN_VALUE;
+        m_sensorValuesOn[idx] = MIN_VALUE;
         m_calMin[idx] = MAX_VALUE;
         m_calMax[idx] = MIN_VALUE;
         m_calibratedSensorValues[idx] = MIN_VALUE;
-        m_offValues[idx] = MIN_VALUE;
+        m_sensorValuesOff[idx] = MIN_VALUE;
     }
 }
 
@@ -336,7 +336,7 @@ bool Zumo2040Linesensors::isCalibrationSuccessful()
 
     uint32_t distance = U_INTEGER_32_ZERO;
 
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         if (m_calibratedMaxValuesOn[idx] < m_calibratedMinValuesOn[idx])
         {
@@ -383,11 +383,11 @@ LinesensorsInfo Zumo2040Linesensors::getInfo() const
     info.m_linesensorError = m_linesensorError;
     info.m_lastSeen = m_lastSeen;
 
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         info.m_sensorError[idx] = m_sensorError[idx];
-        info.m_sensorValues[idx] = m_sensorValues[idx];
-        info.m_offValues[idx] = m_offValues[idx];
+        info.m_sensorValuesOn[idx] = m_sensorValuesOn[idx];
+        info.m_sensorValuesOff[idx] = m_sensorValuesOff[idx];
         info.m_minValues[idx] = m_minValues[idx];
         info.m_maxValues[idx] = m_maxValues[idx];
         info.m_calibratedMinValuesOff[idx] = m_calibratedMinValuesOff[idx];
@@ -412,23 +412,23 @@ LinesensorsInfo Zumo2040Linesensors::getInfo() const
 
 void Zumo2040Linesensors::read()
 {
-    m_core.emitterControl(EMITTER_OFF);
-    m_core.read(m_offValues);
+    m_core.setEmitter(EMITTER_OFF);
+    m_core.read(m_sensorValuesOff);
 
-    m_core.emitterControl(EMITTER_ON);
-    m_core.read(m_sensorValues);
+    m_core.setEmitter(EMITTER_ON);
+    m_core.read(m_sensorValuesOn);
 
     /* Compensate the raw sensor values using the enabled and disabled emitter readings. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
-        m_sensorValues[idx] += MAX_VALUE - m_offValues[idx];
+        m_sensorValuesOn[idx] += MAX_VALUE - m_sensorValuesOff[idx];
     }
 }
 
 
 void Zumo2040Linesensors::readCalibrated()
 {
-    if (false == m_curBounds)
+    if (OUTDATED_BOUNDS == m_curBounds)
     {
         /* Update the upper and lower bounds. */
         calcBounds();
@@ -441,23 +441,23 @@ void Zumo2040Linesensors::readCalibrated()
     /* Update the sensor values. */
     read();
 
-    uint32_t denominator = U_INTEGER_ONE;
+    int32_t denominator = INTEGER_32_ONE;
 
     /* Calculate the calibrated sensor values. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         denominator = m_calMax[idx] - m_calMin[idx];
 
-        int64_t normValue = INTEGER_64_ZERO;
+        int32_t normValue = INTEGER_32_ZERO;
 
         if (denominator != U_INTEGER_32_ZERO)
         {
-            normValue = ((static_cast<int64_t>(m_sensorValues[idx]) - static_cast<int64_t>(m_calMin[idx])) * SCALE_FACTOR) / denominator ;
+            normValue = ((static_cast<int32_t>(m_sensorValuesOn[idx]) - static_cast<int32_t>(m_calMin[idx])) * SCALE_FACTOR) / denominator;
         }
 
-        if (INTEGER_64_ZERO > normValue)
+        if (INTEGER_32_ZERO > normValue)
         {
-            normValue = INTEGER_64_ZERO;
+            normValue = INTEGER_32_ZERO;
         }
         else if (normValue > SCALE_FACTOR)
         {
@@ -478,14 +478,14 @@ void Zumo2040Linesensors::calcBounds()
     }
 
     /* Reset the upper and lower bound buffers. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         m_calMin[idx] = MAX_VALUE;
         m_calMax[idx] = MIN_VALUE;
     }
 
     /* Calculate upper and lower bounds for each sensor. */
-    for (uint8_t idx = U_INTEGER_8_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         if (m_calibratedMinValuesOff[idx] > m_calibratedMinValuesOn[idx])
         {

@@ -56,10 +56,10 @@
  *****************************************************************************/
 
 /** Size of the debug information array. */
-static constexpr uint8_t DEBUG_INFO_COUNT = 2u;
+static constexpr uint32_t DEBUG_INFO_COUNT = 2u;
 
 /** Number of line sensors. */
-static constexpr uint8_t SENSOR_COUNT = 5u;
+static constexpr uint32_t SENSOR_COUNT = 5u;
 
 /** Indicates the current state of the line sensor emitter. */
 enum EmitterStates
@@ -134,7 +134,7 @@ class LinesensorsCore
          * @param state EMITTER_OFF to deactivate the emitter,
          * EMITTER_ON to activate it.
          */
-        void emitterControl(EmitterStates state);
+        void setEmitter(EmitterStates state);
 
     private:
         /** Line sensors error code. */

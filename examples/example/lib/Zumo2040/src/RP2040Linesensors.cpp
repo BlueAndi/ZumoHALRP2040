@@ -81,18 +81,18 @@ constexpr bool ENABLE_AUTOPUSH = true;
 constexpr bool DISABLE_AUTOPULL = false;
 
 /** Integer value zero. */
-constexpr uint8_t U_INTEGER_ZERO = 0u;
+constexpr uint32_t U_INTEGER_32_ZERO = 0u;
 
 /** Integer value one. */
-constexpr uint8_t U_INTEGER_ONE = 1u;
+constexpr uint32_t U_INTEGER_32_ONE = 1u;
 
 /** Bit threshold for ISR autopush. */
-constexpr uint8_t PUSH_THRESHOLD_ISR = 20u;
+constexpr uint32_t PUSH_THRESHOLD_ISR = 20u;
 
 /** Bit threshold for OSR autopull.
  *  Autopull is disabled in this program, but a threshold value is still required.
  */
-constexpr uint8_t PULL_THRESHOLD_OSR = 32u;
+constexpr uint32_t PULL_THRESHOLD_OSR = 32u;
 
 /** Initial value for the pin comparison. */
 constexpr uint32_t INITIAL_PIN_VALUE = 0b11111u;
@@ -101,10 +101,10 @@ constexpr uint32_t INITIAL_PIN_VALUE = 0b11111u;
 constexpr uint32_t SM_END_CONDITION = 0xFFFFFFFFu;
 
 /** Mask for the pin values in the data word from the state machine. */
-constexpr uint8_t VALUES_MASK = 0b11111u;
+constexpr uint32_t VALUES_MASK = 0b11111u;
 
 /** Mask for the pin value, used in the pin value comparison. */
-constexpr uint8_t VALUE_MASK = 0b1u;
+constexpr uint32_t VALUE_MASK = 0b1u;
 
 /** Range of the timer used by the state machine
  *  to measure the discharge time.
@@ -115,10 +115,10 @@ constexpr uint32_t TIMER_RANGE = 32767u;
 constexpr uint32_t TIMER_MASK = 0b111111111111111;
 
 /** Count of the timer bits in the data word from the state machine. */
-constexpr uint8_t TIMER_BIT_COUNT = 15u;
+constexpr uint32_t TIMER_BIT_COUNT = 15u;
 
 /** Delay which is used when emitter state is changed. */
-constexpr uint8_t EMITTER_DELAY_US = 30u;
+constexpr uint32_t EMITTER_DELAY_US = 30u;
 
 /******************************************************************************
  * Public Methods
@@ -127,7 +127,7 @@ constexpr uint8_t EMITTER_DELAY_US = 30u;
 LinesensorsCore::LinesensorsCore() : m_errorCode(NONE),
                                      m_pio(pio1),
                                      m_sm(PICO_ERROR_GENERIC),
-                                     m_debugInformation{INITIAL_PIN_VALUE, U_INTEGER_ZERO}
+                                     m_debugInformation{INITIAL_PIN_VALUE, U_INTEGER_32_ZERO}
 {}
 
 LinesensorsCore::~LinesensorsCore()
@@ -212,12 +212,25 @@ ErrorCode LinesensorsCore::init()
     sm_config_set_set_pin_base(&m_config, Zumo2040Pins::LINE_SENSOR_5_PIN);
     sm_config_set_set_pin_count(&m_config, SENSOR_COUNT);
 
-    /* Configure the ISR behavior for the state machine. */
+    /* Configure the ISR behavior for the state machine:
+     * - Bits are shifted into the ISR from the left.
+     * - Enable autopush so we do not have to use push in the PIO program.
+     *   This means that if x bits are shifted into the ISR, the ISR is
+     *   automatically pushed into the RX FIFO.
+     * - The autopush threshold is set to 20.
+     */
     sm_config_set_in_shift(&m_config,
                             SHIFT_LEFT_ISR,
                             ENABLE_AUTOPUSH,
                             PUSH_THRESHOLD_ISR);
-    /* Configure the OSR behavior for the state machine. */
+    /* Configure the OSR behavior for the state machine:
+     * - Bits are shifted out of the OSR to the right.
+     * - Disable autopull because we do not need it in the PIO program.
+     *   Autopull works similarly to autopush, except that it automatically
+     *   pulls values from the TX FIFO into the OSR.
+     * - The autopull threshold is set to 32 bits, which is the size of the OSR,
+     *   because the function needs a value even if we do not use autopull.
+     */
     sm_config_set_out_shift(&m_config,
                             SHIFT_RIGHT_OSR,
                             DISABLE_AUTOPULL,
@@ -240,10 +253,10 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
 
     uint32_t oldPinValues = INITIAL_PIN_VALUE;
     uint32_t newPinValues = INITIAL_PIN_VALUE;
-    uint32_t data = U_INTEGER_ZERO;
-    uint8_t newValueCount = U_INTEGER_ZERO;
+    uint32_t data = U_INTEGER_32_ZERO;
+    uint32_t newValueCount = U_INTEGER_32_ZERO;
 
-    for (uint8_t idx = U_INTEGER_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
     {
         sensorValues[idx] = TIMER_RANGE;
     }
@@ -263,7 +276,7 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
         newPinValues = (data >> TIMER_BIT_COUNT) & VALUES_MASK;
 
         /* Compare the old and new pin values. */
-        for (uint8_t idx = U_INTEGER_ZERO; idx < SENSOR_COUNT; idx++)
+        for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
         {
             if (((newPinValues >> idx) & VALUE_MASK) != ((oldPinValues >> idx) & VALUE_MASK))
             {
@@ -275,8 +288,8 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
 
     }
 
-    m_debugInformation[U_INTEGER_ZERO] = newPinValues;
-    m_debugInformation[U_INTEGER_ONE] = newValueCount;
+    m_debugInformation[U_INTEGER_32_ZERO] = newPinValues;
+    m_debugInformation[U_INTEGER_32_ONE] = newValueCount;
 
     /* Disable the state machine and prepare it for the next measurement. */
     pio_sm_set_enabled(m_pio, m_sm, DISABLE);
@@ -289,7 +302,7 @@ const uint32_t* LinesensorsCore::getDebugInformation() const
     return m_debugInformation;
 }
 
-void LinesensorsCore::emitterControl(EmitterStates state)
+void LinesensorsCore::setEmitter(EmitterStates state)
 {
     if (EMITTER_OFF == state)
     {
