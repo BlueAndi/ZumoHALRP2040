@@ -75,7 +75,7 @@ class Zumo2040Encoder
          *
          * @return The error code of the initialization.
          */
-        EncoderError init();
+        ErrorCode init();
 
         /**
          * @brief Gets the count of the left encoder.
@@ -154,7 +154,7 @@ class Zumo2040Encoder
          *
          * @return Current error code.
          */
-        EncoderError getError();
+        ErrorCode getError();
 
     private:
         /** Low-level encoder driver. */

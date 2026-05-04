@@ -25,16 +25,16 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief
+ * @brief Zumo2040 error codes.
  * @author Felix Reitenauer
  *
- * @addtogroup
+ * @addtogroup Error codes
  *
  * @{
  */
 
-#ifndef ZUMO2040_H
-#define ZUMO2040_H
+#ifndef ZUMO2040ERRORCODES_H
+#define ZUMO2040ERRORCODES_H
 
 /******************************************************************************
  * Compile Switches
@@ -44,13 +44,6 @@
  * Includes
  *****************************************************************************/
 
-#include "Zumo2040LED.h"
-#include "Zumo2040Buttons.h"
-#include "Zumo2040OLED.h"
-#include "Zumo2040Motors.h"
-#include "Zumo2040Encoders.h"
-#include "Zumo2040Linesensors.h"
-
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -59,9 +52,43 @@
  * Types and Classes
  *****************************************************************************/
 
+/** Defines the error codes for the Zumo2040. */
+enum ErrorCode
+{
+    /** No error. */
+    NONE,
+
+    /** The program could not be added to the PIO instance. */
+    CANT_ADD_PROGRAM,
+
+    /** No unused state machine could be claimed. */
+    CANT_CLAIM_SM,
+
+    /** No unused state machine could be claimed for the left encoder. */
+    ENCODER_CANT_CLAIM_SM_LEFT,
+
+    /** No unused state machine could be claimed for the right encoder. */
+    ENCODER_CANT_CLAIM_SM_RIGHT,
+
+    /** The calibration of the line sensors failed. */
+    LINESENSOR_CALIBRATION_FAILED,
+
+    /** The line sensors are not calibrated. */
+    LINESENSOR_IS_NOT_CALIBRATED,
+
+    /** The read line calculation has zero as divisor. */
+    LINESENSOR_READ_LINE_ZERO_DIVISOR,
+
+    /** The core initialization failed. */
+    LINESENSOR_CORE_INITIALIZATION_FAILED,
+
+    /** The bounds calculation failed. */
+    LINESENSOR_BOUND_CALCULATION_FAILED
+};
+
 /******************************************************************************
  * Functions
  *****************************************************************************/
 
-#endif /* ZUMO2040_H */
+#endif /* ZUMO2040ERRORCODES_H */
 /** @} */

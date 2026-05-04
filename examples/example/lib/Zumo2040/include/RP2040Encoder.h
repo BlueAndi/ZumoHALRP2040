@@ -33,8 +33,8 @@
  * @{
  */
 
-#ifndef ENCODER_H
-#define ENCODER_H
+#ifndef RP2040ENCODER_H
+#define RP2040ENCODER_H
 
 /******************************************************************************
  * Compile Switches
@@ -43,9 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include <cstdint>
 #include <hardware/pio.h>
-#include "RP2040Encoder.pio.h"
+#include "Zumo2040ErrorCodes.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -53,22 +52,6 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
-
-/** Defines the error codes for the encoder. */
-enum EncoderError
-{
-    /** No error. */
-    NONE,
-
-    /** The program could not be added to the PIO instance. */
-    CANT_ADD_PROGRAM,
-
-    /** No unused state machine could be claimed for the left encoder. */
-    CANT_CLAIM_SM_LEFT,
-
-    /** No unused state machine could be claimed for the right encoder. */
-    CANT_CLAIM_SM_RIGHT
-};
 
 /** Defines the encoder sides. */
 enum EncoderSide
@@ -104,7 +87,7 @@ class EncoderCore
          *
          * @return The error code of the initialization.
          */
-        EncoderError init();
+        ErrorCode init();
 
         /**
          * @brief Get the count of the selected encoder.
@@ -138,17 +121,17 @@ class EncoderCore
          *
          * @return Current error code.
          */
-        EncoderError getError();
+        ErrorCode getError();
 
     private:
         /** Encoder error code. */
-        EncoderError m_errorCode;
+        ErrorCode m_errorCode;
         /** Selected PIO instance. */
         PIO m_pio;
         /** State machine used for the left encoder. */
-        uint m_smLeft;
+        int m_smLeft;
         /** State machine used for the right encoder. */
-        uint m_smRight;
+        int m_smRight;
         /** Program offset of the public entry point in the PIO program. */
         uint m_programEntry;
         /** Configuration of the left state machine. */
@@ -161,5 +144,5 @@ class EncoderCore
  * Functions
  *****************************************************************************/
 
-#endif /* ENCODER_H */
+#endif /* RP2040ENCODER_H */
 /** @} */

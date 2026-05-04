@@ -59,7 +59,7 @@
  * Public Methods
  *****************************************************************************/
 
-EncoderError Zumo2040Encoder::init()
+ErrorCode Zumo2040Encoder::init()
 {
     return m_core.init();
 }
@@ -88,7 +88,7 @@ int32_t Zumo2040Encoder::getCountAndResetRight()
     return count;
 }
 
-EncoderError Zumo2040Encoder::getError()
+ErrorCode Zumo2040Encoder::getError()
 {
     return m_core.getError();
 }
