@@ -86,7 +86,10 @@ constexpr uint64_t PULSE_ON_DELAY_US = 250u;
 constexpr uint64_t PULSE_OFF_DELAY_US = 321u;
 /** Number of brightness levels which are used for the read process. */
 constexpr uint32_t NUM_BRIGHTNESS_LEVELS = 6u;
-/** PWM compare levels used as emitter brightness steps during proximity reads. */
+/** PWM compare levels used as emitter brightness steps during proximity reads.
+ *  Derived from the Pololu Zumo 2040 proximity sensor example and scaled to
+ *  the configured PWM range.
+ */
 constexpr uint32_t BRIGHTNESS_LEVELS[NUM_BRIGHTNESS_LEVELS] = {12u, 39u, 81u, 137u, 210u, 296u};
 
 /******************************************************************************
