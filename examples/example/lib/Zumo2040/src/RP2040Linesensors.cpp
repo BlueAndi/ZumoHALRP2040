@@ -285,7 +285,6 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
             }
         }
         oldPinValues = newPinValues;
-
     }
 
     m_debugInformation[U_INTEGER_32_ZERO] = newPinValues;

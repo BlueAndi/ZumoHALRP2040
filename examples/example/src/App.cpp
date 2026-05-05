@@ -59,11 +59,12 @@
 Zumo2040ButtonA button_a;
 Zumo2040ButtonB button_b;
 Zumo2040ButtonC button_c;
-Zumo2040OLED oled;
 Zumo2040Motors motor;
 Zumo2040Encoder encoder;
 Zumo2040Linesensors linesensor;
 LinesensorsInfo info;
+Zumo2040ProximitySensors prox;
+Zumo2040OLED oled;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -72,52 +73,69 @@ LinesensorsInfo info;
 {
     /* Place your once executed code for the setup here.. */
     Board::getInstance().init();
-    linesensor.init();
-    int i = 0;
-
-    while (i < 300)
-    {
-        linesensor.calibrate();
-        i++;
-    }
-
+    prox.initAllSensors();
     oled.setLayout21x8();
-    delay(500);
 }
 
 void App::loop()
 {
-/* Place your periodically executed code here. */
+    /* Place your periodically executed code here. */
+    static uint32_t left_l = 0;
+    static uint32_t front_l = 0;
+    static uint32_t right_l = 0;
 
-static uint32_t pos = 0;
+    static uint32_t left_r = 0;
+    static uint32_t front_r = 0;
+    static uint32_t right_r = 0;
 
-pos = linesensor.readLine();
-info = linesensor.getInfo();
+    static uint32_t counter = 0;
 
-oled.print("Sensor 0: ");
-oled.print(info.m_calibratedSensorValues[0]);
-oled.gotoXY(0, 1);
-oled.print("Sensor 1: ");
-oled.print(info.m_calibratedSensorValues[1]);
-oled.gotoXY(0, 2);
-oled.print("Sensor 2: ");
-oled.print(info.m_calibratedSensorValues[2]);
-oled.gotoXY(0, 3);
-oled.print("Sensor 3: ");
-oled.print(info.m_calibratedSensorValues[3]);
-oled.gotoXY(0, 4);
-oled.print("Sensor 4: ");
-oled.print(info.m_calibratedSensorValues[4]);
-oled.gotoXY(0,5);
-oled.print("Position: ");
-oled.print(pos);
-oled.gotoXY(0, 6);
-oled.print(info.m_linesensorError);
-oled.gotoXY(0, 7);
-for (int idx = 0; idx < SENSOR_COUNT; idx++)
-oled.print(info.m_sensorError[idx]);
-delay(30);
-oled.clear();
+    prox.read();
+
+    left_l = prox.getCountsWithLeftLeds(ProximitySensor::LEFT);
+    front_l = prox.getCountsWithLeftLeds(ProximitySensor::FRONT);
+    right_l = prox.getCountsWithLeftLeds(ProximitySensor::RIGHT);
+
+    left_r = prox.getCountsWithRightLeds(ProximitySensor::LEFT);
+    front_r = prox.getCountsWithRightLeds(ProximitySensor::FRONT);
+    right_r = prox.getCountsWithRightLeds(ProximitySensor::RIGHT);
+
+
+    oled.clear();
+
+    oled.print(left_l);
+    oled.print("  ");
+    oled.print(front_l);
+    oled.print("  ");
+    oled.print(right_l);
+
+    oled.gotoXY(0, 1);
+
+    oled.print(left_r);
+    oled.print("  ");
+    oled.print(front_r);
+    oled.print("  ");
+    oled.print(right_r);
+
+    oled.gotoXY(0,2);
+
+    if (button_a.getSingleDebouncedPress())
+    {
+        counter++;
+    }
+
+    if ((counter % 2) == 0)
+    {
+        oled.print("Num_Bright: ");
+        oled.print(prox.getNumBrightnessLevels());
+    }
+    else
+    {
+        oled.print("Num_Sens: ");
+        oled.print(prox.getNumSensors());
+    }
+
+    delay(5);
 }
 
 /******************************************************************************
