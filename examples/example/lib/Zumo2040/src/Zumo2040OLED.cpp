@@ -122,6 +122,7 @@ void Zumo2040OLEDcore::sh1106TransferStart()
     /* Switch SPI pins to the OLED. */
     SPI.setSCK(m_clkPin);
     SPI.setTX(m_mosPin);
+    SPI.setRX(NOPIN);
 
     SPI.begin();
     SPI.beginTransaction(SPISettings(OLED_CLOCK_FREQUENCY, MSBFIRST, SPI_MODE0));
