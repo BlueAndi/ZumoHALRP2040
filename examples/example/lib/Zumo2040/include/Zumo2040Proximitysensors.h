@@ -67,17 +67,15 @@ struct ProximitySensorStatus
     bool status[Zumo2040Pins::PROXIMITY_SENSOR_COUNT];
 };
 
-namespace ProximitySensor
+
+enum ProximitySensor
 {
-    enum Sensor : uint8_t
-    {
-        /** Indicates the left proximity sensor. */
-        LEFT,
-        /** Indicates the front proximity sensor. */
-        FRONT,
-        /** Indicates the right proximity sensor. */
-        RIGHT
-    };
+    /** Indicates the left proximity sensor. */
+    PROX_LEFT,
+    /** Indicates the front proximity sensor. */
+    PROX_FRONT,
+    /** Indicates the right proximity sensor. */
+    PROX_RIGHT
 };
 
 /** Driver for the proximity sensors.
@@ -150,7 +148,7 @@ class Zumo2040ProximitySensors
          * @param sensor Sensor for which the count shall be returned.
          * @return Count measured with the left emitters.
          */
-        uint32_t getCountsWithLeftLeds(ProximitySensor::Sensor sensor) const;
+        uint32_t getCountsWithLeftLeds(ProximitySensor sensor) const;
 
         /**
          * @brief Gets the count measured with the right emitters.
@@ -158,7 +156,7 @@ class Zumo2040ProximitySensors
          * @param sensor Sensor for which the count shall be returned.
          * @return Count measured with the right emitters.
          */
-        uint32_t getCountsWithRightLeds(ProximitySensor::Sensor sensor) const;
+        uint32_t getCountsWithRightLeds(ProximitySensor sensor) const;
 
     private:
         /**

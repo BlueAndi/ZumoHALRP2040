@@ -136,9 +136,9 @@ void Zumo2040ProximitySensors::initLeftSensor()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[ProximitySensor::LEFT] = Status::ENABLED;
-    sensor.status[ProximitySensor::FRONT] = Status::DISABLED;
-    sensor.status[ProximitySensor::RIGHT] = Status::DISABLED;
+    sensor.status[PROX_LEFT] = Status::ENABLED;
+    sensor.status[PROX_FRONT] = Status::DISABLED;
+    sensor.status[PROX_RIGHT] = Status::DISABLED;
 
     init(sensor);
 }
@@ -148,9 +148,9 @@ void Zumo2040ProximitySensors::initFrontSensor()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[ProximitySensor::LEFT] = Status::DISABLED;
-    sensor.status[ProximitySensor::FRONT] = Status::ENABLED;
-    sensor.status[ProximitySensor::RIGHT] = Status::DISABLED;
+    sensor.status[PROX_LEFT] = Status::DISABLED;
+    sensor.status[PROX_FRONT] = Status::ENABLED;
+    sensor.status[PROX_RIGHT] = Status::DISABLED;
 
     init(sensor);
 }
@@ -160,9 +160,9 @@ void Zumo2040ProximitySensors::initRightSensor()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[ProximitySensor::LEFT] = Status::DISABLED;
-    sensor.status[ProximitySensor::FRONT] = Status::DISABLED;
-    sensor.status[ProximitySensor::RIGHT] = Status::ENABLED;
+    sensor.status[PROX_LEFT] = Status::DISABLED;
+    sensor.status[PROX_FRONT] = Status::DISABLED;
+    sensor.status[PROX_RIGHT] = Status::ENABLED;
 
     init(sensor);
 }
@@ -172,9 +172,9 @@ void Zumo2040ProximitySensors::initAllSensors()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[ProximitySensor::LEFT] = Status::ENABLED;
-    sensor.status[ProximitySensor::FRONT] = Status::ENABLED;
-    sensor.status[ProximitySensor::RIGHT] = Status::ENABLED;
+    sensor.status[PROX_LEFT] = Status::ENABLED;
+    sensor.status[PROX_FRONT] = Status::ENABLED;
+    sensor.status[PROX_RIGHT] = Status::ENABLED;
 
     init(sensor);
 }
@@ -254,12 +254,12 @@ void Zumo2040ProximitySensors::read()
     }
 }
 
-uint32_t Zumo2040ProximitySensors::getCountsWithLeftLeds(ProximitySensor::Sensor sensor) const
+uint32_t Zumo2040ProximitySensors::getCountsWithLeftLeds(ProximitySensor sensor) const
 {
     return m_data[sensor].withLeftLeds;
 }
 
-uint32_t Zumo2040ProximitySensors::getCountsWithRightLeds(ProximitySensor::Sensor sensor) const
+uint32_t Zumo2040ProximitySensors::getCountsWithRightLeds(ProximitySensor sensor) const
 {
     return m_data[sensor].withRightLeds;
 }

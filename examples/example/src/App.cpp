@@ -92,13 +92,13 @@ void App::loop()
 
     prox.read();
 
-    left_l = prox.getCountsWithLeftLeds(ProximitySensor::LEFT);
-    front_l = prox.getCountsWithLeftLeds(ProximitySensor::FRONT);
-    right_l = prox.getCountsWithLeftLeds(ProximitySensor::RIGHT);
+    left_l = prox.getCountsWithLeftLeds(PROX_LEFT);
+    front_l = prox.getCountsWithLeftLeds(PROX_FRONT);
+    right_l = prox.getCountsWithLeftLeds(PROX_RIGHT);
 
-    left_r = prox.getCountsWithRightLeds(ProximitySensor::LEFT);
-    front_r = prox.getCountsWithRightLeds(ProximitySensor::FRONT);
-    right_r = prox.getCountsWithRightLeds(ProximitySensor::RIGHT);
+    left_r = prox.getCountsWithRightLeds(PROX_LEFT);
+    front_r = prox.getCountsWithRightLeds(PROX_FRONT);
+    right_r = prox.getCountsWithRightLeds(PROX_RIGHT);
 
 
     oled.clear();
