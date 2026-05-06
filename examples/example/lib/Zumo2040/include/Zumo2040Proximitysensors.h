@@ -53,14 +53,6 @@
  * Types and Classes
  *****************************************************************************/
 
-enum class ProximitySensorState
-{
-    /** Indicates that the sensor is active. */
-    ACTIVATE = true,
-    /** Indicates that the sensor is inactive. */
-    DEACTIVATE = false,
-};
-
 enum class EmitterSide
 {
     /** Indicates the left side of the IR emitters. */
@@ -69,14 +61,23 @@ enum class EmitterSide
     RIGHT
 };
 
-enum class ProximitySensor : uint8_t
+struct ProximitySensorStatus
 {
-    /** Indicates the left proximity sensor. */
-    LEFT,
-    /** Indicates the front proximity sensor. */
-    FRONT,
-    /** Indicates the right proximity sensor. */
-    RIGHT
+    /** Sensor activation states in the following order: left, front, right. */
+    bool status[Zumo2040Pins::PROXIMITY_SENSOR_COUNT];
+};
+
+namespace ProximitySensor
+{
+    enum Sensor : uint8_t
+    {
+        /** Indicates the left proximity sensor. */
+        LEFT,
+        /** Indicates the front proximity sensor. */
+        FRONT,
+        /** Indicates the right proximity sensor. */
+        RIGHT
+    };
 };
 
 /** Driver for the proximity sensors.
@@ -149,7 +150,7 @@ class Zumo2040ProximitySensors
          * @param sensor Sensor for which the count shall be returned.
          * @return Count measured with the left emitters.
          */
-        uint32_t getCountsWithLeftLeds(ProximitySensor sensor) const;
+        uint32_t getCountsWithLeftLeds(ProximitySensor::Sensor sensor) const;
 
         /**
          * @brief Gets the count measured with the right emitters.
@@ -157,7 +158,7 @@ class Zumo2040ProximitySensors
          * @param sensor Sensor for which the count shall be returned.
          * @return Count measured with the right emitters.
          */
-        uint32_t getCountsWithRightLeds(ProximitySensor sensor) const;
+        uint32_t getCountsWithRightLeds(ProximitySensor::Sensor sensor) const;
 
     private:
         /**
@@ -165,7 +166,7 @@ class Zumo2040ProximitySensors
          *
          * @param states Sensor activation states in proximity sensor order.
          */
-        void init(ProximitySensorState (&states)[Zumo2040Pins::PROXIMITY_SENSOR_COUNT]);
+        void init(ProximitySensorStatus &sensor);
 
         /**
          * @brief Starts the IR pulses on the corresponding side.
