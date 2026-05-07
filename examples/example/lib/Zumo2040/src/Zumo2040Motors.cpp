@@ -92,7 +92,7 @@ Zumo2040Motors::Zumo2040Motors()
     /* Initialize the PWM slice 7 */
     gpio_set_function(Zumo2040Pins::RIGHT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
     gpio_set_function(Zumo2040Pins::LEFT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
-    /* PWM frequency = 125 MHz / 4 / 400 = 78.1 kHz */
+    /* PWM frequency = (125 MHz / 4) / (400 + 1) = 77.9 kHz */
     pwm_set_clkdiv_int_frac4(PWM_SLICE_MOTORS, PWM_CLK_DIV_INT, PWM_CLK_DIV_FRAC4);
     pwm_set_wrap(PWM_SLICE_MOTORS, PWM_RANGE);
     pwm_set_enabled(PWM_SLICE_MOTORS, ENABLED);

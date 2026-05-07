@@ -64,7 +64,7 @@ namespace Zumo2040Pins
     constexpr uint8_t OLED_CLOCK_PIN = 2u;
     /** OLED D/C pin, reused to read Button C. */
     constexpr uint8_t BUTTON_C_OLED_DATA_COMMAND_PIN = 0u;
-    /** Pin used to reset the OLED.  */
+    /** Pin used to reset the OLED. */
     constexpr uint8_t OLED_RESET_PIN = 1u;
     /** Value used to indicate unused pin. */
     constexpr uint8_t UNUSED_OLED_PIN = 255u;
@@ -96,6 +96,14 @@ namespace Zumo2040Pins
     constexpr uint8_t LINE_SENSOR_5_PIN = 18u;
     /** Line sensor emitter control pin. */
     constexpr uint8_t LINE_SENSOR_EMITTER_PIN = 26u;
+    /** Number of proximity sensors. */
+    constexpr uint8_t PROXIMITY_SENSOR_COUNT = 3u;
+    /** Proximity sensor pins in the following order: left, front, right. */
+    constexpr uint8_t PROXIMITY_SENSOR_PINS[PROXIMITY_SENSOR_COUNT] = {23u, 27u, 24u};
+    /** Control pin for the left proximity emitters. */
+    constexpr uint8_t LEFT_PROXIMITY_EMITTERS_PIN = 17u;
+    /** Control pin for the right proximity emitters. */
+    constexpr uint8_t RIGHT_PROXIMITY_EMITTERS_PIN = 16u;
 }
 
 namespace PinLevel
@@ -104,6 +112,22 @@ namespace PinLevel
     constexpr bool LOW = false;
     /** Pin level high. */
     constexpr bool HIGH = true;
+}
+
+namespace PinDirection
+{
+    /** Pin direction: Input. */
+    constexpr bool IN = false;
+    /** Pin direction: Output. */
+    constexpr bool OUT = true;
+}
+
+namespace Status
+{
+    /** Indicates the enabled state. */
+    constexpr bool ENABLED = true;
+    /** Indicates the disabled state. */
+    constexpr bool DISABLED = false;
 }
 
 /******************************************************************************
