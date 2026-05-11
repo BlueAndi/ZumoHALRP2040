@@ -104,6 +104,10 @@ namespace Zumo2040Pins
     constexpr uint8_t LEFT_PROXIMITY_EMITTERS_PIN = 17u;
     /** Control pin for the right proximity emitters. */
     constexpr uint8_t RIGHT_PROXIMITY_EMITTERS_PIN = 16u;
+    /** I2C0 SCL pin. */
+    constexpr uint8_t I2C0_SCL_PIN = 5u;
+    /** I2C0 SDA pin. */
+    constexpr uint8_t I2C0_SDA_PIN = 4u;
 }
 
 namespace PinLevel

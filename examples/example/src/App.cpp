@@ -36,7 +36,6 @@
 #include "Board.h"
 #include <Arduino.h>
 #include <Zumo2040.h>
-#include "RP2040Linesensors.h"
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -65,6 +64,42 @@ Zumo2040Linesensors linesensor;
 LinesensorsInfo info;
 Zumo2040ProximitySensors prox;
 Zumo2040OLED oled;
+Zumo2040IMU_I2C i2c;
+Zumo2040IMU imu;
+
+constexpr uint8_t SIZE_ONE_BYTE = 1u;
+
+constexpr uint32_t LENGTH_ONE_BYTE = 1u;
+
+constexpr uint8_t U_INTEGER_8_ZERO = 0u;
+
+constexpr uint8_t LIS3MDL_ADDR = 0x1Eu;
+
+constexpr uint8_t LIS3MDL_WHO_AM_I_ADDR = 0x0F;
+
+constexpr uint8_t LIS3MDL_WHO_AM_I_ID = 0b00111101;
+
+constexpr uint8_t LIS3MDL_REG_CTRL_REG1 = 0x20;
+
+constexpr uint8_t LIS3MDL_REG_CTRL_REG2 = 0x21;
+
+constexpr uint8_t LIS3MDL_REG_CTRL_REG3 = 0x22;
+
+constexpr uint8_t LIS3MDL_REG_CTRL_REG4 = 0x23;
+
+constexpr uint8_t LSM6DSO_ADDR = 0x6Bu;
+
+constexpr uint8_t LSM6DSO_WHO_AM_I_ID = 0b01101100;
+
+constexpr uint8_t LSM6DSO_WHO_AM_I_ADDR = 0x0F;
+
+constexpr uint8_t LSM6DSO_REG_CTRL1_XL = 0x10;
+
+constexpr uint8_t LSM6DSO_REG_CTRL2_G = 0x11;
+
+constexpr uint8_t LSM6DSO_REG_CTRL3_C = 0x12;
+
+ErrorCode calibError;
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -73,69 +108,197 @@ Zumo2040OLED oled;
 {
     /* Place your once executed code for the setup here.. */
     Board::getInstance().init();
-    prox.initAllSensors();
+
     oled.setLayout21x8();
+    imu.enableDefault();
+    //imu.configureForTurnSensing();
+    //imu.configureForCompassHeading();
+    calibError = imu.calibrateLineFollower();
 }
 
 void App::loop()
 {
     /* Place your periodically executed code here. */
-    static uint32_t left_l = 0;
-    static uint32_t front_l = 0;
-    static uint32_t right_l = 0;
-
-    static uint32_t left_r = 0;
-    static uint32_t front_r = 0;
-    static uint32_t right_r = 0;
-
+    static uint8_t regAddr = 0x21;
+    const uint32_t length = 1u;
+    static uint8_t r_data[length];
+    static uint8_t w_data0[length] = {0b0};
+    static uint8_t w_data1[length] = {0b1};
     static uint32_t counter = 0;
 
-    prox.read();
+    static ErrorCode test0;
+    static uint8_t test1;
+    static vector acc;
+    static vector gyro;
+    static vector magnet;
+    static DataStatus status;
 
-    left_l = prox.getCountsWithLeftLeds(PROX_LEFT);
-    front_l = prox.getCountsWithLeftLeds(PROX_FRONT);
-    right_l = prox.getCountsWithLeftLeds(PROX_RIGHT);
-
-    left_r = prox.getCountsWithRightLeds(PROX_LEFT);
-    front_r = prox.getCountsWithRightLeds(PROX_FRONT);
-    right_r = prox.getCountsWithRightLeds(PROX_RIGHT);
-
-
-    oled.clear();
-
-    oled.print(left_l);
-    oled.print("  ");
-    oled.print(front_l);
-    oled.print("  ");
-    oled.print(right_l);
-
-    oled.gotoXY(0, 1);
-
-    oled.print(left_r);
-    oled.print("  ");
-    oled.print(front_r);
-    oled.print("  ");
-    oled.print(right_r);
-
-    oled.gotoXY(0,2);
-
-    if (button_a.getSingleDebouncedPress())
+/*
+    if (counter % 2 == 0 && button_a.getSingleDebouncedPress())
     {
+        test0 = i2c.write(addr_LSM6DSO, 0x10, w_data1, length);
+        counter++;
+
+    } else if (counter % 2 != 0 && button_a.getSingleDebouncedPress())
+    {
+        test0 = i2c.write(addr_LSM6DSO, 0x10, w_data0, length);
         counter++;
     }
 
-    if ((counter % 2) == 0)
-    {
-        oled.print("Num_Bright: ");
-        oled.print(prox.getNumBrightnessLevels());
-    }
-    else
-    {
-        oled.print("Num_Sens: ");
-        oled.print(prox.getNumSensors());
-    }
+    test0 = i2c.read(addr_LSM6DSO, 0x10, r_data, length);
 
-    delay(5);
+    oled.clear();
+    oled.print(r_data[0], BIN);
+    oled.print(" ");
+    oled.print(test0);
+*/
+
+/*
+    oled.clear();
+
+    oled.print("Register values LIS3MDL: ");
+    oled.gotoXY(0, 1);
+    oled.print(imu.readOneByte(LIS3MDL_ADDR, LIS3MDL_REG_CTRL_REG1), HEX);
+    oled.gotoXY(0, 2);
+    oled.print(imu.readOneByte(LIS3MDL_ADDR, LIS3MDL_REG_CTRL_REG2), HEX);
+    oled.gotoXY(0, 3);
+    oled.print(imu.readOneByte(LIS3MDL_ADDR, LIS3MDL_REG_CTRL_REG3), HEX);
+    oled.gotoXY(0, 4);
+    oled.print(imu.readOneByte(LIS3MDL_ADDR, LIS3MDL_REG_CTRL_REG4), HEX);
+    oled.gotoXY(0, 5);
+    oled.print("Error: ");
+    oled.print(imu.getLastError());
+*/
+
+/*
+    oled.clear();
+
+    oled.print("Register values LSM6DSO: ");
+    oled.gotoXY(0, 1);
+    oled.print(imu.readOneByte(LSM6DSO_ADDR, LSM6DSO_REG_CTRL1_XL), HEX);
+    oled.gotoXY(0, 2);
+    oled.print(imu.readOneByte(LSM6DSO_ADDR, LSM6DSO_REG_CTRL2_G), HEX);
+    oled.gotoXY(0, 3);
+    oled.print(imu.readOneByte(LSM6DSO_ADDR, LSM6DSO_REG_CTRL3_C), HEX);
+    oled.gotoXY(0, 4);
+    oled.print("Error: ");
+    oled.print(imu.getLastError());
+*/
+
+/*
+    acc = imu.readAcc();
+
+    oled.clear();
+
+    oled.print("Accel: ");
+    oled.gotoXY(0, 1);
+    oled.print("X: ");
+    oled.print(acc.x);
+    oled.gotoXY(0, 2);
+    oled.print("Y: ");
+    oled.print(acc.y);
+    oled.gotoXY(0, 3);
+    oled.print("Z: ");
+    oled.print(acc.z);
+    oled.gotoXY(0, 4);
+    oled.print("Error: ");
+    oled.print(imu.getLastError());
+*/
+
+/*
+    gyro = imu.readGyro();
+
+    oled.clear();
+
+    oled.print("Gyro: ");
+    oled.gotoXY(0, 1);
+    oled.print("X: ");
+    oled.print(gyro.x);
+    oled.gotoXY(0, 2);
+    oled.print("Y: ");
+    oled.print(gyro.y);
+    oled.gotoXY(0, 3);
+    oled.print("Z: ");
+    oled.print(gyro.z);
+    oled.gotoXY(0, 4);
+    oled.print("Error: ");
+    oled.print(imu.getLastError());
+*/
+
+/*
+    magnet = imu.readMag();
+
+    oled.clear();
+
+    oled.print("Magnet: ");
+    oled.gotoXY(0, 1);
+    oled.print("X: ");
+    oled.print(magnet.x);
+    oled.gotoXY(0, 2);
+    oled.print("Y: ");
+    oled.print(magnet.y);
+    oled.gotoXY(0, 3);
+    oled.print("Z: ");
+    oled.print(magnet.z);
+    oled.gotoXY(0, 4);
+    oled.print("Error: ");
+    oled.print(imu.getLastError());
+*/
+
+/*
+    magnet = imu.readMag();
+    status = imu.magDataReady();
+
+    oled.clear();
+
+    oled.print(status);
+
+    delay(1000);
+    status = imu.magDataReady();
+
+    oled.print(status);
+*/
+
+/*
+    acc = imu.readAcc();
+    status = imu.accDataReady();
+
+    oled.clear();
+
+    oled.print(status);
+
+    delay(1000);
+    status = imu.accDataReady();
+
+    oled.print(status);
+*/
+
+/*
+    gyro = imu.readGyro();
+    status = imu.gyroDataReady();
+
+    oled.clear();
+
+    oled.print(status);
+
+    delay(1000);
+    status = imu.gyroDataReady();
+
+    oled.print(status);
+*/
+
+/*
+    oled.clear();
+
+    oled.print(imu.getAccelOffsetX());
+    oled.gotoXY(0, 1);
+    oled.print(imu.getGyroOffsetZ());
+    oled.gotoXY(0, 2);
+    oled.print("Error: ");
+    oled.print(imu.getLastError());
+*/
+
+    delay(100);
 }
 
 /******************************************************************************

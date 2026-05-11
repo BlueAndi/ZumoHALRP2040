@@ -82,8 +82,44 @@ enum ErrorCode
     /** The core initialization failed. */
     LINESENSOR_CORE_INITIALIZATION_FAILED,
 
-    /** The bounds calculation failed. */
-    LINESENSOR_BOUND_CALCULATION_FAILED
+    /** Line sensor bounds calculation failed. */
+    LINESENSOR_BOUND_CALCULATION_FAILED,
+
+    /** I2C read operation failed. */
+    I2C_READ_FAILED,
+
+    /** I2C write operation failed. */
+    I2C_WRITE_FAILED,
+
+    /** Unknown IMU detected. */
+    IMU_UNKNOWN,
+
+    /** IMU default configuration failed. */
+    IMU_DEFAULT_CONFIG_FAILED,
+
+    /** IMU turn-sensing configuration failed. */
+    IMU_CONFIG_FOR_TURN_SENSING_FAILED,
+
+    /** IMU compass-heading configuration failed. */
+    IMU_CONFIG_FOR_COMPASS_HEADING_FAILED,
+
+    /** Reading IMU axis values failed. */
+    IMU_READ_AXES_FAILED,
+
+    /** Reading accelerometer values failed. */
+    IMU_READ_ACC_FAILED,
+
+    /** Reading gyroscope values failed. */
+    IMU_READ_GYRO_FAILED,
+
+    /** Reading magnetometer values failed. */
+    IMU_READ_MAGNET_FAILED,
+
+    /** IMU calibration failed. */
+    IMU_CALIBRATION_FAILED,
+
+    /** Cannot return the offset because the IMU is not calibrated. */
+    IMU_CANT_GET_OFFSET_NOT_CALIBRATED
 };
 
 /******************************************************************************
