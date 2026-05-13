@@ -110,6 +110,7 @@ ErrorCode calibError;
     Board::getInstance().init();
 
     oled.setLayout21x8();
+    imu.checkIMU();
     imu.enableDefault();
     //imu.configureForTurnSensing();
     //imu.configureForCompassHeading();
@@ -128,9 +129,9 @@ void App::loop()
 
     static ErrorCode test0;
     static uint8_t test1;
-    static vector acc;
-    static vector gyro;
-    static vector magnet;
+    static IMUvector acc;
+    static IMUvector gyro;
+    static IMUvector magnet;
     static DataStatus status;
 
 /*
@@ -186,7 +187,7 @@ void App::loop()
 */
 
 /*
-    acc = imu.readAcc();
+    imu.readAcc(acc);
 
     oled.clear();
 
@@ -206,7 +207,7 @@ void App::loop()
 */
 
 /*
-    gyro = imu.readGyro();
+    imu.readGyro(gyro);
 
     oled.clear();
 
@@ -226,7 +227,7 @@ void App::loop()
 */
 
 /*
-    magnet = imu.readMag();
+    imu.readMag(magnet);
 
     oled.clear();
 
@@ -246,7 +247,7 @@ void App::loop()
 */
 
 /*
-    magnet = imu.readMag();
+    imu.readMag(magnet);
     status = imu.magDataReady();
 
     oled.clear();
@@ -260,7 +261,7 @@ void App::loop()
 */
 
 /*
-    acc = imu.readAcc();
+    imu.readAcc(acc);
     status = imu.accDataReady();
 
     oled.clear();
@@ -274,7 +275,7 @@ void App::loop()
 */
 
 /*
-    gyro = imu.readGyro();
+    imu.readGyro(gyro);
     status = imu.gyroDataReady();
 
     oled.clear();

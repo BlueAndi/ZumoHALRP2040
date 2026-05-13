@@ -55,7 +55,7 @@
  *****************************************************************************/
 
 /** Represents a 3-axis IMU sensor value vector. */
-struct vector
+struct IMUvector
 {
     /** Represents the x-axis. */
     int16_t x;
@@ -154,23 +154,29 @@ class Zumo2040IMU
         /**
          * @brief Reads the accelerometer data from the LSM6DSO.
          *
-         * @return The resulting acceleration vector. The unit depends on the configuration.
+         * @param Reference to the vector where the results are stored.
+         *
+         * @return The resulting error code.
          */
-        vector readAcc();
+        ErrorCode readAcc(IMUvector& data);
 
         /**
          * @brief Reads the gyroscope data from the LSM6DSO.
          *
-         * @return The resulting angular velocity vector. The unit depends on the configuration.
+         * @param Reference to the vector where the results are stored.
+         *
+         * @return The resulting error code.
          */
-        vector readGyro();
+        ErrorCode readGyro(IMUvector& data);
 
         /**
          * @brief Reads the magnetometer data from the LIS3MDL.
          *
-         * @return The resulting magnetic field vector. The unit depends on the configuration.
+         * @param Reference to the vector where the results are stored.
+         *
+         * @return The resulting error code.
          */
-        vector readMag();
+        ErrorCode readMag(IMUvector& data);
 
         /**
          * @brief Checks whether new acceleration data is available.
@@ -258,7 +264,7 @@ class Zumo2040IMU
          * @param data Reference to the vector where the results are stored.
          * @return The resulting error code.
          */
-        ErrorCode readAxes16Bit(uint8_t addr, uint8_t startReg, vector& data);
+        ErrorCode readAxes16Bit(uint8_t addr, uint8_t startReg, IMUvector& data);
 
         /** Last occurred error code. */
         ErrorCode m_error;
@@ -268,15 +274,6 @@ class Zumo2040IMU
 
         /** Offset of the gyroscope z-axis. */
         int16_t m_rawGyroOffsetZ;
-
-        /** Last read accelerometer axis values. */
-        vector m_accel;
-
-        /** Last read gyroscope axis values. */
-        vector m_gyro;
-
-        /** Last read magnetometer axis values. */
-        vector m_magnet;
 
         /** Indicates whether the IMU is calibrated. */
         IMUCalibrationStatus m_calStatus;

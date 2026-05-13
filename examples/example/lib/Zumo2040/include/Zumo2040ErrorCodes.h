@@ -88,8 +88,14 @@ enum ErrorCode
     /** I2C read operation failed. */
     I2C_READ_FAILED,
 
+    /** I2C read argument is invalid. */
+    I2C_READ_INVALID_ARGUMENT,
+
     /** I2C write operation failed. */
     I2C_WRITE_FAILED,
+
+    /** I2C write argument is invalid. */
+    I2C_WRITE_INVALID_ARGUMENT,
 
     /** Unknown IMU detected. */
     IMU_UNKNOWN,
