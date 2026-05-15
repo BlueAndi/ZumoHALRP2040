@@ -25,16 +25,16 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief Zumo2040 error codes.
+ * @brief IMU I2C driver
  * @author Felix Reitenauer
  *
- * @addtogroup Error codes
+ * @addtogroup Zumo2040IMU
  *
  * @{
  */
 
-#ifndef ZUMO2040ERRORCODES_H
-#define ZUMO2040ERRORCODES_H
+#ifndef ZUMO2040I2C0_H
+#define ZUMO2040I2C0_H
 
 /******************************************************************************
  * Compile Switches
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include <cstdint>
+#include "Zumo2040ErrorCodes.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -52,85 +53,48 @@
  * Types and Classes
  *****************************************************************************/
 
-/** Defines the error codes for the Zumo2040. */
-enum ErrorCode
+/** Driver for the Zumo 2040 I2C bus used by the IMU. */
+class Zumo2040IMU_I2C
 {
-    /** No error. */
-    NONE,
+    public:
+        /** Initializes the I2C bus and pins used by the IMU. */
+        Zumo2040IMU_I2C();
 
-    /** The program could not be added to the PIO instance. */
-    CANT_ADD_PROGRAM,
+        /** Deinitializes the pins used by the IMU. */
+        ~Zumo2040IMU_I2C();
 
-    /** No unused state machine could be claimed. */
-    CANT_CLAIM_SM,
+        /** Delete copy constructor. */
+        Zumo2040IMU_I2C(const Zumo2040IMU_I2C&) = delete;
 
-    /** No unused state machine could be claimed for the left encoder. */
-    ENCODER_CANT_CLAIM_SM_LEFT,
+        /** Delete copy assignment operator. */
+        Zumo2040IMU_I2C& operator=(const Zumo2040IMU_I2C&) = delete;
 
-    /** No unused state machine could be claimed for the right encoder. */
-    ENCODER_CANT_CLAIM_SM_RIGHT,
+        /**
+         * @brief Reads data from a slave, starting at the specified register.
+         *
+         * @param addr Address of the slave.
+         * @param startReg Address of the first register to read.
+         * @param data Array that stores the read values.
+         * @param length Number of bytes to read.
+         * @return The resulting error code.
+         */
+        ErrorCode read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length);
 
-    /** The calibration of the line sensors failed. */
-    LINESENSOR_CALIBRATION_FAILED,
-
-    /** The line sensors are not calibrated. */
-    LINESENSOR_IS_NOT_CALIBRATED,
-
-    /** The read line calculation has zero as divisor. */
-    LINESENSOR_READ_LINE_ZERO_DIVISOR,
-
-    /** The core initialization failed. */
-    LINESENSOR_CORE_INITIALIZATION_FAILED,
-
-    /** Line sensor bounds calculation failed. */
-    LINESENSOR_BOUND_CALCULATION_FAILED,
-
-    /** I2C read operation failed. */
-    I2C_READ_FAILED,
-
-    /** I2C read argument is invalid. */
-    I2C_READ_INVALID_ARGUMENT,
-
-    /** I2C write operation failed. */
-    I2C_WRITE_FAILED,
-
-    /** I2C write argument is invalid. */
-    I2C_WRITE_INVALID_ARGUMENT,
-
-    /** Unknown IMU detected. */
-    IMU_UNKNOWN,
-
-    /** IMU default configuration failed. */
-    IMU_DEFAULT_CONFIG_FAILED,
-
-    /** IMU turn-sensing configuration failed. */
-    IMU_CONFIG_FOR_TURN_SENSING_FAILED,
-
-    /** IMU compass-heading configuration failed. */
-    IMU_CONFIG_FOR_COMPASS_HEADING_FAILED,
-
-    /** Reading IMU axis values failed. */
-    IMU_READ_AXES_FAILED,
-
-    /** Reading accelerometer values failed. */
-    IMU_READ_ACC_FAILED,
-
-    /** Reading gyroscope values failed. */
-    IMU_READ_GYRO_FAILED,
-
-    /** Reading magnetometer values failed. */
-    IMU_READ_MAGNET_FAILED,
-
-    /** IMU calibration failed. */
-    IMU_CALIBRATION_FAILED,
-
-    /** Cannot return the offset because the IMU is not calibrated. */
-    IMU_CANT_GET_OFFSET_NOT_CALIBRATED
+        /**
+         * @brief Writes data to a slave, starting at the specified register.
+         *
+         * @param addr Address of the slave.
+         * @param startReg Address of the first register to write.
+         * @param data Array that stores the values to write.
+         * @param length Number of bytes to write. The maximum value is 15.
+         * @return The resulting error code.
+         */
+        ErrorCode write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length);
 };
 
 /******************************************************************************
  * Functions
  *****************************************************************************/
 
-#endif /* ZUMO2040ERRORCODES_H */
+#endif /* ZUMO2040I2C0_H */
 /** @} */
