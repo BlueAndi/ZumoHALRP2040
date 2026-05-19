@@ -52,6 +52,15 @@
  * Types and Classes
  *****************************************************************************/
 
+enum AlarmStatus
+{
+    /** Indicates that the alarm is disabled. */
+    ALARM_DISABLED = false,
+
+    /** Indicates that the alarm is enabled. */
+    ALARM_ENABLED = true
+};
+
 namespace Zumo2040Pins
 {
     /** Pin for Button A. */
@@ -108,6 +117,8 @@ namespace Zumo2040Pins
     constexpr uint8_t I2C0_SCL_PIN = 5u;
     /** I2C0 SDA pin. */
     constexpr uint8_t I2C0_SDA_PIN = 4u;
+    /** Buzzer pin. */
+    constexpr uint8_t BUZZER_PIN = 7u;
 }
 
 namespace PinLevel

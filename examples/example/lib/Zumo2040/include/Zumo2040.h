@@ -52,6 +52,7 @@
 #include "Zumo2040Linesensors.h"
 #include "Zumo2040Proximitysensors.h"
 #include "Zumo2040IMU.h"
+#include "Zumo2040Buzzer.h"
 
 /******************************************************************************
  * Macros

@@ -125,7 +125,22 @@ enum ErrorCode
     IMU_CALIBRATION_FAILED,
 
     /** Cannot return the offset because the IMU is not calibrated. */
-    IMU_CANT_GET_OFFSET_NOT_CALIBRATED
+    IMU_CANT_GET_OFFSET_NOT_CALIBRATED,
+
+    /** A frequency of zero is not allowed. */
+    BUZZER_INVALID_FREQ_ZERO,
+
+    /** The frequency is too small. */
+    BUZZER_INVALID_FREQ_TOO_SMALL,
+
+    /** The alarm for the callback could not be set. */
+    BUZZER_COULD_NOT_SET_ALARM,
+
+    /** A duration of zero is not allowed. */
+    BUZZER_INVALID_DURATION_ZERO,
+
+    /** The given note sequence pointer is a nullptr. */
+    BUZZER_INVALID_MELODY_NULLPTR
 };
 
 /******************************************************************************
