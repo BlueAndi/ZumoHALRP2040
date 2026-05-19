@@ -164,7 +164,9 @@ class Zumo2040Buzzer
          * play("T240 L8 a gafaeada c+adaeafa <aa<bac#ada c#adaeaf4");
          * @endcode
          *
-         * @param notes Note sequence to play. Range is from E1 to D#9.
+         * @param notes Note sequence to play. The string is not copied and must remain
+         *              valid for the complete playback duration, e.g. as a string
+         *              literal or static const character array.
          *
          * @return The current error code.
          */

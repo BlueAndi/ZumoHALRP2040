@@ -28,7 +28,8 @@
  * @brief Buzzer driver
  *
  * The note sequence parser and playback handling are based on the Pololu
- * buzzer example and adapted for the Zumo 2040 HAL.
+ * buzzer implementation and adapted for the Zumo 2040.
+ * https://github.com/pololu/pololu-buzzer-arduino/tree/master
  *
  * @author Felix Reitenauer
  */
@@ -61,7 +62,7 @@
  *****************************************************************************/
 
 /** Mask which is used to check if DIV_BY_10 bit is set. */
-constexpr uint16_t DIV_BY_10_MASK = 0b1000000000000000u;
+constexpr uint16_t DIV_BY_10_MASK = (1u<<15u);
 /** Unsigned 8-bit integer zero. */
 constexpr uint8_t U_INTEGER_8_ZERO = 0u;
 /** Unsigned 16-bit integer zero. */
@@ -255,7 +256,13 @@ BuzzerStatus Zumo2040Buzzer::playCheck()
 {
     if ((BUZZER_DISABLED == m_buzzerStatus) && (nullptr != m_buzzerSequence) && (DONT_PLAY_AUTOMATIC == m_playmode))
     {
-        nextNote();
+        ErrorCode error = nextNote();
+
+        if (NONE != error)
+        {
+            stopPlaying();
+            return BUZZER_DISABLED;
+        }
     }
 
     return (nullptr != m_buzzerSequence) ? BUZZER_ENABLED : BUZZER_DISABLED;
