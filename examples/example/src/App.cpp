@@ -68,17 +68,6 @@ Zumo2040IMU_I2C i2c;
 Zumo2040IMU imu;
 Zumo2040Buzzer buzzer;
 
-const char fugue[] =
-  {"! O5 L16 agafaea dac+adaea fa<aa<bac#a dac#adaea f"
-  "O6 dcd<b-d<ad<g d<f+d<gd<ad<b- d<dd<ed<f+d<g d<f+d<gd<ad"
-  "L8 MS <b-d<b-d MLe-<ge-<g MSc<ac<a ML d<fd<f O5 MS b-gb-g"
-  "ML >c#e>c#e MS afaf ML gc#gc# MS fdfd ML e<b-e<b-"
-  "O6 L16ragafaea dac#adaea fa<aa<bac#a dac#adaea faeadaca"
-  "<b-acadg<b-g egdgcg<b-g <ag<b-gcf<af dfcf<b-f<af"
-  "<gf<af<b-e<ge c#e<b-e<ae<ge <fe<ge<ad<fd"
-  "O5 e>ee>ef>df>d b->c#b->c#a>df>d e>ee>ef>df>d"
-  "e>d>c#>db>d>c#b >c#agaegfe f O6 dc#dfdc#<b c#4"};
-
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -88,47 +77,52 @@ const char fugue[] =
     /* Place your once executed code for the setup here.. */
     Board::getInstance().init();
     oled.setLayout21x8();
-    buzzer.playMode(BuzzerPlaymode::DONT_PLAY_AUTOMATIC);
+    linesensor.init();
+
+    int i = 0;
+    while (i < 300)
+    {
+        linesensor.calibrate();
+        i++;
+    }
+
+    oled.setLayout21x8();
+
+    delay(500);
 }
 
 void App::loop()
 {
     /* Place your periodically executed code here. */
 
-    static uint8_t vol = 0;
-    static uint16_t freq = 0;
-    static uint32_t counter = 1;
+static uint32_t pos = 0;
 
-/*
-    buzzer.play(fugue);
-    while (buzzer.isPlaying())
-    {
-    }
-    delay(1000);
-*/
+pos = linesensor.readLine();
+info = linesensor.getInfo();
 
-//*
-    buzzer.play(fugue);
-    while (buzzer.isPlaying())
-    {
-        if (button_a.getSingleDebouncedPress())
-        {
-            counter++;
-        }
+oled.print("Sensor 0: ");
+oled.print(info.m_calibratedSensorValues[0]);
+oled.gotoXY(0, 1);
+oled.print("Sensor 1: ");
+oled.print(info.m_calibratedSensorValues[1]);
+oled.gotoXY(0, 2);
+oled.print("Sensor 2: ");
+oled.print(info.m_calibratedSensorValues[2]);
+oled.gotoXY(0, 3);
+oled.print("Sensor 3: ");
+oled.print(info.m_calibratedSensorValues[3]);
+oled.gotoXY(0, 4);
+oled.print("Sensor 4: ");
+oled.print(info.m_calibratedSensorValues[4]);
+oled.gotoXY(0,5);
+oled.print("Position: ");
+oled.print(pos);
 
-        if (counter % 2 == 0)
-        {
-            buzzer.playCheck();
-        }
+delay(30);
 
-        if (button_b.getSingleDebouncedPress())
-        {
-            buzzer.stopPlaying();
-        }
-    }
+oled.clear();
 
-    delay(3000);
-//*/
+
 }
 
 /******************************************************************************

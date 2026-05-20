@@ -120,6 +120,9 @@ constexpr uint32_t TIMER_BIT_COUNT = 15u;
 /** Delay which is used when emitter state is changed. */
 constexpr uint32_t EMITTER_DELAY_US = 30u;
 
+/** Maximum sensor index. */
+constexpr uint32_t MAX_SENSOR_INDEX = SENSOR_COUNT - 1u;
+
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
@@ -276,11 +279,14 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
         newPinValues = (data >> TIMER_BIT_COUNT) & VALUES_MASK;
 
         /* Compare the old and new pin values. */
-        for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+        for (uint32_t count = U_INTEGER_32_ZERO; count < SENSOR_COUNT; count++)
         {
-            if (((newPinValues >> idx) & VALUE_MASK) != ((oldPinValues >> idx) & VALUE_MASK))
+            /* Reverse the sensor order to match the Pololu Zumo32U4 library. */
+            const uint32_t sensorIDX = MAX_SENSOR_INDEX - count;
+
+            if (((newPinValues >> count) & VALUE_MASK) != ((oldPinValues >> count) & VALUE_MASK))
             {
-                sensorValues[idx] = (TIMER_RANGE - (data & TIMER_MASK));
+                sensorValues[sensorIDX] = (TIMER_RANGE - (data & TIMER_MASK));
                 newValueCount++ ;
             }
         }
