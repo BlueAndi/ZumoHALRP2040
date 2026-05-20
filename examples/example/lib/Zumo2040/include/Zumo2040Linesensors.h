@@ -69,7 +69,7 @@ struct LinesensorsInfo
     ErrorCode m_linesensorError;
 
     /** Error code for each sensor.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -79,7 +79,7 @@ struct LinesensorsInfo
     ErrorCode m_sensorError[SENSOR_COUNT];
 
     /** Sensor values compensated with the enabled and disabled emitter readings.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -89,7 +89,7 @@ struct LinesensorsInfo
     uint32_t m_sensorValuesOn[SENSOR_COUNT];
 
     /** Buffer for sensor values with disabled emitter.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -99,7 +99,7 @@ struct LinesensorsInfo
     uint32_t m_sensorValuesOff[SENSOR_COUNT];
 
     /** Minimum values of the sensors.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -109,7 +109,7 @@ struct LinesensorsInfo
     uint32_t m_minValues[SENSOR_COUNT];
 
     /** Maximum values of the sensors.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -119,7 +119,7 @@ struct LinesensorsInfo
     uint32_t m_maxValues[SENSOR_COUNT];
 
     /** Calibrated minimum values with disabled emitter.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -129,7 +129,7 @@ struct LinesensorsInfo
     uint32_t m_calibratedMinValuesOff[SENSOR_COUNT];
 
     /** Calibrated maximum values with disabled emitter.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -139,7 +139,7 @@ struct LinesensorsInfo
     uint32_t m_calibratedMaxValuesOff[SENSOR_COUNT];
 
     /** Calibrated minimum values with enabled emitter.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -149,7 +149,7 @@ struct LinesensorsInfo
     uint32_t m_calibratedMinValuesOn[SENSOR_COUNT];
 
     /** Calibrated maximum values with enabled emitter.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -159,7 +159,7 @@ struct LinesensorsInfo
     uint32_t m_calibratedMaxValuesOn[SENSOR_COUNT];
 
     /** Lower bounds for the sensor values.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -169,7 +169,7 @@ struct LinesensorsInfo
     uint32_t m_calMin[SENSOR_COUNT];
 
     /** Upper bounds for the sensor values.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -179,7 +179,7 @@ struct LinesensorsInfo
     uint32_t m_calMax[SENSOR_COUNT];
 
     /** The calibrated sensor values.
-     * Sensor index order when looking at the robot from the front:
+     * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
      *  [2] = center sensor
@@ -291,7 +291,7 @@ class Zumo2040Linesensors
         ErrorCode m_linesensorError;
 
         /** Error code for each sensor.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -301,7 +301,7 @@ class Zumo2040Linesensors
         ErrorCode m_sensorError[SENSOR_COUNT];
 
         /** Sensor values compensated with the enabled and disabled emitter readings.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -311,7 +311,7 @@ class Zumo2040Linesensors
         uint32_t m_sensorValuesOn[SENSOR_COUNT];
 
         /** Buffer for sensor values measured with the emitter disabled.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -321,7 +321,7 @@ class Zumo2040Linesensors
         uint32_t m_sensorValuesOff[SENSOR_COUNT];
 
         /** Minimum values of the sensors.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -331,7 +331,7 @@ class Zumo2040Linesensors
         uint32_t m_minValues[SENSOR_COUNT];
 
         /** Maximum values of the sensors.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -341,7 +341,7 @@ class Zumo2040Linesensors
         uint32_t m_maxValues[SENSOR_COUNT];
 
         /** Calibrated minimum values with disabled emitter.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -351,7 +351,7 @@ class Zumo2040Linesensors
         uint32_t m_calibratedMinValuesOff[SENSOR_COUNT];
 
         /** Calibrated maximum values with disabled emitter.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -361,7 +361,7 @@ class Zumo2040Linesensors
         uint32_t m_calibratedMaxValuesOff[SENSOR_COUNT];
 
         /** Calibrated minimum values with enabled emitter.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -371,7 +371,7 @@ class Zumo2040Linesensors
         uint32_t m_calibratedMinValuesOn[SENSOR_COUNT];
 
         /** Calibrated maximum values with enabled emitter.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -381,7 +381,7 @@ class Zumo2040Linesensors
         uint32_t m_calibratedMaxValuesOn[SENSOR_COUNT];
 
         /** Lower bounds for the sensor values.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -391,7 +391,7 @@ class Zumo2040Linesensors
         uint32_t m_calMin[SENSOR_COUNT];
 
         /** Upper bounds for the sensor values.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
@@ -401,7 +401,7 @@ class Zumo2040Linesensors
         uint32_t m_calMax[SENSOR_COUNT];
 
         /** The calibrated sensor values.
-         * Sensor index order when looking at the robot from the front:
+         * Sensor index order when looking at the robot from behind:
          *  [0] = leftmost sensor
          *  [1] = left-center sensor
          *  [2] = center sensor
