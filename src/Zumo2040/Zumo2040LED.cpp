@@ -33,8 +33,8 @@
  * Includes
  *****************************************************************************/
 
-#include <Zumo2040LED.h>
-#include <Zumo2040Pin.h>
+#include "Zumo2040LED.h"
+#include "Zumo2040Pin.h"
 #include <SPI.h>
 #include <cstdint>
 
