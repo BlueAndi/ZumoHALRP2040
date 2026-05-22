@@ -27,6 +27,8 @@ Hardware abstraction layer for the Pololu Zumo2040 robot (see <https://www.polol
 
 ### Detail
 
+![Detail](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/BlueAndi/ZumoHALRP2040/refs/heads/develop/doc/uml/HAL.plantuml)
+
 ## How to integrate the library?
 ```
 lib_deps =
@@ -38,6 +40,7 @@ lib_deps =
 See [example](/examples/example/) for more detail.
 
 ## Interface Description
+
 
 
 ## Requirements to your application
@@ -61,6 +64,7 @@ board_build.core = earlephilhower
 | Library                                                                 | Description                               | License |
 | ----------------------------------------------------------------------- | ----------------------------------------- | ------- |
 | [ZumoHALInterfaces](https://github.com/BlueAndi/ZumoHALInterfaces)      | The Zumo C++ HAL interfaces.              | MIT     |
+| [PololuOLED](https://github.com/pololu/pololu-oled-arduino)             | Provides support for displaying text and graphics on the SH1106 OLED display | MIT |
 
 ## Issues, Ideas And Bugs
 
