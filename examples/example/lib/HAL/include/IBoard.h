@@ -27,7 +27,7 @@
 /**
  * @brief  Board interface, which abstracts the physical board
  * @author Felix Reitenauer
- * 
+ *
  * @addtogroup HALInterfaces
  *
  * @{
@@ -44,7 +44,15 @@
  * Includes
  *****************************************************************************/
 #include <stdint.h>
-
+#include <IButton.h>
+#include <IBuzzer.h>
+#include <IDisplay.h>
+#include <IEncoders.h>
+#include <ILineSensors.h>
+#include <IMotors.h>
+#include <ILed.h>
+#include <ISettings.h>
+#include <IPower.h>
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -72,17 +80,113 @@ public:
      */
     virtual void init() = 0;
 
-    
-protected:
+    /**
+     * Get button A driver.
+     *
+     * @return Button A driver.
+     */
+    virtual IButton& getButtonA() = 0;
 
     /**
-     * Constructs the board interface.
+     * Get button B driver.
+     *
+     * @return Button B driver.
      */
-    IBoard()
-    {
-    }
+    virtual IButton& getButtonB() = 0;
 
-private:
+    /**
+     * Get button C driver.
+     *
+     * @return Button C driver.
+     */
+    virtual IButton& getButtonC() = 0;
+
+    /**
+     * Get buzzer driver.
+     *
+     * @return Buzzer driver.
+     */
+    virtual IBuzzer& getBuzzer() = 0;
+
+    /**
+     * Get LCD driver.
+     *
+     * @return LCD driver.
+     */
+    virtual IDisplay& getDisplay() = 0;
+
+    /**
+     * Get encoders driver.
+     *
+     * @return Encoders driver.
+     */
+    virtual IEncoders& getEncoders() = 0;
+
+    /**
+     * Get line sensors driver.
+     *
+     * @return Line sensor driver.
+     */
+    virtual ILineSensors& getLineSensors() = 0;
+
+    /**
+     * Get motor driver.
+     *
+     * @return Motor driver.
+     */
+    virtual IMotors& getMotors() = 0;
+
+    /**
+     * Get red LED driver.
+     *
+     * @return Red LED driver.
+     */
+    virtual ILed& getRedLed() = 0;
+
+    /**
+     * Get yellow LED driver.
+     *
+     * @return Yellow LED driver.
+     */
+    virtual ILed& getYellowLed() = 0;
+
+    /**
+     * Get green LED driver.
+     *
+     * @return Green LED driver.
+     */
+    virtual ILed& getGreenLed() = 0;
+
+    /**
+     * Get the settings.
+     *
+     * @return Settings
+     */
+    virtual ISettings& getSettings() = 0;
+
+    /**
+     * Get the power interface.
+     *
+     * @return IPower interface provider.
+     */
+    virtual IPower& getPower() = 0;
+
+
+    /**
+     * Process actuators and sensors.
+     */
+    virtual void process() = 0;
+
+    protected:
+
+        /**
+         * Constructs the board interface.
+         */
+        IBoard()
+        {
+        }
+
+    private:
 
 };
 

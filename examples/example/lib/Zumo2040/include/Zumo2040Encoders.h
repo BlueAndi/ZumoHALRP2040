@@ -58,8 +58,8 @@
 class Zumo2040Encoder
 {
     public:
-        /** Default constructor. */
-        Zumo2040Encoder() = default;
+        /** Initialize encoders. */
+        Zumo2040Encoder();
 
         /** Default destructor. */
         ~Zumo2040Encoder() = default;

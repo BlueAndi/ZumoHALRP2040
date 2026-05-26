@@ -184,7 +184,7 @@ uint8_t Zumo2040ProximitySensors::getNumSensors() const
     return m_numSensors;
 }
 
-uint32_t Zumo2040ProximitySensors::getNumBrightnessLevels()
+uint32_t Zumo2040ProximitySensors::getNumBrightnessLevels() const
 {
     return NUM_BRIGHTNESS_LEVELS;
 }

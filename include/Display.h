@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Display realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "IDisplay.h"
+#include "Zumo2040OLED.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,132 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target OLED. */
+class Display : public IDisplay
+{
+public:
+    /**
+     * Constructs the display adapter.
+     */
+    Display() : IDisplay(), m_oled()
+    {
+    }
+
+    /**
+     * Destroys the display adapter.
+     */
+    ~Display()
+    {
+    }
+
+    /**
+     * Clear the display and set the cursor to the upper left corner.
+     */
+    void clear() final
+    {
+        m_oled.clear();
+    }
+
+    /**
+     * Set the cursor to the given position.
+     *
+     * @param[in] xCoord x-coordinate, 0 is the most left position.
+     * @param[in] yCoord y-coordinate, 0 is the most upper position.
+     */
+    void gotoXY(uint8_t xCoord, uint8_t yCoord) final
+    {
+        m_oled.gotoXY(xCoord, yCoord);
+    }
+
+    /**
+     * Print the string to the display at the current cursor position.
+     *
+     * @param[in] str   String
+     *
+     * @return Printed number of characters
+     */
+    size_t print(const char str[]) final
+    {
+        return m_oled.print(str);
+    }
+
+    /**
+     * Print the unsigned 8-bit value to the display at the current cursor position.
+     *
+     * @param[in] value Value
+     *
+     * @return Printed number of characters
+     */
+    size_t print(uint8_t value) final
+    {
+        return m_oled.print(value);
+    }
+
+    /**
+     * Print the unsigned 16-bit value to the display at the current cursor position.
+     *
+     * @param[in] value Value
+     *
+     * @return Printed number of characters
+     */
+    size_t print(uint16_t value) final
+    {
+        return m_oled.print(value);
+    }
+
+    /**
+     * Print the unsigned 32-bit value to the display at the current cursor position.
+     *
+     * @param[in] value Value
+     *
+     * @return Printed number of characters
+     */
+    size_t print(uint32_t value) final
+    {
+        return m_oled.print(value);
+    }
+
+    /**
+     * Print the signed 8-bit value to the display at the current cursor position.
+     *
+     * @param[in] value Value
+     *
+     * @return Printed number of characters
+     */
+    size_t print(int8_t value) final
+    {
+        return m_oled.print(value);
+    }
+
+    /**
+     * Print the signed 16-bit value to the display at the current cursor position.
+     *
+     * @param[in] value Value
+     *
+     * @return Printed number of characters
+     */
+    size_t print(int16_t value) final
+    {
+        return m_oled.print(value);
+    }
+
+    /**
+     * Print the signed 32-bit value to the display at the current cursor position.
+     *
+     * @param[in] value Value
+     *
+     * @return Printed number of characters
+     */
+    size_t print(int32_t value) final
+    {
+        return m_oled.print(value);
+    }
+
+private:
+
+    Zumo2040OLED m_oled; /**< Zumo OLED driver */
+};
 
 /******************************************************************************
  * Functions

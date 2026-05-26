@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Encoders realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "IEncoders.h"
+#include "Zumo2040Encoders.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,99 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target encoders. */
+class Encoders : public IEncoders
+{
+public:
+    /**
+     * Constructs the encoders adapter.
+     */
+    Encoders() : IEncoders(), m_encoders()
+    {
+    }
+
+    /**
+     * Destroys the encoders adapter.
+     */
+    ~Encoders()
+    {
+    }
+
+    /**
+     * Initialize or re-initialize the encoders.
+     */
+    void init() final
+    {
+        /* Nothing to do.*/
+    }
+
+    /**
+     * Returns the number of counts that have been detected from the left-side
+     * encoder.  These counts start at 0. Positive counts correspond to forward
+     * movement of the left side of the robot, while negative counts correspond
+     * to backwards movement.
+     *
+     * The count is returned as a signed 16-bit integer. When the count goes
+     * over 32767, it will overflow down to -32768.  When the count goes below
+     * -32768, it will overflow up to 32767.
+     *
+     * @return Encoder steps left
+     */
+    int16_t getCountsLeft() final
+    {
+        /* Use only the lower 16 bits to match the 32U4 wraparound behavior. */
+        return static_cast<int16_t>(m_encoders.getCountLeft());
+    }
+
+    /**
+     * Returns the number of counts that have been detected from the right-side
+     * encoder.  These counts start at 0. Positive counts correspond to forward
+     * movement of the left side of the robot, while negative counts correspond
+     * to backwards movement.
+     *
+     * The count is returned as a signed 16-bit integer. When the count goes
+     * over 32767, it will overflow down to -32768.  When the count goes below
+     * -32768, it will overflow up to 32767.
+     *
+     * @return Encoder steps right
+     */
+    int16_t getCountsRight() final
+    {
+        /* Use only the lower 16 bits to match the 32U4 wraparound behavior. */
+        return static_cast<int16_t>(m_encoders.getCountRight());
+    }
+
+    /**
+     * This function is just like getCountsLeft() except it also clears the
+     * counts before returning. If you call this frequently enough, you will
+     * not have to worry about the count overflowing.
+     *
+     * @return Encoder steps left
+     */
+    int16_t getCountsAndResetLeft() final
+    {
+        /* Use only the lower 16 bits to match the 32U4 wraparound behavior. */
+        return static_cast<int16_t>(m_encoders.getCountAndResetLeft());
+    }
+
+    /**
+     * This function is just like getCountsRight() except it also clears the
+     * counts before returning. If you call this frequently enough, you will
+     * not have to worry about the count overflowing.
+     *
+     * @return Encoder steps right
+     */
+    int16_t getCountsAndResetRight() final
+    {
+        /* Use only the lower 16 bits to match the 32U4 wraparound behavior. */
+        return static_cast<int16_t>(m_encoders.getCountAndResetRight());
+    }
+
+private:
+
+    Zumo2040Encoder m_encoders; /**< Zumo encoders driver. */
+};
 
 /******************************************************************************
  * Functions

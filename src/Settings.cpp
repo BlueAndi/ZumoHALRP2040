@@ -25,14 +25,15 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Settings realization
  * @author Felix Reitenauer
  */
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "Settings.h"
+#include <EEPROM.h>
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -53,9 +54,88 @@
  * Local Variables
  *****************************************************************************/
 
+/**
+ * The magic pattern which is used to determine whether the EEPROM
+ * is initialized or not.
+ */
+static const uint32_t MAGIC_PATTERN = 0xC0FFEEu;
+
+/**
+ * Data version is used to detect whether the data in the EEPROM is
+ * compatible with the current settings version.
+ *
+ * Increase the version number by 1 for every change!
+ */
+static const uint8_t DATA_VERSION = 1u;
+
+/**
+ * Max. speed default values in steps/s.
+ */
+static const int16_t DEFAULT_MAX_SPEED = 0;
+
+/**
+ * Size used for the emulated EEPROM capacity.
+ * Even though the emulated EEPROM uses a fixed flash sector for persistent
+ * storage, we keep the configured size small to reduce RAM usage.
+ */
+static const size_t EEPROM_SIZE = 256u;
+
+/* ---------- Attention! ----------
+ * Keep the following order of variables in the EEPROM.
+ * Add new values at the tail.
+ * Increase the data version (DATA_VERSION) for every change!
+ */
+
+/**
+ * Magic pattern address in EEPROM.
+ */
+static const size_t EEPROM_ADDRESS_MAGIC_PATTERN = 0u;
+
+/**
+ * Data version address in EEPROM.
+ */
+static const size_t EEPROM_ADDRESS_DATA_VERSION = EEPROM_ADDRESS_MAGIC_PATTERN + sizeof(MAGIC_PATTERN);
+
+/**
+ * Max. speed address in EEPROM.
+ */
+static const size_t EEPROM_ADDRESS_MAX_SPEED = EEPROM_ADDRESS_DATA_VERSION + sizeof(DATA_VERSION);
+
+/* ---------- Tail of EEPROM data. ---------- */
+
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
+
+void Settings::init()
+{
+    EEPROM.begin(EEPROM_SIZE);
+    uint32_t magicPattern = getMagicPattern();
+    uint8_t  dataVersion  = getDataVersion();
+
+    if ((MAGIC_PATTERN != magicPattern) || (DATA_VERSION != dataVersion))
+    {
+        /* Write default values. */
+        setMaxSpeed(DEFAULT_MAX_SPEED);
+
+        /* Mark data in EEPROM as valid. */
+        setMagicPattern(MAGIC_PATTERN);
+        setDataVersion(DATA_VERSION);
+    }
+}
+
+int16_t Settings::getMaxSpeed() const
+{
+    int16_t value = 0;
+    EEPROM.get(EEPROM_ADDRESS_MAX_SPEED, value);
+    return value;
+}
+
+void Settings::setMaxSpeed(int16_t maxSpeed)
+{
+    EEPROM.put(EEPROM_ADDRESS_MAX_SPEED, maxSpeed);
+    EEPROM.commit();
+}
 
 /******************************************************************************
  * Protected Methods
@@ -64,6 +144,32 @@
 /******************************************************************************
  * Private Methods
  *****************************************************************************/
+
+uint32_t Settings::getMagicPattern() const
+{
+    uint32_t value = 0u;
+    EEPROM.get(EEPROM_ADDRESS_MAGIC_PATTERN, value);
+    return value;
+}
+
+void Settings::setMagicPattern(uint32_t value) const
+{
+    EEPROM.put(EEPROM_ADDRESS_MAGIC_PATTERN, value);
+    EEPROM.commit();
+}
+
+uint8_t Settings::getDataVersion() const
+{
+    uint8_t value = 0u;
+    EEPROM.get(EEPROM_ADDRESS_DATA_VERSION, value);
+    return value;
+}
+
+void Settings::setDataVersion(uint8_t value) const
+{
+    EEPROM.put(EEPROM_ADDRESS_DATA_VERSION, value);
+    EEPROM.commit();
+}
 
 /******************************************************************************
  * External Functions

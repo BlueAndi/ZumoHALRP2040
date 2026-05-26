@@ -25,10 +25,11 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Receiver realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
+ *
  *
  * @{
  */
@@ -43,7 +44,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "IReceiver.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,46 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class simulates a receiver, because its only relevant for the simulation. */
+class Receiver : public IReceiver
+{
+public:
+    /**
+     * Set channel which to receive data from.
+     *
+     * @param[in] channel   The channel which to use.
+     */
+    void setChannel(int32_t channel) final
+    {
+        (void)channel;
+    }
+
+    /**
+     * Receives data from the configured channel.
+     *
+     * @param[in] data  Data buffer.
+     * @param[in] size  Data buffer size in bytes.
+     *
+     * @return Number of bytes read from stream.
+     */
+    size_t receive(void* data, size_t size) final
+    {
+        (void)data;
+        (void)size;
+        return 0U;
+    }
+
+    /**
+     * Check if any data has been received.
+     *
+     * @return Number of available bytes.
+     */
+    int available() const final
+    {
+        return 0;
+    }
+};
 
 /******************************************************************************
  * Functions

@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Motors realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "IMotors.h"
+#include "Zumo2040Motors.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,91 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target motors. */
+class Motors : public IMotors
+{
+public:
+    /**
+     * Constructs the motors adapter.
+     */
+    Motors() : IMotors(), m_motors(), m_leftSpeed(0), m_rightSpeed(0)
+    {
+    }
+
+    /**
+     * Destroys the motors adapter.
+     */
+    ~Motors()
+    {
+    }
+
+    /**
+     * Initializes the motors.
+     */
+    void init() final
+    {
+        /* Nothing to do. */
+    }
+
+    /**
+     * Sets the speeds for both motors.
+     *
+     * @param[in] leftSpeed A number from -400 to 400 representing the speed and
+     * direction of the right motor. Values of -400 or less result in full speed
+     * reverse, and values of 400 or more result in full speed forward.
+     * @param[in] rightSpeed A number from -400 to 400 representing the speed and
+     * direction of the right motor. Values of -400 or less result in full speed
+     * reverse, and values of 400 or more result in full speed forward.
+     */
+    void setSpeeds(int16_t leftSpeed, int16_t rightSpeed) final
+    {
+        m_motors.setSpeeds(leftSpeed, rightSpeed);
+
+        m_leftSpeed  = leftSpeed;
+        m_rightSpeed = rightSpeed;
+    }
+
+    /**
+     * Get maximum speed of the motors in digits.
+     *
+     * @return Max. speed in digits
+     */
+    int16_t getMaxSpeed() const final
+    {
+        return MAX_SPEED;
+    }
+
+    /**
+     * Get the current speed of the left motor.
+     *
+     * @return The left motor speed in digits.
+     */
+    int16_t getLeftSpeed() final
+    {
+        return m_leftSpeed;
+    }
+
+    /**
+     * Get the current speed of the right motor.
+     *
+     * @return The right motor speed in digits.
+     */
+    int16_t getRightSpeed() final
+    {
+        return m_rightSpeed;
+    }
+
+private:
+    /**
+     * The maximum speed of a single motor in PWM digits.
+     */
+    static const int16_t MAX_SPEED = 400;
+
+    Zumo2040Motors m_motors;     /**< Zumo motors driver. */
+    int16_t        m_leftSpeed;  /**< Left motor speed in PWM digits, used by the application. */
+    int16_t        m_rightSpeed; /**< Right motor speed in PWM digits, used by the application. */
+};
 
 /******************************************************************************
  * Functions
