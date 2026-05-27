@@ -117,8 +117,10 @@ constexpr uint32_t TIMER_MASK = 0b111111111111111;
 /** Count of the timer bits in the data word from the state machine. */
 constexpr uint32_t TIMER_BIT_COUNT = 15u;
 
-/** Delay which is used when emitter state is changed. */
-constexpr uint32_t EMITTER_DELAY_US = 30u;
+/** Delay used after changing the emitter state.
+ *  This value is taken from the Pololu Zumo32U4 line sensor implementation.
+ */
+constexpr uint32_t EMITTER_DELAY_US = 200u;
 
 /** Maximum sensor index. */
 constexpr uint32_t MAX_SENSOR_INDEX = SENSOR_COUNT - 1u;
