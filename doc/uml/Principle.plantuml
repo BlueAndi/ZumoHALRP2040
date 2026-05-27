@@ -10,7 +10,7 @@ package "HAL Interfaces" {
 
 package "HAL RP2040" {
     class "Xxxx" as XxxxMcu
-    
+
     note bottom of XxxxMcu
         MCU specific implementation.
     end note

@@ -1,0 +1,200 @@
+@startuml HAL
+
+package "HAL Interfaces" as halInterfaces {
+
+    interface "IButton" as iButton {
+        + {abstract} isPressed() : bool
+        + {abstract} waitForRelease() : void
+    }
+
+    interface "IBuzzer" as iBuzzer {
+        + {abstract} playFrequency(freq : uint16_t, duration : uint16_t, volume : uint8_t) : void
+        + {abstract} playMelody(sequence : const char*) : void
+        + {abstract} playMelodyPGM(sequence : const char*) : void
+        + {abstract} isPlaying() : bool
+        + {abstract} process() : void
+    }
+
+    interface "IDisplay" as iDisplay {
+        + {abstract} clear() : void
+        + {abstract} gotoXY(xCoord : uint8_t, yCoord : uint8_t) : void
+        + {abstract} print(str : const String&) : size_t
+        + {abstract} print(str : const char[]) : size_t
+        + {abstract} print(value : uint8_t) : size_t
+        + {abstract} print(value : uint16_t) : size_t
+        + {abstract} print(value : uint32_t) : size_t
+        + {abstract} print(value : int8_t) : size_t
+        + {abstract} print(value : int16_t) : size_t
+        + {abstract} print(value : int32_t) : size_t
+    }
+
+    interface "IEncoders" as iEncoders {
+        + {abstract} getCountsLeft() : int16_t
+        + {abstract} getCountsRight() : int16_t
+        + {abstract} getCountsAndResetLeft() : int16_t
+        + {abstract} getCountsAndResetRight() : int16_t
+        + {abstract} getResolution() const : uint16_t
+    }
+
+    interface "IIMU" as iIMU {
+        + {abstract} init() : bool
+        + {abstract} enableDefault() : void
+        + {abstract} configureForTurnSensing() : void
+        + {abstract} readAccelerometer() : void
+        + {abstract} readGyro() : void
+        + {abstract} readMagnetometer() : void
+        + {abstract} accelerometerDataReady() : bool
+        + {abstract} gyroDataReady() : bool
+        + {abstract} magnetometerDataReady() : bool
+        + {abstract} getAccelerationValues(accelerationValues : IMUData*) const : void
+        + {abstract} getTurnRates(turnRates : IMUData*) const : void
+        + {abstract} getMagnetometerValues(magnetometerValues : IMUData*) const : void
+        + {abstract} calibrate() : void
+    }
+
+    interface "ILed" as iLed {
+        + {abstract} enable(enableIt : bool) : void
+    }
+
+    interface "ILineSensors" as iLineSensors {
+        + {abstract} init() : void
+        + {abstract} calibrate() : void
+        + {abstract} readLine() : int16_t
+        + {abstract} getSensorValues() : const uint16_t*
+        + {abstract} isCalibrationSuccessful() : bool
+        + {abstract} getCalibErrorInfo() const : uint8_t
+        + {abstract} getNumLineSensors() const : uint8_t
+        + {abstract} getSensorValueMax() const : uint16_t
+        + {abstract} resetCalibration() : void
+    }
+
+    interface "IMotors" as iMotors {
+        + {abstract} init() : void
+        + {abstract} setSpeeds(leftSpeed : int16_t, rightSpeed : int16_t) : void
+        + {abstract} getMaxSpeed() const : int16_t
+        + {abstract} getLeftSpeed() const : int16_t
+        + {abstract} getRightSpeed() const : int16_t
+    }
+
+    interface "IPower" as iPower {
+        + {abstract} isUsbPowered() : bool
+        + {abstract} getBatteryVoltage() : uint16_t
+    }
+
+    interface "IProximitySensors" as iProximitySensors {
+        + {abstract} initFrontSensor() : void
+        + {abstract} getNumSensors() const : uint8_t
+        + {abstract} read() : void
+        + {abstract} countsFrontWithLeftLeds() : uint8_t
+        + {abstract} countsFrontWithRightLeds() : uint8_t
+        + {abstract} getBrightnessLevels() : uint8_t
+    }
+
+    interface "IReceiver" as iReceiver {
+        + {abstract} setChannel(channel : int32_t) : void
+        + {abstract} receive(data : void*, size : size_t) : void
+        + {abstract} available() const : int
+    }
+
+    interface "ISender" as iSender {
+        + {abstract} setChannel(channel : int32_t) : void
+        + {abstract} send(data : const void*, size : size_t) const : void
+        + {abstract} send(str : const char*) : void
+    }
+
+    interface "ISettings" as iSettings {
+        + {abstract} init() : void
+        + {abstract} getMaxSpeed() : int16_t
+        + {abstract} setMaxSpeed(maxSpeed : int16_t) : void
+    }
+}
+
+package "HAL RP2040" as hal {
+
+    class ButtonA
+    class ButtonB
+    class ButtonC
+    class Buzzer
+    class Display
+    class Encoders
+    class IMU
+    class LedRed
+    class LedYellow
+    class LedGreen
+    class LineSensors
+    class Motors
+    class Power
+    class ProximitySensors
+    class Sender <<unused>>
+    class Receiver <<unused>>
+    class Settings
+
+    iButton <|... ButtonA: <<realize>>
+    iButton <|... ButtonB: <<realize>>
+    iButton <|... ButtonC: <<realize>>
+    iBuzzer <|... Buzzer: <<realize>>
+    iDisplay <|... Display: <<realize>>
+    iEncoders <|... Encoders: <<realize>>
+    iIMU <|... IMU: <<realize>>
+    iLed <|... LedRed: <<realize>>
+    iLed <|... LedYellow: <<realize>>
+    iLed <|... LedGreen: <<realize>>
+    iLineSensors <|... LineSensors: <<realize>>
+    iMotors <|... Motors: <<realize>>
+    iPower <|... Power: <<realize>>
+    iProximitySensors <|... ProximitySensors: <<realize>>
+    iSender <|... Sender: <<realize>>
+    iReceiver <|... Receiver: <<realize>>
+    iSettings <|... Settings: <<realize>>
+}
+
+package "Zumo2040 library" as zumo2040Lib {
+
+    class Zumo2040ButtonA
+    class Zumo2040ButtonB
+    class Zumo2040ButtonC
+    class Zumo2040Buzzer
+    class Zumo2040OLED
+    class Zumo2040Encoder
+    class Zumo2040IMU
+    class Zumo2040LED <<Functions>>
+    class Zumo2040Linesensors
+    class Zumo2040Motors
+    class Zumo2040ProximitySensors
+}
+
+package "Arduino-Pico" as pico {
+    class EEPROMClass
+}
+
+package "Pico-SDK" as picosdk
+{
+    class adc <<Functions>>
+}
+
+halInterfaces -[hidden]-- hal
+hal -[hidden]-- zumo2040Lib
+zumo2040Lib -[hidden]r- pico
+
+ButtonA *---> Zumo2040ButtonA
+ButtonB *---> Zumo2040ButtonB
+ButtonC *---> Zumo2040ButtonC
+Buzzer *---> Zumo2040Buzzer
+Display *---> Zumo2040OLED
+Encoders *---> Zumo2040Encoder
+IMU *---> Zumo2040IMU
+LedRed ...> Zumo2040LED: <<use>>
+LedYellow ...> Zumo2040LED: <<use>>
+LedGreen ...> Zumo2040LED: <<use>>
+LineSensors *---> Zumo2040Linesensors
+Motors *---> Zumo2040Motors
+Power ...> adc : <<use>>
+ProximitySensors *---> Zumo2040ProximitySensors
+Settings ...> EEPROMClass: <<use>>
+
+note bottom of hal
+    The hardware abstraction layer contains
+    the realizations in form of the drivers.
+end note
+
+@enduml
