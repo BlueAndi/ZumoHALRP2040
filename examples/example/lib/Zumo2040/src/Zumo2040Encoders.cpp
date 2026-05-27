@@ -59,6 +59,11 @@
  * Public Methods
  *****************************************************************************/
 
+Zumo2040Encoder::Zumo2040Encoder()
+{
+    init();
+}
+
 ErrorCode Zumo2040Encoder::init()
 {
     return m_core.init();

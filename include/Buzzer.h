@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Buzzer realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "IBuzzer.h"
+#include "Zumo2040Buzzer.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,102 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target buzzer. */
+class Buzzer : public IBuzzer
+{
+public:
+    /**
+     * Constructs the buzzer adapter.
+     */
+    Buzzer() : IBuzzer(), m_buzzer()
+    {
+    }
+
+    /**
+     * Destroys the buzzer adapter.
+     */
+    ~Buzzer()
+    {
+    }
+
+    /**
+     * If the frequency is in 0.1 Hz, this bit must be set otherwise the
+     * frequency unit will be considered in Hz.
+     */
+    static const uint16_t DIV_BY_10_BIT = (1 << 15);
+
+    /**
+     * Plays the specified frequency for the specified duration.
+     *
+     * This function plays the note in the background while your program continues
+     * to execute. If you call another buzzer function while the note is playing,
+     * the new function call will overwrite the previous and take control of the
+     * buzzer.
+     *
+     * @warning @a frequency &times; @a duration / 1000 must be no greater than
+     * 0xFFFF (65535). This means you can't use a duration of 65535 ms for
+     * frequencies greater than 1 kHz. For example, the maximum duration you can
+     * use for a frequency of 10 kHz is 6553 ms. If you use a duration longer than
+     * this, you will produce an integer overflow that can result in unexpected
+     * behavior.
+     *
+     * @param[in] freq        Frequency to play in Hz or 0.1 Hz depended on divBy10 bit.
+     * @param[in] duration    Duration of the note in milliseconds.
+     * @param[in] volume      Volume of the note (0-15).
+     */
+    void playFrequency(uint16_t freq, uint16_t duration, uint8_t volume) final;
+
+    /**
+     * Plays a melody sequence out of RAM.
+     *
+     * @param[in] sequence Melody sequence in RAM
+     */
+    void playMelody(const char* sequence) final
+    {
+        m_buzzer.play(sequence);
+    }
+
+    /**
+     * Plays a melody sequence out of program space.
+     *
+     * @param[in] sequence Melody sequence in program space
+     */
+    void playMelodyPGM(const char* sequence) final
+    {
+        /* The RP2040 uses XIP (execute-in-place) hardware, which allows external
+        * flash memory to be addressed and accessed by the system as though it were
+        * internal memory. This means there is no need for a different function to
+        * read a melody from program space.
+        */
+        m_buzzer.play(sequence);
+    }
+
+    /**
+     * Checks whether a note, frequency, or sequence is being played.
+     *
+     * Note: Avoid calling this method inside a loop without processing the
+     * buzzer. On the simulation additional the simulation time needs to run!
+     *
+     * @return If the buzzer is current playing a note, frequency, or sequence it will
+     * return true otherwise false.
+     */
+    bool isPlaying() final
+    {
+        return 0 != m_buzzer.isPlaying();
+    }
+
+    /**
+     * Process the buzzer to handle sound timings.
+     */
+    void process() final
+    {
+        /* Not used. */
+    }
+
+private:
+    Zumo2040Buzzer m_buzzer; /**< Zumo buzzer driver. */
+};
 
 /******************************************************************************
  * Functions

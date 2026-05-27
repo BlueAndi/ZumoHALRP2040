@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Yellow LED realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -45,7 +45,6 @@
  *****************************************************************************/
 #include "ILed.h"
 #include "Zumo2040LED.h"
-
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -53,6 +52,37 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target yellow LED. */
+class LedYellow : public ILed
+{
+public:
+    /**
+     * Constructs the yellow LED adapter.
+     */
+    LedYellow() : ILed()
+    {
+    }
+
+    /**
+     * Destroys the yellow LED adapter.
+     */
+    ~LedYellow()
+    {
+    }
+
+    /**
+     * Enables/Disables the LED.
+     *
+     * @param[in] enableIt  Enable LED with true, disable it with false.
+     */
+    void enable(bool enableIt) final
+    {
+        setLedYellow(enableIt);
+    }
+
+private:
+};
 
 /******************************************************************************
  * Functions

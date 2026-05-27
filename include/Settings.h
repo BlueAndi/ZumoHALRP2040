@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Settings realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "ISettings.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +51,77 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class handles settings stored in the EEPROM. */
+class Settings : public ISettings
+{
+public:
+    /**
+     * Constructs the settings adapter.
+     */
+    Settings() : ISettings()
+    {
+    }
+
+    /**
+     * Destroys the button A adapter.
+     */
+    ~Settings()
+    {
+    }
+
+    /**
+     * Initialize the settings.
+     *
+     * If the settings are invalid or not compatible to the settings, the
+     * default values will be written!
+     */
+    void init() final;
+
+    /**
+     * Get the max. speed.
+     *
+     * @return Max. speed in steps/s.
+     */
+    int16_t getMaxSpeed() const final;
+
+    /**
+     * Set the max. speed.
+     *
+     * @param[in] maxSpeed  Max. speed in steps/s.
+     */
+    void setMaxSpeed(int16_t maxSpeed) final;
+
+private:
+
+    /**
+     * Get magic pattern.
+     *
+     * @return Magic pattern
+     */
+    uint32_t getMagicPattern() const;
+
+    /**
+     * Set magic pattern.
+     *
+     * @param[in] value Magic pattern
+     */
+    void setMagicPattern(uint32_t value) const;
+
+    /**
+     * Get data version.
+     *
+     * @return Data version
+     */
+    uint8_t getDataVersion() const;
+
+    /**
+     * Set data version.
+     *
+     * @param[in] value Data version
+     */
+    void setDataVersion(uint8_t value) const;
+};
 
 /******************************************************************************
  * Functions

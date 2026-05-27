@@ -25,14 +25,14 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Buzzer realization
  * @author Felix Reitenauer
  */
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "Buzzer.h"
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -56,6 +56,32 @@
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
+
+void Buzzer::playFrequency(uint16_t freq, uint16_t duration, uint8_t volume)
+{
+    unsigned int freqTarget = freq;
+
+    /* If the frequency has a fractional value, the most significant bit in the target frequency
+     * must be set. This means that the lower 15 bit are considered in 0.1 Hz.
+     */
+    if (0 != (freq % 10))
+    {
+        freqTarget |= DIV_BY_10_BIT;
+    }
+    else
+    /* The target frequency is considered in Hz, therefore divide by 10. */
+    {
+        freqTarget /= 10;
+    }
+
+    /* The Zumo2040 implementation does not have the Zumo32U4 limitation
+    * frequency * duration / 1000 <= 65535 because playback timing is handled
+    * differently.
+    * Applications should still respect the common buzzer interface limits to
+    * remain portable to the Zumo32U4 implementation.
+    */
+    m_buzzer.playFrequency(freqTarget, static_cast<uint32_t>(duration), static_cast<uint16_t>(volume));
+}
 
 /******************************************************************************
  * Protected Methods

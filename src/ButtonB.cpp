@@ -25,14 +25,14 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Button B realization
  * @author Felix Reitenauer
  */
 
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "ButtonB.h"
 /******************************************************************************
  * Compiler Switches
  *****************************************************************************/
@@ -56,6 +56,30 @@
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
+
+bool ButtonB::isPressed()
+{
+    /* If button was last time in released state, it shall be checked whether its pressed now. */
+    if (false == m_lastIsPressed)
+    {
+        /* Is button pressed? */
+        if (true == m_button.getSingleDebouncedPress())
+        {
+            m_lastIsPressed = true;
+        }
+    }
+    /* Button was last time in pressed state, it shall be checked whether its released now. */
+    else
+    {
+        /* Is button pressed? */
+        if (true == m_button.getSingleDebouncedRelease())
+        {
+            m_lastIsPressed = false;
+        }
+    }
+
+    return m_lastIsPressed;
+}
 
 /******************************************************************************
  * Protected Methods

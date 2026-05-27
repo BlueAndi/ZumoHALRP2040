@@ -268,66 +268,6 @@ BuzzerStatus Zumo2040Buzzer::playCheck()
     return (nullptr != m_buzzerSequence) ? BUZZER_ENABLED : BUZZER_DISABLED;
 }
 
-ErrorCode Zumo2040Buzzer::play(const char* notes)
-{
-    if (NONE != m_error)
-    {
-        return m_error;
-    }
-
-    if (nullptr == notes)
-    {
-        m_error = BUZZER_INVALID_MELODY_NULLPTR;
-        return m_error;
-    }
-    m_buzzerSequence = notes;
-    /* Reset the staccato rest duration to be sure there are no old temporary values. */
-    m_staccatoRestDuration = U_INTEGER_32_ZERO;
-
-    if (PLAY_AUTOMATIC == m_playmode)
-    {
-        return nextNote();
-    }
-
-    return m_error;
-}
-
-void Zumo2040Buzzer::stopPlaying()
-{
-    /* Stop the output of the buzzer. */
-    pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, U_INTEGER_16_ZERO);
-    pwm_set_enabled(BUZZER_PWM_SLICE, Status::DISABLED);
-    gpio_set_function(Zumo2040Pins::BUZZER_PIN, GPIO_FUNC_SIO);
-
-    if (ALARM_ENABLED == m_alarmStatus)
-    {
-        cancel_alarm(m_alarmID);
-    }
-
-    m_buzzerStatus = BUZZER_DISABLED;
-    m_buzzerSequence = nullptr;
-    m_alarmStatus = ALARM_DISABLED;
-    m_alarmID = ALARM_ID_ZERO;
-    m_staccatoRestDuration = U_INTEGER_32_ZERO;
-}
-
-bool Zumo2040Buzzer::isPlaying() const
-{
-    return ((BUZZER_ENABLED == m_buzzerStatus) || (nullptr != m_buzzerSequence));
-}
-
-ErrorCode Zumo2040Buzzer::getLastError() const
-{
-    return m_error;
-}
-/******************************************************************************
- * Protected Methods
- *****************************************************************************/
-
-/******************************************************************************
- * Private Methods
- *****************************************************************************/
-
 ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t volume)
 {
     if (NONE != m_error)
@@ -479,6 +419,67 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
 
     return NONE;
 }
+
+ErrorCode Zumo2040Buzzer::play(const char* notes)
+{
+    if (NONE != m_error)
+    {
+        return m_error;
+    }
+
+    if (nullptr == notes)
+    {
+        m_error = BUZZER_INVALID_MELODY_NULLPTR;
+        return m_error;
+    }
+    m_buzzerSequence = notes;
+    /* Reset the staccato rest duration to be sure there are no old temporary values. */
+    m_staccatoRestDuration = U_INTEGER_32_ZERO;
+
+    if (PLAY_AUTOMATIC == m_playmode)
+    {
+        return nextNote();
+    }
+
+    return m_error;
+}
+
+void Zumo2040Buzzer::stopPlaying()
+{
+    /* Stop the output of the buzzer. */
+    pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, U_INTEGER_16_ZERO);
+    pwm_set_enabled(BUZZER_PWM_SLICE, Status::DISABLED);
+    gpio_set_function(Zumo2040Pins::BUZZER_PIN, GPIO_FUNC_SIO);
+
+    if (ALARM_ENABLED == m_alarmStatus)
+    {
+        cancel_alarm(m_alarmID);
+    }
+
+    m_buzzerStatus = BUZZER_DISABLED;
+    m_buzzerSequence = nullptr;
+    m_alarmStatus = ALARM_DISABLED;
+    m_alarmID = ALARM_ID_ZERO;
+    m_staccatoRestDuration = U_INTEGER_32_ZERO;
+}
+
+bool Zumo2040Buzzer::isPlaying() const
+{
+    return ((BUZZER_ENABLED == m_buzzerStatus) || (nullptr != m_buzzerSequence));
+}
+
+ErrorCode Zumo2040Buzzer::getLastError() const
+{
+    return m_error;
+}
+
+/******************************************************************************
+ * Protected Methods
+ *****************************************************************************/
+
+/******************************************************************************
+ * Private Methods
+ *****************************************************************************/
 
 int64_t Zumo2040Buzzer::timerDone(alarm_id_t id, void* user_data)
 {

@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Sender realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "ISender.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +51,63 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class simulates a sender, because its only relevant for the simulation. */
+class Sender : public ISender
+{
+public:
+    /**
+     * Constructs the sender adapter.
+     */
+    Sender() : ISender()
+    {
+    }
+
+    /**
+     * Destroys the sender adapter.
+     */
+    ~Sender()
+    {
+    }
+
+    /**
+     * Set channel which to send data to.
+     *
+     * @param[in] channel   The channel which to use.
+     */
+    void setChannel(int32_t channel) final
+    {
+        (void)channel;
+    }
+
+    /**
+     * Sends data to the configured channel.
+     *
+     * @param[in] data  Data buffer
+     * @param[in] size  Data buffer size in bytes.
+     *
+     * @return Number of bytes written.
+     */
+    size_t send(const void* data, size_t size) const final
+    {
+        (void)data;
+        (void)size;
+        return 0U;
+    }
+
+    /**
+     * Sends string to the configured channel.
+     *
+     * @param[in] str   String which to send.
+     *
+     * @return Number of bytes written.
+     */
+    size_t send(const char* str) const final
+    {
+        (void)str;
+        return 0U;
+    }
+};
 
 /******************************************************************************
  * Functions

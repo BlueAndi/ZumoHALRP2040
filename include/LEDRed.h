@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Red LED realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "ILed.h"
+#include "Zumo2040LED.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,37 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target red LED. */
+class LedRed : public ILed
+{
+public:
+    /**
+     * Constructs the red LED adapter.
+     */
+    LedRed() : ILed()
+    {
+    }
+
+    /**
+     * Destroys the red LED adapter.
+     */
+    ~LedRed()
+    {
+    }
+
+    /**
+     * Enables/Disables the LED.
+     *
+     * @param[in] enableIt  Enable LED with true, disable it with false.
+     */
+    void enable(bool enableIt) final
+    {
+        setLedRed(enableIt);
+    }
+
+private:
+};
 
 /******************************************************************************
  * Functions

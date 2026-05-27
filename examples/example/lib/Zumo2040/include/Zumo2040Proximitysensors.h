@@ -127,7 +127,7 @@ class Zumo2040ProximitySensors
          *
          * @return The number of brightness levels.
          */
-        uint32_t getNumBrightnessLevels();
+        uint32_t getNumBrightnessLevels() const;
 
         /**
          * @brief Measures the proximity sensor response for all configured brightness levels.

@@ -120,6 +120,22 @@ class Zumo2040Buzzer
         BuzzerStatus playCheck();
 
         /**
+         * @brief Play a frequency for a given duration and volume.
+         *
+         * If the divide-by-10 flag is set in the frequency value, the remaining value
+         * is interpreted in 0.1 Hz units. Otherwise, the value is interpreted in Hz.
+         *
+         * @param freq Frequency value to play, including the optional divide-by-10 flag.
+         * @param dur Duration in ms.
+         * @param volume The valid range is 0 to 15, where 15 is the maximum volume. Each lower
+         * volume step halves the PWM compare value. Very low compare values may reach
+         * zero before all volume steps can be represented.
+         *
+         * @return The current error code.
+         */
+        ErrorCode playFrequency(uint16_t freq, uint32_t dur, uint16_t volume);
+
+        /**
          * @brief Play a note sequence.
          *
          * The note sequence is interpreted as a small music command string. In
@@ -198,22 +214,6 @@ class Zumo2040Buzzer
         ErrorCode getLastError() const;
 
     private:
-        /**
-         * @brief Play a frequency for a given duration and volume.
-         *
-         * If the divide-by-10 flag is set in the frequency value, the remaining value
-         * is interpreted in 0.1 Hz units. Otherwise, the value is interpreted in Hz.
-         *
-         * @param freq Frequency value to play, including the optional divide-by-10 flag.
-         * @param dur Duration in ms.
-         * @param volume The valid range is 0 to 15, where 15 is the maximum volume. Each lower
-         * volume step halves the PWM compare value. Very low compare values may reach
-         * zero before all volume steps can be represented.
-         *
-         * @return The current error code.
-         */
-        ErrorCode playFrequency(uint16_t freq, uint32_t dur, uint16_t volume);
-
         /**
          * @brief Timer callback used when the current tone duration has elapsed.
          *

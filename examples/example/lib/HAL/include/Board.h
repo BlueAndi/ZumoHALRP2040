@@ -27,7 +27,7 @@
 /**
  * @brief  The physical robot board realization.
  * @author Felix Reitenauer
- * 
+ *
  * @addtogroup HALTarget
  *
  * @{
@@ -42,9 +42,21 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
+#include <stdint.h>
 #include <IBoard.h>
+#include <ButtonA.h>
+#include <ButtonB.h>
+#include <ButtonC.h>
+#include <Buzzer.h>
+#include <Display.h>
+#include <Encoders.h>
+#include <LineSensors.h>
+#include <Motors.h>
+#include <LEDRed.h>
 #include <LEDYellow.h>
-
+#include <LEDGreen.h>
+#include <Settings.h>
+#include <Power.h>
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -62,7 +74,7 @@ public:
 
     /**
      * Get board instance.
-     * 
+     *
      * @return Board instance
      */
     static Board& getInstance()
@@ -77,10 +89,189 @@ public:
      */
     void init() final;
 
+    /**
+     * Get button A driver.
+     *
+     * @return Button A driver.
+     */
+    IButton& getButtonA() final
+    {
+        return m_buttonA;
+    }
+
+    /**
+     * Get button B driver.
+     *
+     * @return Button B driver.
+     */
+    IButton& getButtonB() final
+    {
+        return m_buttonB;
+    }
+
+    /**
+     * Get button C driver.
+     *
+     * @return Button C driver.
+     */
+    IButton& getButtonC() final
+    {
+        return m_buttonC;
+    }
+
+    /**
+     * Get buzzer driver.
+     *
+     * @return Buzzer driver.
+     */
+    IBuzzer& getBuzzer() final
+    {
+        return m_buzzer;
+    }
+
+    /**
+     * Get LCD driver.
+     *
+     * @return LCD driver.
+     */
+    IDisplay& getDisplay() final
+    {
+        return m_display;
+    }
+
+    /**
+     * Get encoders.
+     *
+     * @return Encoders driver.
+     */
+    IEncoders& getEncoders() final
+    {
+        return m_encoders;
+    }
+
+    /**
+     * Get line sensors driver.
+     *
+     * @return Line sensor driver.
+     */
+    ILineSensors& getLineSensors() final
+    {
+        return m_lineSensors;
+    }
+
+    /**
+     * Get motor driver.
+     *
+     * @return Motor driver.
+     */
+    IMotors& getMotors() final
+    {
+        return m_motors;
+    }
+
+    /**
+     * Get red LED driver.
+     *
+     * @return Red LED driver.
+     */
+    ILed& getRedLed() final
+    {
+        return m_ledRed;
+    }
+
+    /**
+     * Get yellow LED driver.
+     *
+     * @return Yellow LED driver.
+     */
+    ILed& getYellowLed() final
+    {
+        return m_ledYellow;
+    }
+
+    /**
+     * Get green LED driver.
+     *
+     * @return Green LED driver.
+     */
+    ILed& getGreenLed() final
+    {
+        return m_ledGreen;
+    }
+
+    /**
+     * Get the settings.
+     *
+     * @return Settings
+     */
+
+    ISettings& getSettings() final
+    {
+        return m_settings;
+    }
+
+
+    /**
+     * Get the power interface.
+     *
+     * @return power interface
+     */
+
+    IPower& getPower() final
+    {
+        return m_power;
+    }
+
+    /**
+     * Process actuators and sensors.
+     */
+    void process() final
+    {
+        m_buzzer.process();
+    }
 
 protected:
 
 private:
+
+    /** Button A driver */
+    ButtonA m_buttonA;
+
+    /** Button B driver */
+    ButtonB m_buttonB;
+
+    /** Button C driver */
+    ButtonC m_buttonC;
+
+    /** Buzzer driver */
+    Buzzer m_buzzer;
+
+    /** Display driver */
+    Display m_display;
+
+    /** Encoders driver */
+    Encoders m_encoders;
+
+    /** Line sensors driver */
+    LineSensors m_lineSensors;
+
+    /** Motors driver */
+    Motors m_motors;
+
+    /** Red LED driver */
+    LedRed m_ledRed;
+
+    /** Yellow LED driver */
+    LedYellow m_ledYellow;
+
+    /** Green LED driver */
+    LedGreen m_ledGreen;
+
+    /** Settings */
+    Settings m_settings;
+
+    /** Power interface provider- */
+    Power m_power;
 
     /**
      * Constructs the concrete board.

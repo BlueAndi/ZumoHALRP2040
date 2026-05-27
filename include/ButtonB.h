@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief  
+ * @brief  Button B realization
  * @author Felix Reitenauer
  *
- * @addtogroup 
+ * @addtogroup HALTarget
  *
  * @{
  */
@@ -43,7 +43,8 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "IButton.h"
+#include "Zumo2040Buttons.h"
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -51,6 +52,36 @@
 /******************************************************************************
  * Types and Classes
  *****************************************************************************/
+
+/** This class provides access to the Zumo target button B. */
+class ButtonB : public IButton
+{
+public:
+    /**
+     * Constructs the button B adapter.
+     */
+    ButtonB() : IButton(), m_button(), m_lastIsPressed(false)
+    {
+    }
+
+    /**
+     * Destroys the button B adapter.
+     */
+    ~ButtonB()
+    {
+    }
+
+    /**
+     * Is button pressed or not, including debouncing.
+     *
+     * @return If button is pressed, returns true otherwise false.
+     */
+    bool isPressed() final;
+
+private:
+    Zumo2040ButtonB m_button;        /**< Zumo button driver. */
+    bool            m_lastIsPressed; /**< Last is pressed state. */
+};
 
 /******************************************************************************
  * Functions
