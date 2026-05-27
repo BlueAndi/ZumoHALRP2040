@@ -58,13 +58,22 @@ platform = https://github.com/maxgerhardt/platform-raspberrypi.git
 board_build.core = earlephilhower
 ```
 
-
 ## Used Libraries
 
 | Library                                                                 | Description                               | License |
 | ----------------------------------------------------------------------- | ----------------------------------------- | ------- |
 | [ZumoHALInterfaces](https://github.com/BlueAndi/ZumoHALInterfaces)      | The Zumo C++ HAL interfaces.              | MIT     |
 | [PololuOLED](https://github.com/pololu/pololu-oled-arduino)             | Provides support for displaying text and graphics on the SH1106 OLED display | MIT |
+
+## Attribution
+
+This library reuses implementation details from the following resources:
+
+| Name                                                                                                                 | License |
+| -------------------------------------------------------------------------------------------------------------------- | ------- |
+| [Pololu Zumo2040 library](https://github.com/pololu/zumo-2040-robot)                                                 | MIT     |
+| [Pololu Zumo32U4 library](https://github.com/pololu/zumo-32u4-arduino-library)                                       | MIT     |
+| [Adam Green Pololu3piPlus32U4 library RP2040 port](https://github.com/adamgreen/pololu-3pi-plus-2040-arduino-library) | MIT     |
 
 ## Issues, Ideas And Bugs
 
