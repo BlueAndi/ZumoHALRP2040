@@ -25,10 +25,10 @@
     DESCRIPTION
 *******************************************************************************/
 /**
- * @brief
+ * @brief Provides access to the Zumo 2040 core implementation.
  * @author Felix Reitenauer
  *
- * @addtogroup
+ * @addtogroup Zumo2040Core
  *
  * @{
  */

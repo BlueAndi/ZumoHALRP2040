@@ -1,0 +1,6 @@
+@mainpage Manual
+
+@defgroup HALTarget Hardware Abstraction Layer
+The concrete hardware abstraction layer for the RP2040, used by the Pololu Zumo2040.
+@{
+@}
