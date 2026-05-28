@@ -39,3 +39,7 @@
 
 # debug information files
 *.dwo
+
+# Local VS Code configuration
+.vscode/
+*.code-workspace
