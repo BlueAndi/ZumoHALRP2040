@@ -26,7 +26,7 @@
 *******************************************************************************/
 /**
  * @brief  Example application
- * @author Felix Reitenauer
+ * @author Andreas Merkle <web@blue-andi.de>
  *
  * @addtogroup Application
  *
