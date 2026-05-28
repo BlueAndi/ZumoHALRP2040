@@ -64,7 +64,7 @@ board_build.core = earlephilhower
 
 ## Issues, Ideas And Bugs
 
-If you have further ideas or you found some bugs, great! Create a [issue](https://github.com/BlueAndi/ZumoHALATmega32u4/issues) or if you are able and willing to fix it by yourself, clone the repository and create a pull request.
+If you have further ideas or you found some bugs, great! Create a [issue](https://github.com/BlueAndi/ZumoHALRP2040/issues) or if you are able and willing to fix it by yourself, clone the repository and create a pull request.
 
 ## License
 
