@@ -87,17 +87,17 @@ static const size_t EEPROM_SIZE = 256u;
  */
 
 /**
- * Magic pattern address in EEPROM.
+ * Magic pattern address in the emulated EEPROM.
  */
 static const size_t EEPROM_ADDRESS_MAGIC_PATTERN = 0u;
 
 /**
- * Data version address in EEPROM.
+ * Data version address in the emulated EEPROM.
  */
 static const size_t EEPROM_ADDRESS_DATA_VERSION = EEPROM_ADDRESS_MAGIC_PATTERN + sizeof(MAGIC_PATTERN);
 
 /**
- * Max. speed address in EEPROM.
+ * Max. speed address in the emulated EEPROM.
  */
 static const size_t EEPROM_ADDRESS_MAX_SPEED = EEPROM_ADDRESS_DATA_VERSION + sizeof(DATA_VERSION);
 
