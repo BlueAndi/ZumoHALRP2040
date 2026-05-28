@@ -363,11 +363,9 @@ bool Zumo2040Linesensors::isCalibrationSuccessful()
 
         distance = m_calibratedMaxValuesOn[idx] - m_calibratedMinValuesOn[idx];
 
-        /* The assumed minimum range between the calibrated minimum and maximum values
-         * for emitter-on readings is one sixth of a typical emitter-on black-line reading.
-         */
         if (MIN_EMITTER_ON_CALIBRATION_DELTA > distance)
         {
+            /* The difference between the calibrated minimum and maximum sensor values was too small. */
             m_sensorError[idx] = LINESENSOR_CALIBRATION_FAILED;
             m_linesensorError = LINESENSOR_CALIBRATION_FAILED;
             return false;
