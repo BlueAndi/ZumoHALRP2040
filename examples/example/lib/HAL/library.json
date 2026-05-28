@@ -1,7 +1,7 @@
 {
     "name": "HAL",
-    "version": "0.0.1",
-    "description": "Example Zumo2040 HAL Library consumer.",
+    "version": "0.1.0",
+    "description": "...",
     "authors": [{
         "name": "Andreas Merkle",
         "email": "web@blue-andi.de",
@@ -11,9 +11,6 @@
     "license": "MIT",
     "dependencies": [{
         "name": "Webots"
-    },{
-        "name": "ZumoHALRP2040",
-        "version": "0.0.1"
     }],
     "frameworks": "*",
     "platforms": "*"
