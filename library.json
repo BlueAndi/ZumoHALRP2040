@@ -1,11 +1,16 @@
 {
     "name": "ZumoHALRP2040",
-    "version": "0.0.1",
+    "version": "0.5.0",
     "description": "Zumo C++ hardware abstraction layer for the Pololu ZumoRP2040 simulation.",
     "authors": [{
         "name": "Felix Reitenauer",
         "email": "Felix.Reitenauer@newtec.de",
         "url": "https://github.com/FelixReite",
+        "maintainer": false
+    },{
+        "name": "Andreas Merkle",
+        "email": "web@blue-andi.de",
+        "url": "https://github.com/BlueAndi",
         "maintainer": true
     }],
     "repository": {
@@ -23,6 +28,7 @@
         "version": "^2.0.0"
     }],
     "frameworks": "arduino",
+    "platforms": "raspberrypi",
       "build": {
     "flags": [
       "-I src/Zumo2040"
