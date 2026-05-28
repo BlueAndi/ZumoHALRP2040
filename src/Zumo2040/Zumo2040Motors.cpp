@@ -33,8 +33,8 @@
  * Includes
  *****************************************************************************/
 
-#include <Zumo2040Motors.h>
-#include <Zumo2040Pin.h>
+#include "Zumo2040Motors.h"
+#include "Zumo2040Pin.h"
 #include <Arduino.h>
 #include <hardware/pwm.h>
 
