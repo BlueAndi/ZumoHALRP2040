@@ -78,7 +78,7 @@ struct LinesensorsInfo
      */
     ErrorCode m_sensorError[SENSOR_COUNT];
 
-    /** Sensor values compensated with the enabled and disabled emitter readings.
+    /** Buffer for sensor values with enabled emitter.
      * Sensor index order when looking at the robot from behind:
      *  [0] = leftmost sensor
      *  [1] = left-center sensor
