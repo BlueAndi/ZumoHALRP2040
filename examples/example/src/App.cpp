@@ -75,7 +75,6 @@ Zumo2040Buzzer buzzer;
  void App::setup()
 {
     /* Place your once executed code for the setup here.. */
-    Board::getInstance().init();
     oled.setLayout21x8();
     linesensor.init();
 
@@ -86,9 +85,6 @@ Zumo2040Buzzer buzzer;
         i++;
     }
 
-    oled.setLayout21x8();
-
-    delay(500);
 }
 
 void App::loop()
@@ -101,22 +97,25 @@ pos = linesensor.readLine();
 info = linesensor.getInfo();
 
 oled.print("Sensor 0: ");
-oled.print(info.m_calibratedSensorValues[0]);
+oled.print(info.m_sensorValuesOn[0]);
 oled.gotoXY(0, 1);
 oled.print("Sensor 1: ");
-oled.print(info.m_calibratedSensorValues[1]);
+oled.print(info.m_sensorValuesOn[1]);
 oled.gotoXY(0, 2);
 oled.print("Sensor 2: ");
-oled.print(info.m_calibratedSensorValues[2]);
+oled.print(info.m_sensorValuesOn[2]);
 oled.gotoXY(0, 3);
 oled.print("Sensor 3: ");
-oled.print(info.m_calibratedSensorValues[3]);
+oled.print(info.m_sensorValuesOn[3]);
 oled.gotoXY(0, 4);
 oled.print("Sensor 4: ");
-oled.print(info.m_calibratedSensorValues[4]);
+oled.print(info.m_sensorValuesOn[4]);
 oled.gotoXY(0,5);
 oled.print("Position: ");
 oled.print(pos);
+oled.gotoXY(0,6);
+oled.print("Calib good?: ");
+oled.print(linesensor.isCalibrationSuccessful());
 
 delay(30);
 

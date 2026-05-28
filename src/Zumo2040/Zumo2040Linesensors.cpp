@@ -88,8 +88,12 @@ constexpr uint32_t ACCEPT_LINE_THRESHOLD = 200u;
 /** Center divisor for edge case calculation in readLine(). */
 constexpr int32_t CENTER_DIVISOR = 2;
 
-/** Divisor used for checking the calibration range. */
-constexpr uint32_t CALIBRATION_CONTROL_DIVISOR = 6u;
+/** Minimum required range between the calibrated minimum and maximum values
+ *  for emitter-on readings.
+ *  The value is based on one sixth of a typical emitter-on black-line reading
+ *  of around 4000 for the inner sensors.
+ */
+constexpr uint32_t MIN_EMITTER_ON_CALIBRATION_DELTA = 667u;
 
 /** Indicates that the line sensors are not calibrated. */
 constexpr bool NOT_CALIBRATED = false;
@@ -359,11 +363,9 @@ bool Zumo2040Linesensors::isCalibrationSuccessful()
 
         distance = m_calibratedMaxValuesOn[idx] - m_calibratedMinValuesOn[idx];
 
-        /* The assumption here is, that the distance (max. value - min. value) must be
-         * higher than a sixth of the max. measure duration.
-         */
-        if ((MAX_VALUE / CALIBRATION_CONTROL_DIVISOR) > distance)
+        if (MIN_EMITTER_ON_CALIBRATION_DELTA > distance)
         {
+            /* The difference between the calibrated minimum and maximum sensor values was too small. */
             m_sensorError[idx] = LINESENSOR_CALIBRATION_FAILED;
             m_linesensorError = LINESENSOR_CALIBRATION_FAILED;
             return false;
