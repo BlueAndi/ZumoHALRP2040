@@ -192,16 +192,16 @@ public:
      */
     virtual void process() = 0;
 
-    protected:
+protected:
 
-        /**
-         * Constructs the board interface.
-         */
-        IBoard()
-        {
-        }
+    /**
+     * Constructs the board interface.
+     */
+    IBoard()
+    {
+    }
 
-    private:
+private:
 
 };
 
