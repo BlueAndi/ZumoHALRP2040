@@ -26,7 +26,7 @@
 *******************************************************************************/
 /**
  * @brief  The physical robot board realization.
- * @author Felix Reitenauer
+ * @author Andreas Merkle <web@blue-andi.de>
  */
 
 /******************************************************************************
