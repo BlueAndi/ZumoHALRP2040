@@ -23,16 +23,16 @@ Hardware abstraction layer for the Pololu Zumo2040 robot (see <https://www.polol
 
 ### The Principle
 
-![Principle](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/BlueAndi/ZumoHALRP2040/refs/heads/develop/doc/uml/Principle.plantuml)
+![Principle](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/BlueAndi/ZumoHALRP2040/refs/heads/main/doc/uml/Principle.plantuml)
 
 ### Detail
 
-![Detail](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/BlueAndi/ZumoHALRP2040/refs/heads/develop/doc/uml/HAL.plantuml)
+![Detail](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/BlueAndi/ZumoHALRP2040/refs/heads/main/doc/uml/HAL.plantuml)
 
 ## How to integrate the library?
 ```
 lib_deps =
-    https://github.com/BlueAndi/ZumoHALRP2040.git
+    BlueAndi/ZumoHALRP2040 @ ~0.5.0
 ```
 
 ### Example
