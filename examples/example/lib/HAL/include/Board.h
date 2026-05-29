@@ -26,7 +26,7 @@
 *******************************************************************************/
 /**
  * @brief  The physical robot board realization.
- * @author Felix Reitenauer
+ * @author Andreas Merkle <web@blue-andi.de>
  *
  * @addtogroup HALTarget
  *
@@ -57,6 +57,7 @@
 #include <LEDGreen.h>
 #include <Settings.h>
 #include <Power.h>
+
 /******************************************************************************
  * Macros
  *****************************************************************************/

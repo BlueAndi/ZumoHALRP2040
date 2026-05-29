@@ -26,7 +26,7 @@
 *******************************************************************************/
 /**
  * @brief  Board interface, which abstracts the physical board
- * @author Felix Reitenauer
+ * @author Andreas Merkle <web@blue-andi.de>
  *
  * @addtogroup HALInterfaces
  *
@@ -53,6 +53,11 @@
 #include <ILed.h>
 #include <ISettings.h>
 #include <IPower.h>
+
+#ifdef DEBUG_ODOMETRY
+#include <ISender.h>
+#endif /* DEBUG_ODOMETRY */
+
 /******************************************************************************
  * Macros
  *****************************************************************************/
@@ -171,22 +176,32 @@ public:
      */
     virtual IPower& getPower() = 0;
 
+#ifdef DEBUG_ODOMETRY
+
+    /**
+     * Get the sender driver, used to send data to the webots supervisor.
+     *
+     * @return Sender driver
+     */
+    virtual ISender& getSender() = 0;
+
+#endif /* DEBUG_ODOMETRY */
 
     /**
      * Process actuators and sensors.
      */
     virtual void process() = 0;
 
-    protected:
+protected:
 
-        /**
-         * Constructs the board interface.
-         */
-        IBoard()
-        {
-        }
+    /**
+     * Constructs the board interface.
+     */
+    IBoard()
+    {
+    }
 
-    private:
+private:
 
 };
 
