@@ -41,6 +41,4 @@
 *.dwo
 
 # Local VS Code configuration
-.vscode/
-!.vscode/extensions.json
 *.code-workspace
