@@ -1,0 +1,86 @@
+/* MIT License
+ *
+ * Copyright (c) 2026 - 2026 Andreas Merkle <web@blue-andi.de>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/*
+* -----------------------------------------------------------------------------
+* Build note
+*
+* Generate the corresponding header with:
+* pioasm -o c-sdk RP2040Linesensors.pio RP2040Linesensors.pio.h
+*
+* Example in PowerShell on Windows:
+* & "C:\Users\<USERNAME>\.platformio\packages\tool-pioasm-rp2040-earlephilhower\pioasm.exe" -o c-sdk RP2040Linesensors.pio RP2040Linesensors.pio.h
+*
+* Run this command in the directory that contains this .pio file.
+* If the terminal is opened in a different directory, use absolute paths for
+* the input and output files as well.
+*
+* Include the generated header in the matching C++ source file:
+* #include "RP2040Linesensors.pio.h"
+*
+* The header must be regenerated whenever this .pio file is changed.
+* ------------------------------------------------------------------------------
+*/
+
+.program rp2040linesensor
+
+initial:
+    mov y, null      ; Reset y.
+    mov osr, ~null   ; Fill the OSR completely with ones, so we can use them later to initialize the counters.
+    out pins, 5      ; Preload HIGH level before enabling output drivers.
+    out pindirs, 5   ; Drive all five sensor pins as outputs to start charging the capacitor.
+    out y, 8         ; Initialize the counter for the charging process using 8 ones from the OSR, which results in y = 255.
+
+; The charge loop consists of 15 instruction operations (14x nop [no operation] + jmp).
+; With 256 loop iterations, this results in 256 * 15 = 3840 operations.
+; At a clock rate of 125 MHz, this results in a charge time of 30.72 us.
+charge:
+    nop [13]         ; For 14 cycles, the state machine does nothing.
+    jmp y-- charge   ; Stay in the charging process as long as the counter is not 0.
+
+set_timer:
+    mov y, null      ; Reset y, so we can safely initialize the discharge counter later.
+    set pindirs, 0   ; Release all five pins and start the RC discharge measurement.
+    mov osr, ~null   ; Fill the OSR completely with ones to ensure we have enough bits to initialize the discharge counter.
+    out y, 15        ; Fill y with 15 ones from the OSR to initialize the discharge counter with its starting value of y = 32767.
+    mov x, pins      ; Store the initial pin values in x, so we can later use them for the before/after comparison.
+
+measure:
+    mov osr, y       ; Move the counter into the OSR, so y has space for the current pin values.
+    mov y, pins      ; Move the current pin values into y.
+    jmp x!=y change  ; Compare the before/after values of the pins to detect if a capacitor has discharged.
+    mov y, osr       ; Move the counter back into y, so we can decrement the counter.
+    jmp y-- measure  ; Decrement the discharge counter. Stay in the loop as long as y != 0.
+    jmp end          ; Timeout reached, jump to the end label to end the measurement.
+
+change:
+    mov x, y         ; Move the pin values from y into x to update the previous pin states.
+    in y, 5          ; Shift the current pin states into the ISR, so the CPU has access to them.
+    mov y, osr       ; Move the discharge counter into y, so we can decrement it.
+    in osr, 15       ; Shift 15 timer bits into the ISR, so the CPU has access to them. This triggers autopush at 20 bits.
+    jmp !x end       ; All sensor pins are low, measurement is complete. Jump to the end label to end the measurement.
+    jmp y-- measure  ; Decrement the discharge counter and stay in the measurement process as long as y != 0 and x is not all zeros.
+
+end:
+    mov y, ~null     ; Ensure that the end marker is all ones.
+    in y, 32         ; Send 0xFFFFFFFF to the CPU to signal the end of the measurement.
