@@ -96,10 +96,10 @@ constexpr uint32_t BRIGHTNESS_LEVELS[NUM_BRIGHTNESS_LEVELS] = {12u, 39u, 81u, 13
  * Public Methods
  *****************************************************************************/
 
-Zumo2040ProximitySensors::Zumo2040ProximitySensors() : m_lineSensorEmitterPin(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN),
+Zumo2040ProximitySensors::Zumo2040ProximitySensors() : m_lineSensorEmitterPin(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN),
                                                        m_numSensors(U_INTEGER_32_ZERO)
 {
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040Pins::PROXIMITY_SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; idx++)
     {
         m_data[idx].pin = UNINITIALIZED_PIN;
         m_data[idx].withLeftLeds = U_INTEGER_32_ZERO;
@@ -107,8 +107,8 @@ Zumo2040ProximitySensors::Zumo2040ProximitySensors() : m_lineSensorEmitterPin(Zu
     }
 
     /* Set the GPIO function of the proximity emitter pins to PWM. */
-    gpio_set_function(Zumo2040Pins::LEFT_PROXIMITY_EMITTERS_PIN, GPIO_FUNC_PWM);
-    gpio_set_function(Zumo2040Pins::RIGHT_PROXIMITY_EMITTERS_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040::Pins::LEFT_PROXIMITY_EMITTERS_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040::Pins::RIGHT_PROXIMITY_EMITTERS_PIN, GPIO_FUNC_PWM);
 
     /* Configure the PWM frequency to 125 MHz / ((3 + 3 / 16) * (699 + 1)) ~= 56.022 kHz,
      * because the sensors detect carrier frequencies near 56 kHz.
@@ -123,12 +123,12 @@ Zumo2040ProximitySensors::Zumo2040ProximitySensors() : m_lineSensorEmitterPin(Zu
 
     pwm_set_counter(PWM_SLICE_PROX_EMITTERS, U_INTEGER_16_ZERO);
 
-    pwm_set_enabled(PWM_SLICE_PROX_EMITTERS, Status::ENABLED);
+    pwm_set_enabled(PWM_SLICE_PROX_EMITTERS, Zumo2040::Status::ENABLED);
 }
 
 Zumo2040ProximitySensors::~Zumo2040ProximitySensors()
 {
-    pwm_set_enabled(PWM_SLICE_PROX_EMITTERS, Status::DISABLED);
+    pwm_set_enabled(PWM_SLICE_PROX_EMITTERS, Zumo2040::Status::DISABLED);
 }
 
 void Zumo2040ProximitySensors::initLeftSensor()
@@ -136,9 +136,9 @@ void Zumo2040ProximitySensors::initLeftSensor()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Status::ENABLED;
-    sensor.status[PROX_FRONT] = Status::DISABLED;
-    sensor.status[PROX_RIGHT] = Status::DISABLED;
+    sensor.status[PROX_LEFT] = Zumo2040::Status::ENABLED;
+    sensor.status[PROX_FRONT] = Zumo2040::Status::DISABLED;
+    sensor.status[PROX_RIGHT] = Zumo2040::Status::DISABLED;
 
     init(sensor);
 }
@@ -148,9 +148,9 @@ void Zumo2040ProximitySensors::initFrontSensor()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Status::DISABLED;
-    sensor.status[PROX_FRONT] = Status::ENABLED;
-    sensor.status[PROX_RIGHT] = Status::DISABLED;
+    sensor.status[PROX_LEFT] = Zumo2040::Status::DISABLED;
+    sensor.status[PROX_FRONT] = Zumo2040::Status::ENABLED;
+    sensor.status[PROX_RIGHT] = Zumo2040::Status::DISABLED;
 
     init(sensor);
 }
@@ -160,9 +160,9 @@ void Zumo2040ProximitySensors::initRightSensor()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Status::DISABLED;
-    sensor.status[PROX_FRONT] = Status::DISABLED;
-    sensor.status[PROX_RIGHT] = Status::ENABLED;
+    sensor.status[PROX_LEFT] = Zumo2040::Status::DISABLED;
+    sensor.status[PROX_FRONT] = Zumo2040::Status::DISABLED;
+    sensor.status[PROX_RIGHT] = Zumo2040::Status::ENABLED;
 
     init(sensor);
 }
@@ -172,9 +172,9 @@ void Zumo2040ProximitySensors::initAllSensors()
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
     ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Status::ENABLED;
-    sensor.status[PROX_FRONT] = Status::ENABLED;
-    sensor.status[PROX_RIGHT] = Status::ENABLED;
+    sensor.status[PROX_LEFT] = Zumo2040::Status::ENABLED;
+    sensor.status[PROX_FRONT] = Zumo2040::Status::ENABLED;
+    sensor.status[PROX_RIGHT] = Zumo2040::Status::ENABLED;
 
     init(sensor);
 }
@@ -192,7 +192,7 @@ uint32_t Zumo2040ProximitySensors::getNumBrightnessLevels() const
 void Zumo2040ProximitySensors::read()
 {
     /* Ensure that all initialized sensor pins use pull-ups and reset their counts. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040Pins::PROXIMITY_SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; idx++)
     {
         if (m_data[idx].pin != UNINITIALIZED_PIN)
         {
@@ -206,10 +206,10 @@ void Zumo2040ProximitySensors::read()
         }
     }
     /* Ensure that the line sensor emitter is deactivated during proximity measurement. */
-    if ((gpio_get((m_lineSensorEmitterPin)) == PinLevel::HIGH) &&
-        (gpio_get_dir((m_lineSensorEmitterPin)) == PinDirection::OUT))
+    if ((gpio_get((m_lineSensorEmitterPin)) == Zumo2040::PinLevel::HIGH) &&
+        (gpio_get_dir((m_lineSensorEmitterPin)) == Zumo2040::PinDirection::OUT))
     {
-        gpio_put(m_lineSensorEmitterPin, PinLevel::LOW);
+        gpio_put(m_lineSensorEmitterPin, Zumo2040::PinLevel::LOW);
     }
 
     sleep_us(PULSE_OFF_DELAY_US);
@@ -219,12 +219,12 @@ void Zumo2040ProximitySensors::read()
         startIRPuls(EmitterSide::LEFT, BRIGHTNESS_LEVELS[idx]);
         sleep_us(PULSE_ON_DELAY_US);
 
-        for (uint32_t pinIDX = U_INTEGER_32_ZERO; pinIDX < Zumo2040Pins::PROXIMITY_SENSOR_COUNT; pinIDX++)
+        for (uint32_t pinIDX = U_INTEGER_32_ZERO; pinIDX < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; pinIDX++)
         {
             if (m_data[pinIDX].pin != UNINITIALIZED_PIN)
             {
                 /* Count the sensor if its output is pulled low while the emitter is active. */
-                if (gpio_get(m_data[pinIDX].pin) == PinLevel::LOW)
+                if (gpio_get(m_data[pinIDX].pin) == Zumo2040::PinLevel::LOW)
                 {
                     m_data[pinIDX].withLeftLeds++;
                 }
@@ -237,12 +237,12 @@ void Zumo2040ProximitySensors::read()
         startIRPuls(EmitterSide::RIGHT, BRIGHTNESS_LEVELS[idx]);
         sleep_us(PULSE_ON_DELAY_US);
 
-        for (uint32_t pinIDX = U_INTEGER_32_ZERO; pinIDX < Zumo2040Pins::PROXIMITY_SENSOR_COUNT; pinIDX++)
+        for (uint32_t pinIDX = U_INTEGER_32_ZERO; pinIDX < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; pinIDX++)
         {
             if (m_data[pinIDX].pin != UNINITIALIZED_PIN)
             {
                 /* Count the sensor if its output is pulled low while the emitter is active. */
-                if (gpio_get(m_data[pinIDX].pin) == PinLevel::LOW)
+                if (gpio_get(m_data[pinIDX].pin) == Zumo2040::PinLevel::LOW)
                 {
                     m_data[pinIDX].withRightLeds++;
                 }
@@ -276,7 +276,7 @@ void Zumo2040ProximitySensors::init(ProximitySensorStatus &sensor)
 {
     m_numSensors = U_INTEGER_32_ZERO;
 
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040Pins::PROXIMITY_SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; idx++)
     {
         m_data[idx].pin = UNINITIALIZED_PIN;
         m_data[idx].withLeftLeds = U_INTEGER_32_ZERO;
@@ -285,9 +285,9 @@ void Zumo2040ProximitySensors::init(ProximitySensorStatus &sensor)
         /* Initialize selected sensor pins as inputs with pull-ups. The sensor output pulls
          * the pin low when reflected IR is detected.
          */
-        if (Status::ENABLED == sensor.status[idx])
+        if (Zumo2040::Status::ENABLED == sensor.status[idx])
         {
-            m_data[idx].pin = Zumo2040Pins::PROXIMITY_SENSOR_PINS[idx];
+            m_data[idx].pin = Zumo2040::Pins::PROXIMITY_SENSOR_PINS[idx];
 
             gpio_init(m_data[idx].pin);
             gpio_set_dir(m_data[idx].pin, GPIO_IN);

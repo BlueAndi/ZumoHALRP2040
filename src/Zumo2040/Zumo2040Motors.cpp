@@ -83,15 +83,15 @@ Zumo2040Motors::Zumo2040Motors()
     * reconfiguring the PWM frequency when multiple peripherals use PWM, which is
     * undesirable for stable hardware operation.
     */
-    gpio_init(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN);
-    gpio_init(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN);
-    gpio_set_dir(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN, GPIO_OUT);
-    gpio_set_dir(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN, GPIO_OUT);
-    gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN, LOW);
-    gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN, LOW);
+    gpio_init(Zumo2040::Pins::RIGHT_MOTOR_DIRECTION_PIN);
+    gpio_init(Zumo2040::Pins::LEFT_MOTOR_DIRECTION_PIN);
+    gpio_set_dir(Zumo2040::Pins::RIGHT_MOTOR_DIRECTION_PIN, GPIO_OUT);
+    gpio_set_dir(Zumo2040::Pins::LEFT_MOTOR_DIRECTION_PIN, GPIO_OUT);
+    gpio_put(Zumo2040::Pins::RIGHT_MOTOR_DIRECTION_PIN, LOW);
+    gpio_put(Zumo2040::Pins::LEFT_MOTOR_DIRECTION_PIN, LOW);
     /* Initialize the PWM slice 7 */
-    gpio_set_function(Zumo2040Pins::RIGHT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
-    gpio_set_function(Zumo2040Pins::LEFT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040::Pins::RIGHT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040::Pins::LEFT_MOTOR_PWM_PIN, GPIO_FUNC_PWM);
     /* PWM frequency = (125 MHz / 4) / (400 + 1) = 77.9 kHz */
     pwm_set_clkdiv_int_frac4(PWM_SLICE_MOTORS, PWM_CLK_DIV_INT, PWM_CLK_DIV_FRAC4);
     pwm_set_wrap(PWM_SLICE_MOTORS, PWM_RANGE);
@@ -115,7 +115,7 @@ void Zumo2040Motors::setLeftSpeed(int16_t speed)
         /* Cap absolute speed value at 400 */
         speed = (speed < (-PWM_RANGE)) ? PWM_RANGE : -speed;
         /* Set direction pin for backward driving */
-        gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,
+        gpio_put(Zumo2040::Pins::LEFT_MOTOR_DIRECTION_PIN,
                  m_flipLeftMotor ? LOW : HIGH);
     }
     else
@@ -123,7 +123,7 @@ void Zumo2040Motors::setLeftSpeed(int16_t speed)
         /* Cap absolute speed value at 400 */
         speed = (speed > PWM_RANGE) ? PWM_RANGE : speed;
         /* Set direction pin for forward driving */
-        gpio_put(Zumo2040Pins::LEFT_MOTOR_DIRECTION_PIN,
+        gpio_put(Zumo2040::Pins::LEFT_MOTOR_DIRECTION_PIN,
                  m_flipLeftMotor ? HIGH : LOW);
     }
     /* Set the current PWM counter compare value for the left motor channel */
@@ -139,7 +139,7 @@ void Zumo2040Motors::setRightSpeed(int16_t speed)
         /* Cap absolute speed value at 400 */
         speed = (speed < (-PWM_RANGE)) ? PWM_RANGE : -speed;
         /* Set direction pin for backward driving */
-        gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,
+        gpio_put(Zumo2040::Pins::RIGHT_MOTOR_DIRECTION_PIN,
                  m_flipRightMotor ? LOW : HIGH);
     }
     else
@@ -147,7 +147,7 @@ void Zumo2040Motors::setRightSpeed(int16_t speed)
         /* Cap absolute speed value at 400 */
         speed = (speed > PWM_RANGE) ? PWM_RANGE : speed;
         /* Set direction pin for forward driving */
-        gpio_put(Zumo2040Pins::RIGHT_MOTOR_DIRECTION_PIN,
+        gpio_put(Zumo2040::Pins::RIGHT_MOTOR_DIRECTION_PIN,
                  m_flipRightMotor ? HIGH : LOW);
     }
     /* Set the current PWM counter compare value for the right motor channel */

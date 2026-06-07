@@ -140,16 +140,16 @@ ErrorCode EncoderCore::init()
     /* Configure the left encoder pins for PIO input usage. */
     pio_sm_set_consecutive_pindirs(m_pio,
                                    m_smLeft,
-                                   Zumo2040Pins::LEFT_ENCODER_A_PIN,
+                                   Zumo2040::Pins::LEFT_ENCODER_A_PIN,
                                    PIN_COUNT,
                                    INPUT);
 
-    pio_gpio_init(m_pio, Zumo2040Pins::LEFT_ENCODER_A_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LEFT_ENCODER_B_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LEFT_ENCODER_A_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LEFT_ENCODER_B_PIN);
 
     /* Configure the state machine for the left encoder. */
     m_configLeft = rp2040encoder_program_get_default_config(OFFSET_ZERO);
-    sm_config_set_in_pin_base(&m_configLeft, Zumo2040Pins::LEFT_ENCODER_A_PIN);
+    sm_config_set_in_pin_base(&m_configLeft, Zumo2040::Pins::LEFT_ENCODER_A_PIN);
     sm_config_set_in_shift(&m_configLeft,
                            SHIFT_LEFT,
                            DISABLE_AUTOPUSH,
@@ -170,16 +170,16 @@ ErrorCode EncoderCore::init()
     /* Configure the right encoder pins as PIO inputs. */
     pio_sm_set_consecutive_pindirs(m_pio,
                                    m_smRight,
-                                   Zumo2040Pins::RIGHT_ENCODER_A_PIN,
+                                   Zumo2040::Pins::RIGHT_ENCODER_A_PIN,
                                    PIN_COUNT,
                                    INPUT);
 
-    pio_gpio_init(m_pio, Zumo2040Pins::RIGHT_ENCODER_A_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::RIGHT_ENCODER_B_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::RIGHT_ENCODER_A_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::RIGHT_ENCODER_B_PIN);
 
     /* Configure the state machine for the right encoder. */
     m_configRight = rp2040encoder_program_get_default_config(OFFSET_ZERO);
-    sm_config_set_in_pin_base(&m_configRight, Zumo2040Pins::RIGHT_ENCODER_A_PIN);
+    sm_config_set_in_pin_base(&m_configRight, Zumo2040::Pins::RIGHT_ENCODER_A_PIN);
     sm_config_set_in_shift(&m_configRight,
                            SHIFT_LEFT,
                            DISABLE_AUTOPUSH,
