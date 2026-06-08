@@ -9,9 +9,6 @@
         "maintainer": true
     }],
     "license": "MIT",
-    "dependencies": [{
-        "name": "Webots"
-    }],
     "frameworks": "*",
     "platforms": "*"
 }
