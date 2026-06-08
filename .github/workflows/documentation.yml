@@ -34,7 +34,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up graphviz
         uses: ts-graphviz/setup-graphviz@v2
