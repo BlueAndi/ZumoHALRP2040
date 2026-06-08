@@ -52,9 +52,9 @@
 #include <Encoders.h>
 #include <LineSensors.h>
 #include <Motors.h>
-#include <LEDRed.h>
-#include <LEDYellow.h>
-#include <LEDGreen.h>
+#include <LedRed.h>
+#include <LedYellow.h>
+#include <LedGreen.h>
 #include <Settings.h>
 #include <Power.h>
 
