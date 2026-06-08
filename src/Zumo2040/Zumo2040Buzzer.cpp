@@ -226,7 +226,7 @@ constexpr bool REST = true;
 
 Zumo2040Buzzer::Zumo2040Buzzer() : m_buzzerSequence(nullptr),
                                    m_buzzerStatus(BUZZER_DISABLED),
-                                   m_alarmStatus(ALARM_DISABLED),
+                                   m_alarmStatus(Zumo2040::AlarmStatus::ALARM_DISABLED),
                                    m_alarmID(ALARM_ID_ZERO),
                                    m_playmode(PLAY_AUTOMATIC),
                                    m_error(NONE),
@@ -377,16 +377,16 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
     }
 
     /* Cancel an active alarm before starting a new tone. */
-    if (ALARM_ENABLED == m_alarmStatus)
+    if (Zumo2040::AlarmStatus::ALARM_ENABLED == m_alarmStatus)
     {
         alarm_id_t oldID = m_alarmID;
         m_alarmID = ALARM_ID_ZERO;
-        m_alarmStatus = ALARM_DISABLED;
+        m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
         cancel_alarm(oldID);
     }
 
     /* Configure the buzzer pin so it can be used for PWM. */
-    gpio_set_function(Zumo2040Pins::BUZZER_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(Zumo2040::Pins::BUZZER_PIN, GPIO_FUNC_PWM);
     /* Configure the clock divider to reach the wanted frequency. */
     pwm_set_clkdiv(BUZZER_PWM_SLICE, clkDiv);
     /* Configure the wrap value of the PWM to reach the wanted frequency. */
@@ -394,7 +394,7 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
     /* Configure the counter compare value to set the wanted volume. */
     pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, level);
     /* Enable the PWM. */
-    pwm_set_enabled(BUZZER_PWM_SLICE, Status::ENABLED);
+    pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::ENABLED);
     m_buzzerStatus = BUZZER_ENABLED;
 
     /* Create the alarm that calls the callback function timerDone() after
@@ -405,17 +405,17 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
     /* If the alarm could not be created the function returns a value < 0. */
     if (m_alarmID < ALARM_ID_ZERO)
     {
-        pwm_set_enabled(BUZZER_PWM_SLICE, Status::DISABLED);
+        pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::DISABLED);
 
         m_buzzerStatus = BUZZER_DISABLED;
-        m_alarmStatus = ALARM_DISABLED;
+        m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
         m_alarmID = ALARM_ID_ZERO;
 
         m_error = BUZZER_COULD_NOT_SET_ALARM;
         return m_error;
     }
 
-    m_alarmStatus = ALARM_ENABLED;
+    m_alarmStatus = Zumo2040::AlarmStatus::ALARM_ENABLED;
 
     return NONE;
 }
@@ -448,17 +448,17 @@ void Zumo2040Buzzer::stopPlaying()
 {
     /* Stop the output of the buzzer. */
     pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, U_INTEGER_16_ZERO);
-    pwm_set_enabled(BUZZER_PWM_SLICE, Status::DISABLED);
-    gpio_set_function(Zumo2040Pins::BUZZER_PIN, GPIO_FUNC_SIO);
+    pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::DISABLED);
+    gpio_set_function(Zumo2040::Pins::BUZZER_PIN, GPIO_FUNC_SIO);
 
-    if (ALARM_ENABLED == m_alarmStatus)
+    if (Zumo2040::AlarmStatus::ALARM_ENABLED == m_alarmStatus)
     {
         cancel_alarm(m_alarmID);
     }
 
     m_buzzerStatus = BUZZER_DISABLED;
     m_buzzerSequence = nullptr;
-    m_alarmStatus = ALARM_DISABLED;
+    m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
     m_alarmID = ALARM_ID_ZERO;
     m_staccatoRestDuration = U_INTEGER_32_ZERO;
 }
@@ -496,10 +496,10 @@ int64_t Zumo2040Buzzer::timerDone(alarm_id_t id, void* user_data)
     }
 
     pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, U_INTEGER_16_ZERO);
-    pwm_set_enabled(BUZZER_PWM_SLICE, Status::DISABLED);
+    pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::DISABLED);
 
     buzzer->m_buzzerStatus = BUZZER_DISABLED;
-    buzzer->m_alarmStatus = ALARM_DISABLED;
+    buzzer->m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
     buzzer->m_alarmID = ALARM_ID_ZERO;
 
     if ((buzzer->m_buzzerSequence) && (buzzer->m_playmode == PLAY_AUTOMATIC))

@@ -273,7 +273,7 @@ class Zumo2040Buzzer
         BuzzerStatus m_buzzerStatus;
 
         /** Indicates the current alarm status. */
-        AlarmStatus m_alarmStatus;
+        Zumo2040::AlarmStatus m_alarmStatus;
 
         /** ID of the current alarm. */
         alarm_id_t m_alarmID;

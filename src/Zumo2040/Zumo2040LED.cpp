@@ -141,8 +141,8 @@ constexpr uint8_t END_FRAME_BYTES = 4;
 LedSpiAccess::LedSpiAccess(uint32_t clock, BitOrder bitOrder, arduino::SPIMode dataMode)
 {
     /* Switch SPI pins to leds. */
-    SPI.setSCK(Zumo2040Pins::RGB_CLOCK_PIN);
-    SPI.setTX(Zumo2040Pins::RGB_OLED_DATA_PIN);
+    SPI.setSCK(Zumo2040::Pins::RGB_CLOCK_PIN);
+    SPI.setTX(Zumo2040::Pins::RGB_OLED_DATA_PIN);
     SPI.setRX(NOPIN);
 
     SPI.begin();
