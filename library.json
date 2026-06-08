@@ -26,11 +26,16 @@
         "owner": "pololu",
         "name": "PololuOLED",
         "version": "^2.0.0"
+    },{
+        "name": "EEPROM"
+    },{
+        "name": "SPI"
     }],
     "frameworks": "arduino",
     "platforms": "raspberrypi",
-      "build": {
-    "flags": [
-      "-I src/Zumo2040"
-    ]}
+    "build": {
+        "flags": [
+            "-I src/Zumo2040"
+        ]
+    }
 }
