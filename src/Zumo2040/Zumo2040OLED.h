@@ -152,11 +152,11 @@ class Zumo2040OLED : public PololuSH1106Main<Zumo2040OLEDcore>
      * @param dc OLED data/not command pin (use 255 if it is not used).
      * @param cs Chip-select pin (use 255 if it is not used).
      */
-    Zumo2040OLED(uint8_t clk = Zumo2040Pins::OLED_CLOCK_PIN,
-                 uint8_t mos = Zumo2040Pins::RGB_OLED_DATA_PIN,
-                 uint8_t res = Zumo2040Pins::OLED_RESET_PIN,
-                 uint8_t dc = Zumo2040Pins::BUTTON_C_OLED_DATA_COMMAND_PIN,
-                 uint8_t cs = Zumo2040Pins::UNUSED_OLED_PIN);
+    Zumo2040OLED(uint8_t clk = Zumo2040::Pins::OLED_CLOCK_PIN,
+                 uint8_t mos = Zumo2040::Pins::RGB_OLED_DATA_PIN,
+                 uint8_t res = Zumo2040::Pins::OLED_RESET_PIN,
+                 uint8_t dc = Zumo2040::Pins::BUTTON_C_OLED_DATA_COMMAND_PIN,
+                 uint8_t cs = Zumo2040::Pins::UNUSED_OLED_PIN);
 };
 
 /******************************************************************************

@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://choosealicense.com/licenses/mit/)
 [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Release](https://img.shields.io/github/release/BlueAndi/ZumoHALRP2040.svg)](https://github.com/BlueAndi/ZumoHALRP2040/releases)
 
 Hardware abstraction layer for the Pololu Zumo2040 robot (see <https://www.pololu.com/category/129/zumo-robots-and-accessories>).
 
@@ -32,7 +33,7 @@ Hardware abstraction layer for the Pololu Zumo2040 robot (see <https://www.polol
 ## How to integrate the library?
 ```
 lib_deps =
-    BlueAndi/ZumoHALRP2040 @ ~0.5.0
+    BlueAndi/ZumoHALRP2040 @ ~1.0.0
 ```
 
 ### Example
@@ -41,7 +42,7 @@ See [example](/examples/example/) for more detail.
 
 ## Interface Description
 
-
+See [interface description of latest version](https://blueandi.github.io/ZumoHALRP2040/).
 
 ## Requirements to your application
 

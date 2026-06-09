@@ -150,35 +150,35 @@ LinesensorsCore::~LinesensorsCore()
         }
     }
 
-    if (gpio_get(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN) == PinLevel::HIGH)
+    if (gpio_get(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN) == Zumo2040::PinLevel::HIGH)
     {
         /* Deactivate the line sensor emitter. */
-        gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::LOW);
+        gpio_put(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN, Zumo2040::PinLevel::LOW);
     }
 }
 
 ErrorCode LinesensorsCore::init()
 {
     /* Initialize the line sensor emitter. */
-    gpio_init(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN);
-    gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::HIGH);
-    gpio_set_dir(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, GPIO_OUT);
+    gpio_init(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN);
+    gpio_put(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN, Zumo2040::PinLevel::HIGH);
+    gpio_set_dir(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN, GPIO_OUT);
 
     /* Initialize the line sensor pins for the state machine. */
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_5_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_4_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_3_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_2_PIN);
-    pio_gpio_init(m_pio, Zumo2040Pins::LINE_SENSOR_1_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LINE_SENSOR_5_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LINE_SENSOR_4_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LINE_SENSOR_3_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LINE_SENSOR_2_PIN);
+    pio_gpio_init(m_pio, Zumo2040::Pins::LINE_SENSOR_1_PIN);
 
     /* Disable the pulls of the line sensors pins, to guarantee
     *  that the capacitor is only drained by the phototransistors.
     */
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_5_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_4_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_3_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_2_PIN);
-    gpio_disable_pulls(Zumo2040Pins::LINE_SENSOR_1_PIN);
+    gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_5_PIN);
+    gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_4_PIN);
+    gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_3_PIN);
+    gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_2_PIN);
+    gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_1_PIN);
 
     /* State machine initialization. */
     if (!pio_can_add_program(m_pio, &rp2040linesensor_program))
@@ -199,22 +199,22 @@ ErrorCode LinesensorsCore::init()
     /* Initialize the pin directions for the state machine. */
     pio_sm_set_consecutive_pindirs(m_pio,
                                    m_sm,
-                                   Zumo2040Pins::LINE_SENSOR_5_PIN,
+                                   Zumo2040::Pins::LINE_SENSOR_5_PIN,
                                    SENSOR_COUNT,
                                    OUTPUT);
 
     m_config = rp2040linesensor_program_get_default_config(m_programEntry);
 
     /* Configure which pins are used for the "in pins" command in the state machine. */
-    sm_config_set_in_pin_base(&m_config,  Zumo2040Pins::LINE_SENSOR_5_PIN);
+    sm_config_set_in_pin_base(&m_config,  Zumo2040::Pins::LINE_SENSOR_5_PIN);
     sm_config_set_in_pin_count(&m_config, SENSOR_COUNT);
 
     /* Configure which pins are used for the "out pins" command in the state machine. */
-    sm_config_set_out_pin_base(&m_config, Zumo2040Pins::LINE_SENSOR_5_PIN);
+    sm_config_set_out_pin_base(&m_config, Zumo2040::Pins::LINE_SENSOR_5_PIN);
     sm_config_set_out_pin_count(&m_config, SENSOR_COUNT);
 
     /* Configure which pins are used for the "set pins" command in the state machine. */
-    sm_config_set_set_pin_base(&m_config, Zumo2040Pins::LINE_SENSOR_5_PIN);
+    sm_config_set_set_pin_base(&m_config, Zumo2040::Pins::LINE_SENSOR_5_PIN);
     sm_config_set_set_pin_count(&m_config, SENSOR_COUNT);
 
     /* Configure the ISR behavior for the state machine:
@@ -313,12 +313,12 @@ void LinesensorsCore::setEmitter(EmitterStates state)
 {
     if (EMITTER_OFF == state)
     {
-        gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::LOW);
+        gpio_put(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN, Zumo2040::PinLevel::LOW);
         sleep_us(EMITTER_DELAY_US);
     }
     else
     {
-        gpio_put(Zumo2040Pins::LINE_SENSOR_EMITTER_PIN, PinLevel::HIGH);
+        gpio_put(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN, Zumo2040::PinLevel::HIGH);
         sleep_us(EMITTER_DELAY_US);
     }
 }

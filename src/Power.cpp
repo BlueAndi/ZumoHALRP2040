@@ -78,7 +78,7 @@ static const uint32_t BATTERY_VOLTAGE_DIVIDER_FACTOR = 11u;
 
 uint16_t Power::getBatteryVoltage()
 {
-    const uint pin = Zumo2040Pins::LINE_SENSOR_EMITTER_PIN;
+    const uint pin = Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN;
 
     /* Save the old pin configuration, because this pin is also used
      * for line sensor emitter control.

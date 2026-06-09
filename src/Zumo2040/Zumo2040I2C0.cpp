@@ -90,19 +90,19 @@ Zumo2040IMU_I2C::Zumo2040IMU_I2C()
 {
     /* Initialize the I2C bus and the pins used by the IMU. */
     i2c_init(i2c0, I2C_CLOCK_SPEED_HZ);
-    gpio_set_function(Zumo2040Pins::I2C0_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(Zumo2040Pins::I2C0_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(Zumo2040Pins::I2C0_SDA_PIN);
-    gpio_pull_up(Zumo2040Pins::I2C0_SCL_PIN);
+    gpio_set_function(Zumo2040::Pins::I2C0_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(Zumo2040::Pins::I2C0_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(Zumo2040::Pins::I2C0_SDA_PIN);
+    gpio_pull_up(Zumo2040::Pins::I2C0_SCL_PIN);
 }
 
 Zumo2040IMU_I2C::~Zumo2040IMU_I2C()
 {
     /* Deinitialize the pins used by the IMU. */
-    gpio_set_function(Zumo2040Pins::I2C0_SDA_PIN, GPIO_FUNC_NULL);
-    gpio_set_function(Zumo2040Pins::I2C0_SCL_PIN, GPIO_FUNC_NULL);
-    gpio_disable_pulls(Zumo2040Pins::I2C0_SDA_PIN);
-    gpio_disable_pulls(Zumo2040Pins::I2C0_SCL_PIN);
+    gpio_set_function(Zumo2040::Pins::I2C0_SDA_PIN, GPIO_FUNC_NULL);
+    gpio_set_function(Zumo2040::Pins::I2C0_SCL_PIN, GPIO_FUNC_NULL);
+    gpio_disable_pulls(Zumo2040::Pins::I2C0_SDA_PIN);
+    gpio_disable_pulls(Zumo2040::Pins::I2C0_SCL_PIN);
 }
 
 ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length)

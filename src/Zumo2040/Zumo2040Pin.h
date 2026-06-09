@@ -52,98 +52,101 @@
  * Types and Classes
  *****************************************************************************/
 
-enum AlarmStatus
+namespace Zumo2040
 {
-    /** Indicates that the alarm is disabled. */
-    ALARM_DISABLED = false,
+    enum AlarmStatus
+    {
+        /** Indicates that the alarm is disabled. */
+        ALARM_DISABLED = false,
 
-    /** Indicates that the alarm is enabled. */
-    ALARM_ENABLED = true
-};
+        /** Indicates that the alarm is enabled. */
+        ALARM_ENABLED = true
+    };
 
-namespace Zumo2040Pins
-{
-    /** Pin for Button A. */
-    constexpr uint8_t BUTTON_A_PIN = 25u;
-    /** SPI MOSI pin for APA102 and OLED data. */
-    constexpr uint8_t RGB_OLED_DATA_PIN = 3u;
-    /** SPI SCK pin for APA102 clock. */
-    constexpr uint8_t RGB_CLOCK_PIN = 6u;
-    /** SPI SCK pin for OLED clock. */
-    constexpr uint8_t OLED_CLOCK_PIN = 2u;
-    /** OLED D/C pin, reused to read Button C. */
-    constexpr uint8_t BUTTON_C_OLED_DATA_COMMAND_PIN = 0u;
-    /** Pin used to reset the OLED. */
-    constexpr uint8_t OLED_RESET_PIN = 1u;
-    /** Value used to indicate unused pin. */
-    constexpr uint8_t UNUSED_OLED_PIN = 255u;
-    /** Left motor direction pin. */
-    constexpr uint8_t LEFT_MOTOR_DIRECTION_PIN = 11u;
-    /** Right motor direction pin. */
-    constexpr uint8_t RIGHT_MOTOR_DIRECTION_PIN = 10u;
-    /** Left motor PWM pin. */
-    constexpr uint8_t LEFT_MOTOR_PWM_PIN = 15u;
-    /** Right motor PWM pin. */
-    constexpr uint8_t RIGHT_MOTOR_PWM_PIN = 14u;
-    /** Left encoder A pin. */
-    constexpr uint8_t LEFT_ENCODER_A_PIN = 12u;
-    /** Left encoder B pin. */
-    constexpr uint8_t LEFT_ENCODER_B_PIN = 13u;
-    /** Right encoder A pin. */
-    constexpr uint8_t RIGHT_ENCODER_A_PIN = 8u;
-    /** Right encoder B pin. */
-    constexpr uint8_t RIGHT_ENCODER_B_PIN = 9u;
-    /** Line sensor 1 pin. */
-    constexpr uint8_t LINE_SENSOR_1_PIN = 22u;
-    /** Line sensor 2 pin. */
-    constexpr uint8_t LINE_SENSOR_2_PIN = 21u;
-    /** Line sensor 3 pin. */
-    constexpr uint8_t LINE_SENSOR_3_PIN = 20u;
-    /** Line sensor 4 pin. */
-    constexpr uint8_t LINE_SENSOR_4_PIN = 19u;
-    /** Line sensor 5 pin. */
-    constexpr uint8_t LINE_SENSOR_5_PIN = 18u;
-    /** Line sensor emitter control pin. */
-    constexpr uint8_t LINE_SENSOR_EMITTER_PIN = 26u;
-    /** Number of proximity sensors. */
-    constexpr uint8_t PROXIMITY_SENSOR_COUNT = 3u;
-    /** Proximity sensor pins in the following order: left, front, right. */
-    constexpr uint8_t PROXIMITY_SENSOR_PINS[PROXIMITY_SENSOR_COUNT] = {23u, 27u, 24u};
-    /** Control pin for the left proximity emitters. */
-    constexpr uint8_t LEFT_PROXIMITY_EMITTERS_PIN = 17u;
-    /** Control pin for the right proximity emitters. */
-    constexpr uint8_t RIGHT_PROXIMITY_EMITTERS_PIN = 16u;
-    /** I2C0 SCL pin. */
-    constexpr uint8_t I2C0_SCL_PIN = 5u;
-    /** I2C0 SDA pin. */
-    constexpr uint8_t I2C0_SDA_PIN = 4u;
-    /** Buzzer pin. */
-    constexpr uint8_t BUZZER_PIN = 7u;
-}
+    namespace Pins
+    {
+        /** Pin for Button A. */
+        constexpr uint8_t BUTTON_A_PIN = 25u;
+        /** SPI MOSI pin for APA102 and OLED data. */
+        constexpr uint8_t RGB_OLED_DATA_PIN = 3u;
+        /** SPI SCK pin for APA102 clock. */
+        constexpr uint8_t RGB_CLOCK_PIN = 6u;
+        /** SPI SCK pin for OLED clock. */
+        constexpr uint8_t OLED_CLOCK_PIN = 2u;
+        /** OLED D/C pin, reused to read Button C. */
+        constexpr uint8_t BUTTON_C_OLED_DATA_COMMAND_PIN = 0u;
+        /** Pin used to reset the OLED. */
+        constexpr uint8_t OLED_RESET_PIN = 1u;
+        /** Value used to indicate unused pin. */
+        constexpr uint8_t UNUSED_OLED_PIN = 255u;
+        /** Left motor direction pin. */
+        constexpr uint8_t LEFT_MOTOR_DIRECTION_PIN = 11u;
+        /** Right motor direction pin. */
+        constexpr uint8_t RIGHT_MOTOR_DIRECTION_PIN = 10u;
+        /** Left motor PWM pin. */
+        constexpr uint8_t LEFT_MOTOR_PWM_PIN = 15u;
+        /** Right motor PWM pin. */
+        constexpr uint8_t RIGHT_MOTOR_PWM_PIN = 14u;
+        /** Left encoder A pin. */
+        constexpr uint8_t LEFT_ENCODER_A_PIN = 12u;
+        /** Left encoder B pin. */
+        constexpr uint8_t LEFT_ENCODER_B_PIN = 13u;
+        /** Right encoder A pin. */
+        constexpr uint8_t RIGHT_ENCODER_A_PIN = 8u;
+        /** Right encoder B pin. */
+        constexpr uint8_t RIGHT_ENCODER_B_PIN = 9u;
+        /** Line sensor 1 pin. */
+        constexpr uint8_t LINE_SENSOR_1_PIN = 22u;
+        /** Line sensor 2 pin. */
+        constexpr uint8_t LINE_SENSOR_2_PIN = 21u;
+        /** Line sensor 3 pin. */
+        constexpr uint8_t LINE_SENSOR_3_PIN = 20u;
+        /** Line sensor 4 pin. */
+        constexpr uint8_t LINE_SENSOR_4_PIN = 19u;
+        /** Line sensor 5 pin. */
+        constexpr uint8_t LINE_SENSOR_5_PIN = 18u;
+        /** Line sensor emitter control pin. */
+        constexpr uint8_t LINE_SENSOR_EMITTER_PIN = 26u;
+        /** Number of proximity sensors. */
+        constexpr uint8_t PROXIMITY_SENSOR_COUNT = 3u;
+        /** Proximity sensor pins in the following order: left, front, right. */
+        constexpr uint8_t PROXIMITY_SENSOR_PINS[PROXIMITY_SENSOR_COUNT] = {23u, 27u, 24u};
+        /** Control pin for the left proximity emitters. */
+        constexpr uint8_t LEFT_PROXIMITY_EMITTERS_PIN = 17u;
+        /** Control pin for the right proximity emitters. */
+        constexpr uint8_t RIGHT_PROXIMITY_EMITTERS_PIN = 16u;
+        /** I2C0 SCL pin. */
+        constexpr uint8_t I2C0_SCL_PIN = 5u;
+        /** I2C0 SDA pin. */
+        constexpr uint8_t I2C0_SDA_PIN = 4u;
+        /** Buzzer pin. */
+        constexpr uint8_t BUZZER_PIN = 7u;
+    }
 
-namespace PinLevel
-{
-    /** Pin level low. */
-    constexpr bool LOW = false;
-    /** Pin level high. */
-    constexpr bool HIGH = true;
-}
+    namespace PinLevel
+    {
+        /** Pin level low. */
+        constexpr bool LOW = false;
+        /** Pin level high. */
+        constexpr bool HIGH = true;
+    }
 
-namespace PinDirection
-{
-    /** Pin direction: Input. */
-    constexpr bool IN = false;
-    /** Pin direction: Output. */
-    constexpr bool OUT = true;
-}
+    namespace PinDirection
+    {
+        /** Pin direction: Input. */
+        constexpr bool IN = false;
+        /** Pin direction: Output. */
+        constexpr bool OUT = true;
+    }
 
-namespace Status
-{
-    /** Indicates the enabled state. */
-    constexpr bool ENABLED = true;
-    /** Indicates the disabled state. */
-    constexpr bool DISABLED = false;
-}
+    namespace Status
+    {
+        /** Indicates the enabled state. */
+        constexpr bool ENABLED = true;
+        /** Indicates the disabled state. */
+        constexpr bool DISABLED = false;
+    }
+} /* namespace Zumo2040 */
 
 /******************************************************************************
  * Functions

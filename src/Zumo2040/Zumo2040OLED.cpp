@@ -81,7 +81,7 @@ void Zumo2040OLEDcore::setPins(uint8_t clk, uint8_t mos, uint8_t res, uint8_t dc
 
 void Zumo2040OLEDcore::initPins()
 {
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resetPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_resetPin)
     {
         pinMode(m_resetPin, OUTPUT);
     }
@@ -90,11 +90,11 @@ void Zumo2040OLEDcore::initPins()
     digitalWrite(m_clkPin, LOW);
     pinMode(m_mosPin, OUTPUT);
 
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_dcPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_dcPin)
     {
         pinMode(m_dcPin, OUTPUT);
     }
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_csPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_csPin)
     {
         pinMode(m_csPin, OUTPUT);
     }
@@ -102,7 +102,7 @@ void Zumo2040OLEDcore::initPins()
 
 void Zumo2040OLEDcore::reset()
 {
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_resetPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_resetPin)
     {
         digitalWrite(m_resetPin, LOW);
         delayMicroseconds(STABILIZATION_TIME_US);
@@ -113,7 +113,7 @@ void Zumo2040OLEDcore::reset()
 
 void Zumo2040OLEDcore::sh1106TransferStart()
 {
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_csPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_csPin)
     {
         /* Select the SH1106 controller */
         digitalWrite(m_csPin, LOW);
@@ -130,7 +130,7 @@ void Zumo2040OLEDcore::sh1106TransferStart()
 
 void Zumo2040OLEDcore::sh1106TransferEnd()
 {
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_csPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_csPin)
     {
         /* Deselect the SH1106 controller */
         digitalWrite(m_csPin, HIGH);
@@ -144,7 +144,7 @@ void Zumo2040OLEDcore::sh1106CommandMode()
 {
     m_dataMode = Sh1106Modes::COMMAND;
 
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_dcPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_dcPin)
     {
         /* Set command mode */
         digitalWrite(m_dcPin, LOW);
@@ -155,7 +155,7 @@ void Zumo2040OLEDcore::sh1106DataMode()
 {
     m_dataMode = Sh1106Modes::DATA;
 
-    if (Zumo2040Pins::UNUSED_OLED_PIN != m_dcPin)
+    if (Zumo2040::Pins::UNUSED_OLED_PIN != m_dcPin)
     {
         /* Set data mode */
         digitalWrite(m_dcPin, HIGH);

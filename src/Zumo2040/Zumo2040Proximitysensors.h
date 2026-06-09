@@ -64,7 +64,7 @@ enum class EmitterSide
 struct ProximitySensorStatus
 {
     /** Sensor activation states in the following order: left, front, right. */
-    bool status[Zumo2040Pins::PROXIMITY_SENSOR_COUNT];
+    bool status[Zumo2040::Pins::PROXIMITY_SENSOR_COUNT];
 };
 
 
@@ -195,7 +195,7 @@ class Zumo2040ProximitySensors
         /** Line sensor emitter pin. */
         uint8_t m_lineSensorEmitterPin;
         /** Sensor data for all proximity sensor slots. */
-        SensorData m_data[Zumo2040Pins::PROXIMITY_SENSOR_COUNT];
+        SensorData m_data[Zumo2040::Pins::PROXIMITY_SENSOR_COUNT];
         /** Number of sensors which are initialized. */
         uint32_t m_numSensors;
 };
