@@ -1,6 +1,6 @@
 {
     "name": "ZumoHALRP2040",
-    "version": "0.5.0",
+    "version": "1.0.0",
     "description": "Zumo C++ hardware abstraction layer for the Pololu ZumoRP2040 simulation.",
     "authors": [{
         "name": "Felix Reitenauer",
