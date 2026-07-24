@@ -47,7 +47,7 @@
 
 bool IMU::init()
 {
-    if (m_imuDrv.checkIMU() == NONE)
+    if (m_imuDrv.checkIMU() == Zumo2040::NONE)
     {
         return true;
     }
@@ -70,7 +70,7 @@ void IMU::configureForTurnSensing()
 
 void IMU::readAccelerometer()
 {
-    IMUvector accel;
+    Zumo2040::IMUvector accel;
     m_imuDrv.readAcc(accel);
     m_accelerometerValues.valueX = accel.x - m_rawAccelerometerOffsetX;
     m_accelerometerValues.valueY = 0;
@@ -79,7 +79,7 @@ void IMU::readAccelerometer()
 
 void IMU::readGyro()
 {
-    IMUvector gyro;
+    Zumo2040::IMUvector gyro;
     m_imuDrv.readGyro(gyro);
     m_gyroValues.valueX = 0;
     m_gyroValues.valueY = 0;
@@ -88,7 +88,7 @@ void IMU::readGyro()
 
 void IMU::readMagnetometer()
 {
-    IMUvector mag;
+    Zumo2040::IMUvector mag;
     m_imuDrv.readMag(mag);
     m_magnetometerValues.valueX = mag.x;
     m_magnetometerValues.valueY = mag.y;
@@ -97,7 +97,7 @@ void IMU::readMagnetometer()
 
 bool IMU::accelerometerDataReady()
 {
-    if (m_imuDrv.accDataReady() == DataStatus::NO_NEW_DATA)
+    if (m_imuDrv.accDataReady() == Zumo2040::DataStatus::NO_NEW_DATA)
     {
         return false;
     }
@@ -109,7 +109,7 @@ bool IMU::accelerometerDataReady()
 
 bool IMU::gyroDataReady()
 {
-    if (m_imuDrv.gyroDataReady() == DataStatus::NO_NEW_DATA)
+    if (m_imuDrv.gyroDataReady() == Zumo2040::DataStatus::NO_NEW_DATA)
     {
         return false;
     }
@@ -121,7 +121,7 @@ bool IMU::gyroDataReady()
 
 bool IMU::magnetometerDataReady()
 {
-    if (m_imuDrv.magDataReady() == DataStatus::NO_NEW_DATA)
+    if (m_imuDrv.magDataReady() == Zumo2040::DataStatus::NO_NEW_DATA)
     {
         return false;
     }

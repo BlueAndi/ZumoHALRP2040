@@ -281,16 +281,16 @@ constexpr uint8_t IMU_WHO_AM_I_ADDRESSES[COUNT_IMU_SLAVES] = {LIS3MDL_WHO_AM_I_A
  * Public Methods
  *****************************************************************************/
 
-Zumo2040IMU::Zumo2040IMU() : m_error(NONE),
+Zumo2040IMU::Zumo2040IMU() : m_error(Zumo2040::NONE),
                              m_rawAccelerometerOffsetX(INTEGER_16_ZERO),
                              m_rawGyroOffsetZ(INTEGER_16_ZERO),
-                             m_calStatus(IMU_NOT_CALIBRATED)
+                             m_calStatus(Zumo2040::IMU_NOT_CALIBRATED)
 {
 }
 
-ErrorCode Zumo2040IMU::checkIMU()
+Zumo2040::ErrorCode Zumo2040IMU::checkIMU()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
@@ -301,7 +301,7 @@ ErrorCode Zumo2040IMU::checkIMU()
     for (uint8_t idx = 0; idx < COUNT_IMU_SLAVES; idx++)
     {
         slaveIdentification[idx] = readOneByte(IMU_SLAVE_ADDRESSES[idx], IMU_WHO_AM_I_ADDRESSES[idx]);
-        if (NONE != m_error)
+        if (Zumo2040::NONE != m_error)
         {
             return m_error;
         }
@@ -309,28 +309,28 @@ ErrorCode Zumo2040IMU::checkIMU()
 
     if ((LIS3MDL_WHO_AM_I_ID != slaveIdentification[U_INTEGER_8_ZERO]) || (LSM6DSO_WHO_AM_I_ID != slaveIdentification[U_INTEGER_8_ONE]))
     {
-        m_error = IMU_UNKNOWN;
+        m_error = Zumo2040::IMU_UNKNOWN;
         return m_error;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU::enableDefault()
+Zumo2040::ErrorCode Zumo2040IMU::enableDefault()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
-    m_calStatus = IMU_NOT_CALIBRATED;
+    m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
 
     for (uint8_t idx = U_INTEGER_8_ZERO; idx < COUNT_LSM6DSO_DEFAULT_CONFIG_REG; idx++)
     {
         writeOneByte(LSM6DSO_ADDR, LSM6DSO_DEFAULT_CONFIG_REG[idx], LSM6DSO_DEFAULT_CONFIG[idx]);
-        if (NONE != m_error)
+        if (Zumo2040::NONE != m_error)
         {
-            m_error = IMU_DEFAULT_CONFIG_FAILED;
+            m_error = Zumo2040::IMU_DEFAULT_CONFIG_FAILED;
             return m_error;
         }
     }
@@ -338,72 +338,72 @@ ErrorCode Zumo2040IMU::enableDefault()
     for (uint8_t idx = U_INTEGER_8_ZERO; idx < COUNT_LIS3MDL_DEFAULT_CONFIG_REG; idx++)
     {
         writeOneByte(LIS3MDL_ADDR, LIS3MDL_DEFAULT_CONFIG_REG[idx], LIS3MDL_DEFAULT_CONFIG[idx]);
-        if (NONE != m_error)
+        if (Zumo2040::NONE != m_error)
         {
-            m_error = IMU_DEFAULT_CONFIG_FAILED;
+            m_error = Zumo2040::IMU_DEFAULT_CONFIG_FAILED;
             return m_error;
         }
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU::configureForTurnSensing()
+Zumo2040::ErrorCode Zumo2040IMU::configureForTurnSensing()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
-    m_calStatus = IMU_NOT_CALIBRATED;
+    m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
 
     /* In contrast to the LSM6DS33, the LSM6DSO cannot disable individual axes. */
     writeOneByte(LSM6DSO_ADDR, LSM6DSO_REG_CTRL2_G, LSM6DSO_GYRO_CONFIG_TURN_SENS);
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_error = IMU_CONFIG_FOR_TURN_SENSING_FAILED;
+        m_error = Zumo2040::IMU_CONFIG_FOR_TURN_SENSING_FAILED;
         return m_error;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU::configureForCompassHeading()
+Zumo2040::ErrorCode Zumo2040IMU::configureForCompassHeading()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
-    m_calStatus = IMU_NOT_CALIBRATED;
+    m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
 
     m_error = writeOneByte(LIS3MDL_ADDR, LIS3MDL_REG_CTRL_REG1, LIS3MDL_MAGNET_CONFIG_COMPASS_HEADING);
 
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_error = IMU_CONFIG_FOR_COMPASS_HEADING_FAILED;
+        m_error = Zumo2040::IMU_CONFIG_FOR_COMPASS_HEADING_FAILED;
         return m_error;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU::readAcc(IMUvector& data)
+Zumo2040::ErrorCode Zumo2040IMU::readAcc(Zumo2040::IMUvector& data)
 {
-    data = {INTEGER_16_ZERO};
+    data = {};
 
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
     /* Read the accelerometer values into the m_accel vector. */
     m_error = readAxes16Bit(LSM6DSO_ADDR, LSM6DSO_START_REG_ACCEL, data);
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_error = IMU_READ_ACC_FAILED;
+        m_error = Zumo2040::IMU_READ_ACC_FAILED;
 
-        data = {INTEGER_16_ZERO};
+        data = {};
 
         return m_error;
     }
@@ -411,22 +411,22 @@ ErrorCode Zumo2040IMU::readAcc(IMUvector& data)
     return m_error;
 }
 
-ErrorCode Zumo2040IMU::readGyro(IMUvector& data)
+Zumo2040::ErrorCode Zumo2040IMU::readGyro(Zumo2040::IMUvector& data)
 {
-    data = {INTEGER_16_ZERO};
+    data = {};
 
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
     /* Read the gyroscope values into the m_gyro vector. */
     m_error = readAxes16Bit(LSM6DSO_ADDR, LSM6DSO_START_REG_GYRO, data);
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_error = IMU_READ_GYRO_FAILED;
+        m_error = Zumo2040::IMU_READ_GYRO_FAILED;
 
-        data = {INTEGER_16_ZERO};
+        data = {};
 
         return m_error;
     }
@@ -434,22 +434,22 @@ ErrorCode Zumo2040IMU::readGyro(IMUvector& data)
     return m_error;
 }
 
-ErrorCode Zumo2040IMU::readMag(IMUvector& data)
+Zumo2040::ErrorCode Zumo2040IMU::readMag(Zumo2040::IMUvector& data)
 {
-    data = {INTEGER_16_ZERO};
+    data = {};
 
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
     /* Read the magnetometer values into the m_magnet vector. */
     m_error = readAxes16Bit(LIS3MDL_ADDR, LIS3MDL_START_REG_MAGNET_AUTO_INC, data);
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_error = IMU_READ_MAGNET_FAILED;
+        m_error = Zumo2040::IMU_READ_MAGNET_FAILED;
 
-        data = {INTEGER_16_ZERO};
+        data = {};
 
         return m_error;
     }
@@ -457,11 +457,11 @@ ErrorCode Zumo2040IMU::readMag(IMUvector& data)
     return m_error;
 }
 
-DataStatus Zumo2040IMU::accDataReady()
+Zumo2040::DataStatus Zumo2040IMU::accDataReady()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        return NO_NEW_DATA;
+        return Zumo2040::NO_NEW_DATA;
     }
 
     uint8_t status = readOneByte(LSM6DSO_ADDR, LSM6DSO_STATUS_REG);
@@ -471,17 +471,17 @@ DataStatus Zumo2040IMU::accDataReady()
 
     if (LSM6DSO_STATUS_ACC_MASK != status)
     {
-        return NO_NEW_DATA;
+        return Zumo2040::NO_NEW_DATA;
     }
 
-    return NEW_DATA;
+    return Zumo2040::NEW_DATA;
 }
 
-DataStatus Zumo2040IMU::gyroDataReady()
+Zumo2040::DataStatus Zumo2040IMU::gyroDataReady()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        return NO_NEW_DATA;
+        return Zumo2040::NO_NEW_DATA;
     }
 
     uint8_t status = readOneByte(LSM6DSO_ADDR, LSM6DSO_STATUS_REG);
@@ -491,17 +491,17 @@ DataStatus Zumo2040IMU::gyroDataReady()
 
     if (LSM6DSO_STATUS_GYRO_MASK != status)
     {
-        return NO_NEW_DATA;
+        return Zumo2040::NO_NEW_DATA;
     }
 
-    return NEW_DATA;
+    return Zumo2040::NEW_DATA;
 }
 
-DataStatus Zumo2040IMU::magDataReady()
+Zumo2040::DataStatus Zumo2040IMU::magDataReady()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        return NO_NEW_DATA;
+        return Zumo2040::NO_NEW_DATA;
     }
 
     uint8_t status = readOneByte(LIS3MDL_ADDR, LIS3MDL_STATUS_REG);
@@ -511,17 +511,17 @@ DataStatus Zumo2040IMU::magDataReady()
 
     if (LIS3MDL_STATUS_MAGNET_MASK != status)
     {
-        return NO_NEW_DATA;
+        return Zumo2040::NO_NEW_DATA;
     }
 
-    return NEW_DATA;
+    return Zumo2040::NEW_DATA;
 }
 
-ErrorCode Zumo2040IMU::calibrateLineFollower()
+Zumo2040::ErrorCode Zumo2040IMU::calibrateLineFollower()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_calStatus = IMU_NOT_CALIBRATED;
+        m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
         return m_error;
     }
 
@@ -532,37 +532,37 @@ ErrorCode Zumo2040IMU::calibrateLineFollower()
     int32_t sumOfRawGyroValuesZ = INTEGER_32_ZERO;
     int32_t measurementIndex = INTEGER_32_ZERO;
     uint32_t retryCount = U_INTEGER_32_ZERO;
-    IMUvector accel;
-    IMUvector gyro;
+    Zumo2040::IMUvector accel;
+    Zumo2040::IMUvector gyro;
 
     while (measurementIndex < NUMBER_OF_MEASUREMENTS)
     {
-        if (NONE != m_error)
+        if (Zumo2040::NONE != m_error)
         {
-            m_calStatus = IMU_NOT_CALIBRATED;
+            m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
             return m_error;
         }
         else if (retryCount >= MAX_CALIBRATION_RETRY_COUNT)
         {
-            m_calStatus = IMU_NOT_CALIBRATED;
-            m_error = IMU_CALIBRATION_FAILED;
+            m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
+            m_error = Zumo2040::IMU_CALIBRATION_FAILED;
             return m_error;
         }
-        else if((NEW_DATA == accDataReady()) && (NEW_DATA == gyroDataReady()))
+        else if((Zumo2040::NEW_DATA == accDataReady()) && (Zumo2040::NEW_DATA == gyroDataReady()))
         {
             readAcc(accel);
-            if (NONE != m_error)
+            if (Zumo2040::NONE != m_error)
             {
-                m_calStatus = IMU_NOT_CALIBRATED;
-                m_error = IMU_CALIBRATION_FAILED;
+                m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
+                m_error = Zumo2040::IMU_CALIBRATION_FAILED;
                 return m_error;
             }
 
             readGyro(gyro);
-            if (NONE != m_error)
+            if (Zumo2040::NONE != m_error)
             {
-                m_calStatus = IMU_NOT_CALIBRATED;
-                m_error = IMU_CALIBRATION_FAILED;
+                m_calStatus = Zumo2040::IMU_NOT_CALIBRATED;
+                m_error = Zumo2040::IMU_CALIBRATION_FAILED;
                 return m_error;
             }
 
@@ -582,25 +582,25 @@ ErrorCode Zumo2040IMU::calibrateLineFollower()
     m_rawAccelerometerOffsetX = static_cast<int16_t>((sumOfRawAccelValuesX / NUMBER_OF_MEASUREMENTS));
     m_rawGyroOffsetZ = static_cast<int16_t>((sumOfRawGyroValuesZ / NUMBER_OF_MEASUREMENTS));
 
-    m_calStatus = IMU_CALIBRATED;
+    m_calStatus = Zumo2040::IMU_CALIBRATED;
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU::getLastError() const
+Zumo2040::ErrorCode Zumo2040IMU::getLastError() const
 {
     return m_error;
 }
 
 int16_t Zumo2040IMU::getAccelOffsetX()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return INTEGER_16_ZERO;
     }
-    else if (IMU_CALIBRATED != m_calStatus)
+    else if (Zumo2040::IMU_CALIBRATED != m_calStatus)
     {
-        m_error = IMU_CANT_GET_OFFSET_NOT_CALIBRATED;
+        m_error = Zumo2040::IMU_CANT_GET_OFFSET_NOT_CALIBRATED;
         return INTEGER_16_ZERO;
     }
 
@@ -609,13 +609,13 @@ int16_t Zumo2040IMU::getAccelOffsetX()
 
 int16_t Zumo2040IMU::getGyroOffsetZ()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return INTEGER_16_ZERO;
     }
-    else if (IMU_CALIBRATED != m_calStatus)
+    else if (Zumo2040::IMU_CALIBRATED != m_calStatus)
     {
-        m_error = IMU_CANT_GET_OFFSET_NOT_CALIBRATED;
+        m_error = Zumo2040::IMU_CANT_GET_OFFSET_NOT_CALIBRATED;
         return INTEGER_16_ZERO;
     }
 
@@ -624,7 +624,7 @@ int16_t Zumo2040IMU::getGyroOffsetZ()
 
 void Zumo2040IMU::resetError()
 {
-    m_error = NONE;
+    m_error = Zumo2040::NONE;
 }
 
 /******************************************************************************
@@ -637,7 +637,7 @@ void Zumo2040IMU::resetError()
 
 uint8_t Zumo2040IMU::readOneByte(uint8_t addr, uint8_t reg)
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return U_INTEGER_8_ZERO;
     }
@@ -647,7 +647,7 @@ uint8_t Zumo2040IMU::readOneByte(uint8_t addr, uint8_t reg)
     /* Read one register value into the buffer. */
     m_error = m_i2c.read(addr, reg, buffer, LENGTH_ONE_BYTE);
 
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return U_INTEGER_8_ZERO;
     }
@@ -655,9 +655,9 @@ uint8_t Zumo2040IMU::readOneByte(uint8_t addr, uint8_t reg)
     return buffer[U_INTEGER_8_ZERO];
 }
 
-ErrorCode Zumo2040IMU::writeOneByte(uint8_t addr, uint8_t reg, uint8_t value)
+Zumo2040::ErrorCode Zumo2040IMU::writeOneByte(uint8_t addr, uint8_t reg, uint8_t value)
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
@@ -670,9 +670,9 @@ ErrorCode Zumo2040IMU::writeOneByte(uint8_t addr, uint8_t reg, uint8_t value)
     return m_error;
 }
 
-ErrorCode Zumo2040IMU::readAxes16Bit(uint8_t addr, uint8_t startReg, IMUvector& data)
+Zumo2040::ErrorCode Zumo2040IMU::readAxes16Bit(uint8_t addr, uint8_t startReg, Zumo2040::IMUvector& data)
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
@@ -683,9 +683,9 @@ ErrorCode Zumo2040IMU::readAxes16Bit(uint8_t addr, uint8_t startReg, IMUvector& 
 
     /* Read register values into the 8-bit buffer. */
     m_error = m_i2c.read(addr, startReg, buffer8bit, COUNT_REGISTER_VECTOR_32BIT);
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
-        m_error = IMU_READ_AXES_FAILED;
+        m_error = Zumo2040::IMU_READ_AXES_FAILED;
         return m_error;
     }
 
@@ -700,7 +700,7 @@ ErrorCode Zumo2040IMU::readAxes16Bit(uint8_t addr, uint8_t startReg, IMUvector& 
     data.y = static_cast<int16_t>((buffer16bit[Y_H] << COUNT_BITS_IN_BYTE) | buffer16bit[Y_L]);
     data.z = static_cast<int16_t>((buffer16bit[Z_H] << COUNT_BITS_IN_BYTE) | buffer16bit[Z_L]);
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
 /******************************************************************************

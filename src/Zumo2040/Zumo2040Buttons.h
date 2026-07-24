@@ -53,19 +53,22 @@
  * Types and Classes
  *****************************************************************************/
 
-/** States used in the debounce state machine. */
-enum class ButtonState : uint8_t
+namespace Zumo2040
 {
-    COMPARE,
-    DEBOUNCERISING,
-};
+    /** States used in the debounce state machine. */
+    enum class ButtonState : uint8_t
+    {
+        COMPARE,
+        DEBOUNCERISING,
+    };
 
-/** States of the button. */
-enum class ButtonValue : uint8_t
-{
-    RELEASED,
-    PRESSED
-};
+    /** States of the button. */
+    enum class ButtonValue : uint8_t
+    {
+        RELEASED,
+        PRESSED
+    };
+}
 
 /** Class which represents the button base class. */
 class Zumo2040Button
@@ -95,32 +98,32 @@ class Zumo2040Button
     protected:
 
         /** Checks whether button is pressed */
-        virtual ButtonValue isPressed() = 0;
+        virtual Zumo2040::ButtonValue isPressed() = 0;
 
     private:
 
         /** Detects a debounced rising edge of the input signal. */
         static bool getSingleDebouncedRisingEdge(
-            ButtonValue value,
-            ButtonValue& prevValue,
+            Zumo2040::ButtonValue value,
+            Zumo2040::ButtonValue& prevValue,
             uint32_t& prevTime,
-            ButtonState& state);
+            Zumo2040::ButtonState& state);
 
         /** Current state in the debounce state machine. */
-        ButtonState m_pressState = ButtonState::COMPARE;
+        Zumo2040::ButtonState m_pressState = Zumo2040::ButtonState::COMPARE;
 
         /** Previous value of the Button */
-        ButtonValue m_pressPrevValue = ButtonValue::RELEASED;
+        Zumo2040::ButtonValue m_pressPrevValue = Zumo2040::ButtonValue::RELEASED;
 
         /** Timestamp for last rising edge occurrence. */
         uint32_t m_pressPrevTime = 0u;
 
         /** Current state in the debounce state machine. */
-        ButtonState m_releaseState = ButtonState::COMPARE;
+        Zumo2040::ButtonState m_releaseState = Zumo2040::ButtonState::COMPARE;
 
         /** Previous button value. Initialized to pressed because release detection
          *  reuses the rising edge function with an inverted input signal. */
-        ButtonValue m_releasePrevValue = ButtonValue::PRESSED;
+        Zumo2040::ButtonValue m_releasePrevValue = Zumo2040::ButtonValue::PRESSED;
 
         /** Timestamp for last falling edge occurrence. */
         uint32_t m_releasePrevTime = 0u;
@@ -136,7 +139,7 @@ class Zumo2040ButtonA : public Zumo2040Button
     private:
 
         /** Checks whether button is pressed. */
-        ButtonValue isPressed() override;
+        Zumo2040::ButtonValue isPressed() override;
 };
 
 /** Class which represents the button B driver.
@@ -158,7 +161,7 @@ class Zumo2040ButtonB : public Zumo2040Button
 {
     private:
         /** Checks whether button is pressed. */
-        ButtonValue isPressed() override;
+        Zumo2040::ButtonValue isPressed() override;
 };
 
 /** Class which represents the button C driver.
@@ -174,7 +177,7 @@ class Zumo2040ButtonC : public Zumo2040Button
 {
     private:
         /** Checks whether button is pressed. */
-        ButtonValue isPressed() override;
+        Zumo2040::ButtonValue isPressed() override;
 };
 
 /******************************************************************************

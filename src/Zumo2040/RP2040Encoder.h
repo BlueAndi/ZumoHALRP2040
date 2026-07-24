@@ -53,15 +53,18 @@
  * Types and Classes
  *****************************************************************************/
 
-/** Defines the encoder sides. */
-enum EncoderSide
+namespace Zumo2040
 {
-    /** Left encoder. */
-    LEFT,
+    /** Defines the encoder sides. */
+    enum EncoderSide
+    {
+        /** Left encoder. */
+        LEFT,
 
-    /** Right encoder. */
-    RIGHT
-};
+        /** Right encoder. */
+        RIGHT
+    };
+}
 
 /** Low-level encoder driver class. */
 class EncoderCore
@@ -87,7 +90,7 @@ class EncoderCore
          *
          * @return The error code of the initialization.
          */
-        ErrorCode init();
+        Zumo2040::ErrorCode init();
 
         /**
          * @brief Get the count of the selected encoder.
@@ -107,25 +110,25 @@ class EncoderCore
          *
          * @return Count of the encoder.
          */
-        int32_t getCount(EncoderSide side);
+        int32_t getCount(Zumo2040::EncoderSide side);
 
         /**
          * @brief Reset the count of the selected encoder.
          *
          * @param side LEFT for the left encoder, RIGHT for the right encoder.
          */
-        void resetCount(EncoderSide side);
+        void resetCount(Zumo2040::EncoderSide side);
 
         /**
          * @brief Get the current error code.
          *
          * @return Current error code.
          */
-        ErrorCode getError();
+        Zumo2040::ErrorCode getError();
 
     private:
         /** Encoder error code. */
-        ErrorCode m_errorCode;
+        Zumo2040::ErrorCode m_errorCode;
         /** Selected PIO instance. */
         PIO m_pio;
         /** State machine used for the left encoder. */

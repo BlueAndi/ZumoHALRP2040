@@ -120,12 +120,13 @@ constexpr bool ON_LINE = true;
 Zumo2040Linesensors::Zumo2040Linesensors() : m_isCalibrated(NOT_CALIBRATED),
                                              m_curBounds(OUTDATED_BOUNDS),
                                              m_position(OFF_LINE),
-                                             m_lastSeen(U_INTEGER_32_ZERO),
-                                             m_linesensorError(NONE)
+                                             m_linesensorError(Zumo2040::NONE),
+                                             m_lastSeen(U_INTEGER_32_ZERO)
+
 {
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
-        m_sensorError[idx] = NONE;
+        m_sensorError[idx] = Zumo2040::NONE;
         m_minValues[idx] = MAX_VALUE;
         m_calibratedMinValuesOff[idx] = MAX_VALUE;
         m_calibratedMinValuesOn[idx] = MAX_VALUE;
@@ -143,12 +144,12 @@ Zumo2040Linesensors::Zumo2040Linesensors() : m_isCalibrated(NOT_CALIBRATED),
 
 void Zumo2040Linesensors::init()
 {
-    if (m_core.init() == NONE)
+    if (m_core.init() == Zumo2040::NONE)
     {
         return;
     }
 
-    m_linesensorError = LINESENSOR_CORE_INITIALIZATION_FAILED;
+    m_linesensorError = Zumo2040::LINESENSOR_CORE_INITIALIZATION_FAILED;
 }
 
 
@@ -159,9 +160,9 @@ void Zumo2040Linesensors::calibrate()
     /* Read the line sensor values with the emitter disabled and determine the maximum and minimum values. */
     for (uint32_t rounds = U_INTEGER_32_ZERO; rounds < ROUND_LIMIT; rounds++)
     {
-        m_core.setEmitter(EMITTER_OFF);
+        m_core.setEmitter(Zumo2040::EMITTER_OFF);
         m_core.read(m_sensorValuesOff);
-        for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+        for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
         {
             if (m_maxValues[idx] < m_sensorValuesOff[idx])
             {
@@ -176,7 +177,7 @@ void Zumo2040Linesensors::calibrate()
     }
 
     /* Determine the calibrated maximum and minimum values for the disabled emitter. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         if (m_calibratedMinValuesOff[idx] > m_maxValues[idx])
         {
@@ -190,7 +191,7 @@ void Zumo2040Linesensors::calibrate()
     }
 
     /* Reset the minimum and maximum buffer. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         m_maxValues[idx] = MIN_VALUE;
         m_minValues[idx] = MAX_VALUE;
@@ -199,9 +200,9 @@ void Zumo2040Linesensors::calibrate()
     /* Read the line sensor values with the emitter enabled and determine the maximum and minimum values. */
     for (uint32_t rounds = U_INTEGER_32_ZERO; rounds < ROUND_LIMIT; rounds++)
     {
-        m_core.setEmitter(EMITTER_ON);
+        m_core.setEmitter(Zumo2040::EMITTER_ON);
         m_core.read(m_sensorValuesOn);
-        for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+        for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
         {
             if (m_maxValues[idx] < m_sensorValuesOn[idx])
             {
@@ -216,7 +217,7 @@ void Zumo2040Linesensors::calibrate()
     }
 
     /* Determine the calibrated maximum and minimum values for the enabled emitter. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         if  (m_calibratedMinValuesOn[idx] > m_maxValues[idx])
         {
@@ -230,7 +231,7 @@ void Zumo2040Linesensors::calibrate()
     }
 
     /* Reset the minimum and maximum buffer. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         m_maxValues[idx] = MIN_VALUE;
         m_minValues[idx] = MAX_VALUE;
@@ -249,13 +250,13 @@ uint32_t Zumo2040Linesensors::readLine()
     /* Update calibrated sensor values. */
     readCalibrated();
 
-    if (NONE != m_linesensorError)
+    if (Zumo2040::NONE != m_linesensorError)
     {
         return m_lastSeen;
     }
 
     /* Calculate the weighted sum and the denominator for the position calculation. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         uint32_t sensorValue = m_calibratedSensorValues[idx];
 
@@ -282,19 +283,19 @@ uint32_t Zumo2040Linesensors::readLine()
 
     if (OFF_LINE == m_position)
     {
-        if (m_lastSeen < ((SENSOR_COUNT - U_INTEGER_32_ONE) * static_cast<uint32_t>(SCALE_FACTOR / CENTER_DIVISOR)))
+        if (m_lastSeen < ((Zumo2040::SENSOR_COUNT - U_INTEGER_32_ONE) * static_cast<uint32_t>(SCALE_FACTOR / CENTER_DIVISOR)))
         {
             return U_INTEGER_32_ZERO;
         }
         else
         {
-            return (SENSOR_COUNT - U_INTEGER_32_ONE) * static_cast<uint32_t>(SCALE_FACTOR);
+            return (Zumo2040::SENSOR_COUNT - U_INTEGER_32_ONE) * static_cast<uint32_t>(SCALE_FACTOR);
         }
     }
 
     if (U_INTEGER_32_ZERO == sum)
     {
-        m_linesensorError = LINESENSOR_READ_LINE_ZERO_DIVISOR;
+        m_linesensorError = Zumo2040::LINESENSOR_READ_LINE_ZERO_DIVISOR;
         return U_INTEGER_32_ZERO;
     }
 
@@ -311,11 +312,11 @@ void Zumo2040Linesensors::reset()
     m_curBounds = OUTDATED_BOUNDS;
     m_position = OFF_LINE;
     m_lastSeen = U_INTEGER_32_ZERO;
-    m_linesensorError = NONE;
+    m_linesensorError = Zumo2040::NONE;
 
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
-        m_sensorError[idx] = NONE;
+        m_sensorError[idx] = Zumo2040::NONE;
         m_minValues[idx] = MAX_VALUE;
         m_calibratedMinValuesOff[idx] = MAX_VALUE;
         m_calibratedMinValuesOn[idx] = MAX_VALUE;
@@ -334,30 +335,30 @@ bool Zumo2040Linesensors::isCalibrationSuccessful()
 {
     if (NOT_CALIBRATED == m_isCalibrated)
     {
-        m_linesensorError = LINESENSOR_IS_NOT_CALIBRATED;
+        m_linesensorError = Zumo2040::LINESENSOR_IS_NOT_CALIBRATED;
         return false;
     }
 
     uint32_t distance = U_INTEGER_32_ZERO;
 
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         if (m_calibratedMaxValuesOn[idx] < m_calibratedMinValuesOn[idx])
         {
-            m_sensorError[idx] = LINESENSOR_CALIBRATION_FAILED;
-            m_linesensorError = LINESENSOR_CALIBRATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
+            m_linesensorError = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
             return false;
         }
         else if (m_calibratedMinValuesOff[idx] < m_calibratedMaxValuesOn[idx])
         {
-            m_sensorError[idx] = LINESENSOR_CALIBRATION_FAILED;
-            m_linesensorError = LINESENSOR_CALIBRATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
+            m_linesensorError = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
             return false;
         }
         else if (m_calibratedMaxValuesOff[idx] < m_calibratedMaxValuesOn[idx])
         {
-            m_sensorError[idx] = LINESENSOR_CALIBRATION_FAILED;
-            m_linesensorError = LINESENSOR_CALIBRATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
+            m_linesensorError = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
             return false;
         }
 
@@ -366,8 +367,8 @@ bool Zumo2040Linesensors::isCalibrationSuccessful()
         if (MIN_EMITTER_ON_CALIBRATION_DELTA > distance)
         {
             /* The difference between the calibrated minimum and maximum sensor values was too small. */
-            m_sensorError[idx] = LINESENSOR_CALIBRATION_FAILED;
-            m_linesensorError = LINESENSOR_CALIBRATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
+            m_linesensorError = Zumo2040::LINESENSOR_CALIBRATION_FAILED;
             return false;
         }
     }
@@ -375,9 +376,9 @@ bool Zumo2040Linesensors::isCalibrationSuccessful()
     return true;
 }
 
-LinesensorsInfo Zumo2040Linesensors::getInfo() const
+Zumo2040::LinesensorsInfo Zumo2040Linesensors::getInfo() const
 {
-    LinesensorsInfo info;
+    Zumo2040::LinesensorsInfo info;
 
     info.m_isCalibrated = m_isCalibrated;
     info.m_curBounds = m_curBounds;
@@ -385,7 +386,7 @@ LinesensorsInfo Zumo2040Linesensors::getInfo() const
     info.m_linesensorError = m_linesensorError;
     info.m_lastSeen = m_lastSeen;
 
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         info.m_sensorError[idx] = m_sensorError[idx];
         info.m_sensorValuesOn[idx] = m_sensorValuesOn[idx];
@@ -414,14 +415,14 @@ LinesensorsInfo Zumo2040Linesensors::getInfo() const
 
 void Zumo2040Linesensors::read()
 {
-    m_core.setEmitter(EMITTER_OFF);
+    m_core.setEmitter(Zumo2040::EMITTER_OFF);
     m_core.read(m_sensorValuesOff);
 
-    m_core.setEmitter(EMITTER_ON);
+    m_core.setEmitter(Zumo2040::EMITTER_ON);
     m_core.read(m_sensorValuesOn);
 
     /* Compensate the raw sensor values using the enabled and disabled emitter readings. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         m_sensorValuesOn[idx] += MAX_VALUE - m_sensorValuesOff[idx];
     }
@@ -434,7 +435,7 @@ void Zumo2040Linesensors::readCalibrated()
     {
         /* Update the upper and lower bounds. */
         calcBounds();
-        if (NONE != m_linesensorError)
+        if (Zumo2040::NONE != m_linesensorError)
         {
             return;
         }
@@ -446,7 +447,7 @@ void Zumo2040Linesensors::readCalibrated()
     int32_t denominator = INTEGER_32_ONE;
 
     /* Calculate the calibrated sensor values. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         denominator = m_calMax[idx] - m_calMin[idx];
 
@@ -475,19 +476,19 @@ void Zumo2040Linesensors::calcBounds()
 {
     if (NOT_CALIBRATED == m_isCalibrated)
     {
-        m_linesensorError = LINESENSOR_IS_NOT_CALIBRATED;
+        m_linesensorError = Zumo2040::LINESENSOR_IS_NOT_CALIBRATED;
         return;
     }
 
     /* Reset the upper and lower bound buffers. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         m_calMin[idx] = MAX_VALUE;
         m_calMax[idx] = MIN_VALUE;
     }
 
     /* Calculate upper and lower bounds for each sensor. */
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         if (m_calibratedMinValuesOff[idx] > m_calibratedMinValuesOn[idx])
         {
@@ -496,8 +497,8 @@ void Zumo2040Linesensors::calcBounds()
         }
         else
         {
-            m_sensorError[idx] = LINESENSOR_BOUND_CALCULATION_FAILED;
-            m_linesensorError = LINESENSOR_BOUND_CALCULATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_BOUND_CALCULATION_FAILED;
+            m_linesensorError = Zumo2040::LINESENSOR_BOUND_CALCULATION_FAILED;
             return;
         }
 
@@ -508,15 +509,15 @@ void Zumo2040Linesensors::calcBounds()
         }
         else
         {
-            m_sensorError[idx] = LINESENSOR_BOUND_CALCULATION_FAILED;
-            m_linesensorError = LINESENSOR_BOUND_CALCULATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_BOUND_CALCULATION_FAILED;
+            m_linesensorError = Zumo2040::LINESENSOR_BOUND_CALCULATION_FAILED;
             return;
         }
 
         if (m_calMax[idx] <= m_calMin[idx])
         {
-            m_sensorError[idx] = LINESENSOR_BOUND_CALCULATION_FAILED;
-            m_linesensorError =  LINESENSOR_BOUND_CALCULATION_FAILED;
+            m_sensorError[idx] = Zumo2040::LINESENSOR_BOUND_CALCULATION_FAILED;
+            m_linesensorError =  Zumo2040::LINESENSOR_BOUND_CALCULATION_FAILED;
             return;
         }
     }

@@ -121,7 +121,7 @@ namespace Zumo2040
         constexpr uint8_t I2C0_SDA_PIN = 4u;
         /** Buzzer pin. */
         constexpr uint8_t BUZZER_PIN = 7u;
-    }
+    } /* namespace Pins */
 
     namespace PinLevel
     {
@@ -129,7 +129,7 @@ namespace Zumo2040
         constexpr bool LOW = false;
         /** Pin level high. */
         constexpr bool HIGH = true;
-    }
+    } /* namespace PinLevel */
 
     namespace PinDirection
     {
@@ -137,7 +137,7 @@ namespace Zumo2040
         constexpr bool IN = false;
         /** Pin direction: Output. */
         constexpr bool OUT = true;
-    }
+    } /* namespace PinDirection */
 
     namespace Status
     {
@@ -145,7 +145,7 @@ namespace Zumo2040
         constexpr bool ENABLED = true;
         /** Indicates the disabled state. */
         constexpr bool DISABLED = false;
-    }
+    } /* namespace Status */
 } /* namespace Zumo2040 */
 
 /******************************************************************************

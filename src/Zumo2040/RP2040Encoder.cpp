@@ -97,7 +97,7 @@ constexpr bool DISABLE = false;
  * Public Methods
  *****************************************************************************/
 
-EncoderCore::EncoderCore() : m_errorCode(NONE),
+EncoderCore::EncoderCore() : m_errorCode(Zumo2040::NONE),
                              m_pio(pio0),
                              m_programEntry(rp2040encoder_offset_entry_point)
 {}
@@ -113,14 +113,14 @@ EncoderCore::~EncoderCore()
     pio_sm_unclaim(m_pio, m_smRight);
 }
 
-ErrorCode EncoderCore::init()
+Zumo2040::ErrorCode EncoderCore::init()
 {
     /* Check whether the PIO program can be loaded at offset 0.
      * Offset 0 is required because the PIO program uses 'mov pc, isr'.
      */
     if (!pio_can_add_program_at_offset(m_pio, &rp2040encoder_program, OFFSET_ZERO))
     {
-        m_errorCode = CANT_ADD_PROGRAM;
+        m_errorCode = Zumo2040::CANT_ADD_PROGRAM;
         return m_errorCode;
     }
 
@@ -133,7 +133,7 @@ ErrorCode EncoderCore::init()
      */
     if (m_smLeft == PICO_ERROR_GENERIC)
     {
-        m_errorCode = ENCODER_CANT_CLAIM_SM_LEFT;
+        m_errorCode = Zumo2040::ENCODER_CANT_CLAIM_SM_LEFT;
         return m_errorCode;
     }
 
@@ -163,7 +163,7 @@ ErrorCode EncoderCore::init()
 
     if (m_smRight == PICO_ERROR_GENERIC)
     {
-        m_errorCode = ENCODER_CANT_CLAIM_SM_RIGHT;
+        m_errorCode = Zumo2040::ENCODER_CANT_CLAIM_SM_RIGHT;
         return m_errorCode;
     }
 
@@ -188,12 +188,12 @@ ErrorCode EncoderCore::init()
     pio_sm_init(m_pio, m_smRight, m_programEntry, &m_configRight);
     pio_sm_set_enabled(m_pio, m_smRight, ENABLE);
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-int32_t EncoderCore::getCount(EncoderSide side)
+int32_t EncoderCore::getCount(Zumo2040::EncoderSide side)
 {
-    const uint sm = (LEFT == side) ? m_smLeft : m_smRight;
+    const uint sm = (Zumo2040::LEFT == side) ? m_smLeft : m_smRight;
 
     int32_t raw = INTEGER_ZERO;
     /* Get the current number of entries in the RX FIFO. */
@@ -210,14 +210,14 @@ int32_t EncoderCore::getCount(EncoderSide side)
     return raw;
 }
 
-void EncoderCore::resetCount(EncoderSide side)
+void EncoderCore::resetCount(Zumo2040::EncoderSide side)
 {
-    const uint sm = (LEFT == side) ? m_smLeft : m_smRight;
+    const uint sm = (Zumo2040::LEFT == side) ? m_smLeft : m_smRight;
     /* Execute the PIO reset instruction on the selected state machine. */
     pio_sm_exec(m_pio, sm, PIO_RESET_COUNTER_COMMAND);
 }
 
-ErrorCode EncoderCore::getError()
+Zumo2040::ErrorCode EncoderCore::getError()
 {
     return m_errorCode;
 }

@@ -54,13 +54,16 @@
  * Types and Classes
  *****************************************************************************/
 
-enum PwmChannel
+namespace Zumo2040
 {
-    /** Index for the right motor channel on the PWM slice 7 */
-    RIGHT_MOTOR = 0,
-    /** Index for the left motor channel on the PWM slice 7 */
-    LEFT_MOTOR = 1
-};
+    enum PwmChannel
+    {
+        /** Index for the right motor channel on the PWM slice 7 */
+        RIGHT_MOTOR = 0,
+        /** Index for the left motor channel on the PWM slice 7 */
+        LEFT_MOTOR = 1
+    };
+}
 
 class Zumo2040Motors
 {

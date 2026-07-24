@@ -55,31 +55,34 @@
  * Types and Classes
  *****************************************************************************/
 
-enum BuzzerStatus
+namespace Zumo2040
 {
-    /** Indicates that the buzzer is disabled. */
-    BUZZER_DISABLED = false,
+    enum BuzzerStatus
+    {
+        /** Indicates that the buzzer is disabled. */
+        BUZZER_DISABLED = false,
 
-    /** Indicates that the buzzer is enabled. */
-    BUZZER_ENABLED = true
-};
+        /** Indicates that the buzzer is enabled. */
+        BUZZER_ENABLED = true
+    };
 
-enum BuzzerPlaymode
-{
-    /** The next note is started automatically after the current note has finished. */
-    PLAY_AUTOMATIC,
+    enum BuzzerPlaymode
+    {
+        /** The next note is started automatically after the current note has finished. */
+        PLAY_AUTOMATIC,
 
-    /** The next note is started only when playCheck() is called. */
-    DONT_PLAY_AUTOMATIC
-};
+        /** The next note is started only when playCheck() is called. */
+        DONT_PLAY_AUTOMATIC
+    };
 
-enum StaccatoMode
-{
-    /** Indicates that staccato is disabled. */
-    STACCATO_DISABLED = false,
-    /** Indicates that staccato is enabled. */
-    STACCATO_ENABLED = true
-};
+    enum StaccatoMode
+    {
+        /** Indicates that staccato is disabled. */
+        STACCATO_DISABLED = false,
+        /** Indicates that staccato is enabled. */
+        STACCATO_ENABLED = true
+    };
+}
 
 /** Driver for the Zumo2040Buzzer. */
 class Zumo2040Buzzer
@@ -107,7 +110,7 @@ class Zumo2040Buzzer
          *
          * @return The current error code.
          */
-        ErrorCode playMode(BuzzerPlaymode mode);
+        Zumo2040::ErrorCode playMode(Zumo2040::BuzzerPlaymode mode);
 
         /**
          * @brief Continue playback in non-automatic play mode.
@@ -117,7 +120,7 @@ class Zumo2040Buzzer
          *
          * @return The current buzzer status.
          */
-        BuzzerStatus playCheck();
+        Zumo2040::BuzzerStatus playCheck();
 
         /**
          * @brief Play a frequency for a given duration and volume.
@@ -133,7 +136,7 @@ class Zumo2040Buzzer
          *
          * @return The current error code.
          */
-        ErrorCode playFrequency(uint16_t freq, uint32_t dur, uint16_t volume);
+        Zumo2040::ErrorCode playFrequency(uint16_t freq, uint32_t dur, uint16_t volume);
 
         /**
          * @brief Play a note sequence.
@@ -186,7 +189,7 @@ class Zumo2040Buzzer
          *
          * @return The current error code.
          */
-        ErrorCode play(const char* notes);
+        Zumo2040::ErrorCode play(const char* notes);
 
         /**
          * @brief Stop the active playback.
@@ -211,7 +214,7 @@ class Zumo2040Buzzer
          *
          * @return The last error code.
          */
-        ErrorCode getLastError() const;
+        Zumo2040::ErrorCode getLastError() const;
 
     private:
         /**
@@ -241,7 +244,7 @@ class Zumo2040Buzzer
          *
          * @return The current error code.
          */
-        ErrorCode playNote(uint8_t note, uint32_t dur, uint16_t volume);
+        Zumo2040::ErrorCode playNote(uint8_t note, uint32_t dur, uint16_t volume);
 
         /**
          * @brief Get the current character in the note sequence.
@@ -264,13 +267,13 @@ class Zumo2040Buzzer
          *
          * @return The current error code.
          */
-        ErrorCode nextNote();
+        Zumo2040::ErrorCode nextNote();
 
         /** Pointer to the active note sequence. */
         const char * volatile m_buzzerSequence;
 
         /** Indicates the current buzzer status. */
-        BuzzerStatus m_buzzerStatus;
+        Zumo2040::BuzzerStatus m_buzzerStatus;
 
         /** Indicates the current alarm status. */
         Zumo2040::AlarmStatus m_alarmStatus;
@@ -279,10 +282,10 @@ class Zumo2040Buzzer
         alarm_id_t m_alarmID;
 
         /** Indicates the current playmode. */
-        BuzzerPlaymode m_playmode;
+        Zumo2040::BuzzerPlaymode m_playmode;
 
         /** Last occurred error code. */
-        ErrorCode m_error;
+        Zumo2040::ErrorCode m_error;
 
         /** Current default octave. */
         volatile uint32_t m_octave;
@@ -300,7 +303,7 @@ class Zumo2040Buzzer
         volatile uint16_t m_volume;
 
         /** Current staccato mode. */
-        volatile StaccatoMode m_staccato;
+        volatile Zumo2040::StaccatoMode m_staccato;
 
         /** Current staccato rest duration in ms. */
         volatile uint32_t m_staccatoRestDuration;

@@ -105,12 +105,12 @@ Zumo2040IMU_I2C::~Zumo2040IMU_I2C()
     gpio_disable_pulls(Zumo2040::Pins::I2C0_SCL_PIN);
 }
 
-ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length)
+Zumo2040::ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length)
 {
     int test = PICO_ERROR_GENERIC;
     if ((nullptr == data) || (U_INTEGER_32_ZERO == length))
     {
-        return I2C_READ_INVALID_ARGUMENT;
+        return Zumo2040::I2C_READ_INVALID_ARGUMENT;
     }
 
     /* Write the register address to the slave. This is needed so the slave knows
@@ -121,7 +121,7 @@ ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, u
      /* Check whether the expected number of bytes was written. */
     if (static_cast<int>(REGISTER_ADDRESS_SIZE_BYTES) != test)
     {
-        return I2C_READ_FAILED;
+        return Zumo2040::I2C_READ_FAILED;
     }
 
     /* Read length bytes starting from the previously configured register. */
@@ -130,20 +130,20 @@ ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, u
     /* Check whether the expected number of bytes was read. */
     if (static_cast<int>(length) != test)
     {
-        return I2C_READ_FAILED;
+        return Zumo2040::I2C_READ_FAILED;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU_I2C::write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length)
+Zumo2040::ErrorCode Zumo2040IMU_I2C::write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length)
 {
     int test = PICO_ERROR_GENERIC;
     uint8_t buffer[WRITE_BUFFER_SIZE];
 
     if ((nullptr == data) || (MAX_SIZE_WRITE_DATA_BYTES < length) || (U_INTEGER_32_ZERO == length))
     {
-        return I2C_WRITE_INVALID_ARGUMENT;
+        return Zumo2040::I2C_WRITE_INVALID_ARGUMENT;
     }
 
     /* The first byte to transmit is the register address. */
@@ -162,10 +162,10 @@ ErrorCode Zumo2040IMU_I2C::write(uint8_t addr, uint8_t startReg, const uint8_t* 
     /* Check whether the expected number of bytes was written. */
     if (static_cast<int>(writeLength) != test)
     {
-        return I2C_WRITE_FAILED;
+        return Zumo2040::I2C_WRITE_FAILED;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
 

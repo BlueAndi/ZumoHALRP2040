@@ -123,13 +123,13 @@ constexpr uint32_t TIMER_BIT_COUNT = 15u;
 constexpr uint32_t EMITTER_DELAY_US = 200u;
 
 /** Maximum sensor index. */
-constexpr uint32_t MAX_SENSOR_INDEX = SENSOR_COUNT - 1u;
+constexpr uint32_t MAX_SENSOR_INDEX = Zumo2040::SENSOR_COUNT - 1u;
 
 /******************************************************************************
  * Public Methods
  *****************************************************************************/
 
-LinesensorsCore::LinesensorsCore() : m_errorCode(NONE),
+LinesensorsCore::LinesensorsCore() : m_errorCode(Zumo2040::NONE),
                                      m_pio(pio1),
                                      m_sm(PICO_ERROR_GENERIC),
                                      m_debugInformation{INITIAL_PIN_VALUE, U_INTEGER_32_ZERO}
@@ -157,7 +157,7 @@ LinesensorsCore::~LinesensorsCore()
     }
 }
 
-ErrorCode LinesensorsCore::init()
+Zumo2040::ErrorCode LinesensorsCore::init()
 {
     /* Initialize the line sensor emitter. */
     gpio_init(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN);
@@ -183,7 +183,7 @@ ErrorCode LinesensorsCore::init()
     /* State machine initialization. */
     if (!pio_can_add_program(m_pio, &rp2040linesensor_program))
     {
-        m_errorCode = CANT_ADD_PROGRAM;
+        m_errorCode = Zumo2040::CANT_ADD_PROGRAM;
         return m_errorCode;
     }
 
@@ -192,7 +192,7 @@ ErrorCode LinesensorsCore::init()
 
     if (PICO_ERROR_GENERIC == m_sm)
     {
-        m_errorCode = CANT_CLAIM_SM;
+        m_errorCode = Zumo2040::CANT_CLAIM_SM;
         return m_errorCode;
     }
 
@@ -200,22 +200,22 @@ ErrorCode LinesensorsCore::init()
     pio_sm_set_consecutive_pindirs(m_pio,
                                    m_sm,
                                    Zumo2040::Pins::LINE_SENSOR_5_PIN,
-                                   SENSOR_COUNT,
+                                   Zumo2040::SENSOR_COUNT,
                                    OUTPUT);
 
     m_config = rp2040linesensor_program_get_default_config(m_programEntry);
 
     /* Configure which pins are used for the "in pins" command in the state machine. */
     sm_config_set_in_pin_base(&m_config,  Zumo2040::Pins::LINE_SENSOR_5_PIN);
-    sm_config_set_in_pin_count(&m_config, SENSOR_COUNT);
+    sm_config_set_in_pin_count(&m_config, Zumo2040::SENSOR_COUNT);
 
     /* Configure which pins are used for the "out pins" command in the state machine. */
     sm_config_set_out_pin_base(&m_config, Zumo2040::Pins::LINE_SENSOR_5_PIN);
-    sm_config_set_out_pin_count(&m_config, SENSOR_COUNT);
+    sm_config_set_out_pin_count(&m_config, Zumo2040::SENSOR_COUNT);
 
     /* Configure which pins are used for the "set pins" command in the state machine. */
     sm_config_set_set_pin_base(&m_config, Zumo2040::Pins::LINE_SENSOR_5_PIN);
-    sm_config_set_set_pin_count(&m_config, SENSOR_COUNT);
+    sm_config_set_set_pin_count(&m_config, Zumo2040::SENSOR_COUNT);
 
     /* Configure the ISR behavior for the state machine:
      * - Bits are shifted into the ISR from the left.
@@ -247,11 +247,11 @@ ErrorCode LinesensorsCore::init()
     /* Initialize the state machine. */
     pio_sm_init(m_pio, m_sm, m_programEntry, &m_config);
 
-    m_errorCode = NONE;
+    m_errorCode = Zumo2040::NONE;
     return m_errorCode;
 }
 
-void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
+void LinesensorsCore::read(uint32_t sensorValues[Zumo2040::SENSOR_COUNT])
 {
     /* Enable the state machine to start the measurement. */
     pio_sm_set_enabled(m_pio, m_sm, ENABLE);
@@ -261,7 +261,7 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
     uint32_t data = U_INTEGER_32_ZERO;
     uint32_t newValueCount = U_INTEGER_32_ZERO;
 
-    for (uint32_t idx = U_INTEGER_32_ZERO; idx < SENSOR_COUNT; idx++)
+    for (uint32_t idx = U_INTEGER_32_ZERO; idx < Zumo2040::SENSOR_COUNT; idx++)
     {
         sensorValues[idx] = TIMER_RANGE;
     }
@@ -281,7 +281,7 @@ void LinesensorsCore::read(uint32_t sensorValues[SENSOR_COUNT])
         newPinValues = (data >> TIMER_BIT_COUNT) & VALUES_MASK;
 
         /* Compare the old and new pin values. */
-        for (uint32_t count = U_INTEGER_32_ZERO; count < SENSOR_COUNT; count++)
+        for (uint32_t count = U_INTEGER_32_ZERO; count < Zumo2040::SENSOR_COUNT; count++)
         {
             /* Reverse the sensor order to match the Pololu Zumo32U4 library. */
             const uint32_t sensorIDX = MAX_SENSOR_INDEX - count;
@@ -309,9 +309,9 @@ const uint32_t* LinesensorsCore::getDebugInformation() const
     return m_debugInformation;
 }
 
-void LinesensorsCore::setEmitter(EmitterStates state)
+void LinesensorsCore::setEmitter(Zumo2040::EmitterStates state)
 {
-    if (EMITTER_OFF == state)
+    if (Zumo2040::EMITTER_OFF == state)
     {
         gpio_put(Zumo2040::Pins::LINE_SENSOR_EMITTER_PIN, Zumo2040::PinLevel::LOW);
         sleep_us(EMITTER_DELAY_US);
