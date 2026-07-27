@@ -58,70 +58,53 @@
 
 /** Prevents a panic if no free state machine can be claimed. */
 constexpr bool DONT_PANIC = false;
-
 /** Configures pins as outputs for PIO usage. */
 constexpr bool OUTPUT = true;
-
 /** Enables the PIO state machine. */
 constexpr bool ENABLE = true;
-
 /** Disables the PIO state machine. */
 constexpr bool DISABLE = false;
-
 /** Configures ISR shifting to the left. */
 constexpr bool SHIFT_LEFT_ISR = false;
-
 /** Configures OSR shifting to the right. */
 constexpr bool SHIFT_RIGHT_OSR = true;
-
 /** Enable ISR autopush. */
 constexpr bool ENABLE_AUTOPUSH = true;
-
 /** Disable OSR autopull. */
 constexpr bool DISABLE_AUTOPULL = false;
-
 /** Integer value zero. */
 constexpr uint32_t U_INTEGER_32_ZERO = 0u;
-
 /** Integer value one. */
 constexpr uint32_t U_INTEGER_32_ONE = 1u;
-
 /** Bit threshold for ISR autopush. */
 constexpr uint32_t PUSH_THRESHOLD_ISR = 20u;
-
-/** Bit threshold for OSR autopull.
- *  Autopull is disabled in this program, but a threshold value is still required.
+/**
+ * Bit threshold for OSR autopull.
+ * Autopull is disabled in this program, but a threshold value is still required.
  */
 constexpr uint32_t PULL_THRESHOLD_OSR = 32u;
-
 /** Initial value for the pin comparison. */
 constexpr uint32_t INITIAL_PIN_VALUE = 0b11111u;
-
 /** Value sent by the state machine to signal the end of the measurement. */
 constexpr uint32_t SM_END_CONDITION = 0xFFFFFFFFu;
-
 /** Mask for the pin values in the data word from the state machine. */
 constexpr uint32_t VALUES_MASK = 0b11111u;
-
 /** Mask for the pin value, used in the pin value comparison. */
 constexpr uint32_t VALUE_MASK = 0b1u;
-
-/** Range of the timer used by the state machine
- *  to measure the discharge time.
+/**
+ * Range of the timer used by the state machine
+ * to measure the discharge time.
  */
 constexpr uint32_t TIMER_RANGE = 32767u;
-
 /** Mask for the timer value in the data word from the state machine. */
 constexpr uint32_t TIMER_MASK = 0b111111111111111;
-
 /** Count of the timer bits in the data word from the state machine. */
 constexpr uint32_t TIMER_BIT_COUNT = 15u;
-
-/** Delay used after changing the emitter state.
- *  This value is taken from the Pololu Zumo32U4 line sensor implementation.
+/**
+ * Delay used after changing the emitter state.
+ * This value is taken from the Pololu Zumo32U4 line sensor implementation.
  */
 constexpr uint32_t EMITTER_DELAY_US = 200u;
-
 /** Maximum sensor index. */
 constexpr uint32_t MAX_SENSOR_INDEX = Zumo2040::SENSOR_COUNT - 1u;
 
@@ -172,8 +155,8 @@ Zumo2040::ErrorCode LinesensorsCore::init()
     pio_gpio_init(m_pio, Zumo2040::Pins::LINE_SENSOR_1_PIN);
 
     /* Disable the pulls of the line sensors pins, to guarantee
-    *  that the capacitor is only drained by the phototransistors.
-    */
+     *  that the capacitor is only drained by the phototransistors.
+     */
     gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_5_PIN);
     gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_4_PIN);
     gpio_disable_pulls(Zumo2040::Pins::LINE_SENSOR_3_PIN);

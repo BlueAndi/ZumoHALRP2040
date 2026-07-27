@@ -57,59 +57,42 @@
 
 /** Maximum sensor value. */
 constexpr uint32_t MAX_VALUE = 32767u;
-
 /** Minimum sensor value. */
 constexpr uint32_t MIN_VALUE = 0u;
-
 /** Unsigned 32-bit integer one used in several places. */
 constexpr uint32_t U_INTEGER_32_ONE = 1u;
-
 /** Signed 32-bit integer one used in several places. */
 constexpr int32_t INTEGER_32_ONE = 1;
-
 /** Unsigned 32-bit integer zero used in several places. */
 constexpr uint32_t U_INTEGER_32_ZERO = 0u;
-
 /** Signed 64-bit integer zero used in several places. */
 constexpr int32_t INTEGER_32_ZERO = 0;
-
 /** Scaling factor for the position calculation of the line sensors. */
 constexpr int32_t SCALE_FACTOR = 1000;
-
 /** Round limit for one calibration cycle. */
 constexpr uint32_t ROUND_LIMIT = 10u;
-
 /** Noise threshold which sensor values have to exceed to be used for position calculation. */
 constexpr uint32_t NOISE_THRESHOLD = 50u;
-
 /** Threshold which one sensor value has to exceed to accept that the line is detected. */
 constexpr uint32_t ACCEPT_LINE_THRESHOLD = 200u;
-
 /** Center divisor for edge case calculation in readLine(). */
 constexpr int32_t CENTER_DIVISOR = 2;
-
 /** Minimum required range between the calibrated minimum and maximum values
  *  for emitter-on readings.
  *  The value is based on one sixth of a typical emitter-on black-line reading
  *  of around 4000 for the inner sensors.
  */
 constexpr uint32_t MIN_EMITTER_ON_CALIBRATION_DELTA = 667u;
-
 /** Indicates that the line sensors are not calibrated. */
 constexpr bool NOT_CALIBRATED = false;
-
 /** Indicates that the line sensors are calibrated. */
 constexpr bool CALIBRATED = true;
-
 /** Indicates that the calibration bounds are outdated. */
 constexpr bool OUTDATED_BOUNDS = false;
-
 /** Indicates that the calibration bounds are up to date. */
 constexpr bool CURRENT_BOUNDS = true;
-
 /** Indicates that the line sensors are off the line. */
 constexpr bool OFF_LINE = false;
-
 /** Indicates that the line sensors are on the line. */
 constexpr bool ON_LINE = true;
 

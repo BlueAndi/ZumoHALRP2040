@@ -57,39 +57,28 @@
 
 /** Offset at which the PIO program is loaded. */
 constexpr uint8_t OFFSET_ZERO = 0u;
-
 /** Bit threshold for ISR autopush.
  *  Autopush is disabled in this program, but a threshold value is still required.
  */
 constexpr uint8_t PUSH_THRESHOLD = 32u;
-
 /** Number of pins used by one encoder. */
 constexpr uint8_t PIN_COUNT = 2u;
-
 /** Integer value zero used in several places. */
 constexpr int8_t INTEGER_ZERO = 0;
-
 /** Integer value one used in several places. */
 constexpr int8_t INTEGER_ONE = 1;
-
 /** Encoded PIO instruction used to reset the counter. */
 constexpr uint PIO_RESET_COUNTER_COMMAND = 0xa023;
-
 /** Configures ISR shifting to the left. */
 constexpr bool SHIFT_LEFT = false;
-
 /** Disables ISR autopush. */
 constexpr bool DISABLE_AUTOPUSH = false;
-
 /** Prevents a panic if no free state machine can be claimed. */
 constexpr bool DONT_PANIC = false;
-
 /** Configures pins as inputs for PIO usage. */
 constexpr bool INPUT = false;
-
 /** Enables the PIO state machine. */
 constexpr bool ENABLE = true;
-
 /** Disables the PIO state machine. */
 constexpr bool DISABLE = false;
 

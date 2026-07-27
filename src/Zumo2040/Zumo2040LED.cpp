@@ -92,13 +92,10 @@ static void refreshLeds();
 
 /** Value which controls the brightness of the LED : first 3 bits shall always be 1, the following 5 are controlling the brightness  */
 constexpr uint8_t SET_BRIGHTNESS_ON = 0b11100111;
-
 /** Value which turns the LED off */
 constexpr uint8_t SET_BRIGHTNESS_OFF = 0b11100000;
-
 /** Number of APA102 RGB LEDs on the Zumo 2040 */
 constexpr uint8_t NUM_LEDS = 6;
-
 /** Color values and state for the LEDs. */
 static LedState g_LedState[NUM_LEDS] = {
     { SET_BRIGHTNESS_OFF, {255, 80, 0}},  /**< LED 0 - Yellow */
@@ -108,29 +105,20 @@ static LedState g_LedState[NUM_LEDS] = {
     { SET_BRIGHTNESS_OFF, {0, 0, 0}},     /**< LED 4 - Off */
     { SET_BRIGHTNESS_OFF, {0, 0, 0}}      /**< LED 5 - Off */
 };
-
-
 /** Index for LED 0 */
 constexpr int8_t IDX_LED_YELLOW = 0;
-
 /** Index for LED 1 */
 constexpr int8_t IDX_LED_GREEN = 1;
-
 /** Index for LED 2 */
 constexpr int8_t IDX_LED_RED = 2;
-
 /** Chunk of the start frame */
 constexpr uint8_t START_FRAME_CHUNK = 0x00;
-
 /** Chunk of the end frame */
 constexpr uint8_t END_FRAME_CHUNK = 0xFF;
-
 /** Clock frequency for SPI */
 constexpr uint32_t SPEEDHZ_LED = 20000000;
-
 /** Number of start frame bytes */
 constexpr uint8_t START_FRAME_BYTES = 4;
-
 /** Number of end frame bytes */
 constexpr uint8_t END_FRAME_BYTES = 4;
 

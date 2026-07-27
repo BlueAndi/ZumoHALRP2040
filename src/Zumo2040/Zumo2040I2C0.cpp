@@ -58,27 +58,21 @@
 
 /** Unsigned 32-bit integer zero. */
 constexpr uint32_t U_INTEGER_32_ZERO = 0u;
-
-/** I2C clock speed in Hz.
- *  400 kHz corresponds to I2C fast mode, which is the fastest I2C mode supported by the IMU.
+/**
+ * I2C clock speed in Hz.
+ * 400 kHz corresponds to I2C fast mode, which is the fastest I2C mode supported by the IMU.
  */
 constexpr uint32_t I2C_CLOCK_SPEED_HZ = 400000u;
-
 /** Timeout for the I2C transfer. */
 constexpr uint32_t I2C_TIMEOUT_US = 1000u;
-
 /** Size of the register address in bytes. */
 constexpr uint32_t REGISTER_ADDRESS_SIZE_BYTES = 1u;
-
 /** Maximum number of data bytes that can be transmitted in one write call. */
 constexpr uint32_t MAX_SIZE_WRITE_DATA_BYTES = 15u;
-
 /** Size of the buffer that holds the register address and the data to write. */
 constexpr uint32_t WRITE_BUFFER_SIZE = MAX_SIZE_WRITE_DATA_BYTES + REGISTER_ADDRESS_SIZE_BYTES;
-
 /** Do not stop the I2C transfer after the current transmission. */
 constexpr bool I2C_NO_STOP = true;
-
 /** Stop the I2C transfer after the current transmission. */
 constexpr bool I2C_STOP = false;
 

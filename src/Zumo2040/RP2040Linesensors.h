@@ -59,17 +59,18 @@ namespace Zumo2040
 {
     /** Size of the debug information array. */
     static constexpr uint32_t DEBUG_INFO_COUNT = 2u;
-
     /** Number of line sensors. */
     static constexpr uint32_t SENSOR_COUNT = 5u;
 
     /** Indicates the current state of the line sensor emitter. */
     enum EmitterStates
     {
+        /** Indicates that the line sensor emitter is switched off. */
         EMITTER_OFF,
+        /** Indicates that the line sensor emitter is switched on. */
         EMITTER_ON
     };
-}
+} /* namespace Zumo2040 */
 
 /** Low-level line sensors driver class. */
 class LinesensorsCore
@@ -134,8 +135,8 @@ class LinesensorsCore
         /**
          * @brief Controls the line sensors emitter.
          *
-         * @param state EMITTER_OFF to deactivate the emitter,
-         * EMITTER_ON to activate it.
+         * @param state Zumo2040::EMITTER_OFF to deactivate the emitter,
+         * Zumo2040::EMITTER_ON to activate it.
          */
         void setEmitter(Zumo2040::EmitterStates state);
 

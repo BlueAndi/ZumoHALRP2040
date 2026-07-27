@@ -61,10 +61,8 @@ namespace Zumo2040
     {
         /** Represents the x-axis. */
         int16_t x;
-
         /** Represents the y-axis. */
         int16_t y;
-
         /** Represents the z-axis. */
         int16_t z;
     };
@@ -74,7 +72,6 @@ namespace Zumo2040
     {
         /** Indicates that there is no new data available. */
         NO_NEW_DATA = false,
-
         /** Indicates that there is new data available. */
         NEW_DATA = true
     };
@@ -84,11 +81,10 @@ namespace Zumo2040
     {
         /** Indicates that the IMU is not calibrated. */
         IMU_NOT_CALIBRATED = false,
-
         /** Indicates that the IMU is calibrated. */
         IMU_CALIBRATED = true
     };
-}
+} /* namespace Zumo2040 */
 
 /** Driver for the IMU. */
 class Zumo2040IMU
@@ -157,7 +153,7 @@ class Zumo2040IMU
         /**
          * @brief Reads the accelerometer data from the LSM6DSO.
          *
-         * @param Reference to the vector where the results are stored.
+         * @param data Reference to the vector where the results are stored.
          *
          * @return The resulting error code.
          */
@@ -166,7 +162,7 @@ class Zumo2040IMU
         /**
          * @brief Reads the gyroscope data from the LSM6DSO.
          *
-         * @param Reference to the vector where the results are stored.
+         * @param data Reference to the vector where the results are stored.
          *
          * @return The resulting error code.
          */
@@ -175,7 +171,7 @@ class Zumo2040IMU
         /**
          * @brief Reads the magnetometer data from the LIS3MDL.
          *
-         * @param Reference to the vector where the results are stored.
+         * @param data Reference to the vector where the results are stored.
          *
          * @return The resulting error code.
          */

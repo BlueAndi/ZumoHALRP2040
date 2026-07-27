@@ -56,6 +56,7 @@
 
 namespace Zumo2040
 {
+    /** Defines the PWM channels used to control the motors. */
     enum PwmChannel
     {
         /** Index for the right motor channel on the PWM slice 7 */
@@ -63,8 +64,9 @@ namespace Zumo2040
         /** Index for the left motor channel on the PWM slice 7 */
         LEFT_MOTOR = 1
     };
-}
+} /* namespace Zumo2040 */
 
+/** Driver for the motors. */
 class Zumo2040Motors
 {
     public:
@@ -125,7 +127,6 @@ class Zumo2040Motors
          * Default: LOW = forward, HIGH = reverse.
          */
         bool m_flipLeftMotor = false;
-
         /**
          * Indicates whether the right motor direction pin logic is inverted.
          * Default: LOW = forward, HIGH = reverse.

@@ -60,11 +60,10 @@ namespace Zumo2040
     {
         /** Left encoder. */
         LEFT,
-
         /** Right encoder. */
         RIGHT
     };
-}
+} /* namespace Zumo2040 */
 
 /** Low-level encoder driver class. */
 class EncoderCore
@@ -106,7 +105,7 @@ class EncoderCore
          * The exact gear ratios of the different motors can be found here:
          * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
          *
-         * @param side LEFT for the left encoder, RIGHT for the right encoder.
+         * @param side Zumo2040::LEFT for the left encoder, Zumo2040::RIGHT for the right encoder.
          *
          * @return Count of the encoder.
          */
@@ -115,7 +114,7 @@ class EncoderCore
         /**
          * @brief Reset the count of the selected encoder.
          *
-         * @param side LEFT for the left encoder, RIGHT for the right encoder.
+         * @param side Zumo2040::LEFT for the left encoder, Zumo2040::RIGHT for the right encoder.
          */
         void resetCount(Zumo2040::EncoderSide side);
 

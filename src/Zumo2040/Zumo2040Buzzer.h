@@ -57,24 +57,25 @@
 
 namespace Zumo2040
 {
+    /** Defines whether the buzzer is enabled or disabled. */
     enum BuzzerStatus
     {
         /** Indicates that the buzzer is disabled. */
         BUZZER_DISABLED = false,
-
         /** Indicates that the buzzer is enabled. */
         BUZZER_ENABLED = true
     };
 
+    /** Defines how an active note sequence is advanced. */
     enum BuzzerPlaymode
     {
         /** The next note is started automatically after the current note has finished. */
         PLAY_AUTOMATIC,
-
         /** The next note is started only when playCheck() is called. */
         DONT_PLAY_AUTOMATIC
     };
 
+    /** Defines whether notes are played in staccato or legato mode. */
     enum StaccatoMode
     {
         /** Indicates that staccato is disabled. */
@@ -82,7 +83,7 @@ namespace Zumo2040
         /** Indicates that staccato is enabled. */
         STACCATO_ENABLED = true
     };
-}
+} /* namespace Zumo2040 */
 
 /** Driver for the Zumo2040Buzzer. */
 class Zumo2040Buzzer
@@ -271,40 +272,28 @@ class Zumo2040Buzzer
 
         /** Pointer to the active note sequence. */
         const char * volatile m_buzzerSequence;
-
         /** Indicates the current buzzer status. */
         Zumo2040::BuzzerStatus m_buzzerStatus;
-
         /** Indicates the current alarm status. */
         Zumo2040::AlarmStatus m_alarmStatus;
-
         /** ID of the current alarm. */
         alarm_id_t m_alarmID;
-
         /** Indicates the current playmode. */
         Zumo2040::BuzzerPlaymode m_playmode;
-
         /** Last occurred error code. */
         Zumo2040::ErrorCode m_error;
-
         /** Current default octave. */
         volatile uint32_t m_octave;
-
         /** Current whole note duration in ms. */
         volatile uint32_t m_wholeNoteDuration;
-
         /** Current default note type, e.g. 4 for quarter notes. */
         volatile uint32_t m_noteType;
-
         /** Current default note duration in ms. */
         volatile uint32_t m_duration;
-
         /** Current default volume. */
         volatile uint16_t m_volume;
-
         /** Current staccato mode. */
         volatile Zumo2040::StaccatoMode m_staccato;
-
         /** Current staccato rest duration in ms. */
         volatile uint32_t m_staccatoRestDuration;
 };

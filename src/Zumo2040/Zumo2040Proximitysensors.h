@@ -55,6 +55,7 @@
 
 namespace Zumo2040
 {
+    /** Identifies the side on which the IR emitters are located. */
     enum class EmitterSide
     {
         /** Indicates the left side of the IR emitters. */
@@ -63,13 +64,14 @@ namespace Zumo2040
         RIGHT
     };
 
+    /** Stores the activation states of all proximity sensors. */
     struct ProximitySensorStatus
     {
         /** Sensor activation states in the following order: left, front, right. */
         bool status[Zumo2040::Pins::PROXIMITY_SENSOR_COUNT];
     };
 
-
+    /** Identifies one of the proximity sensors. */
     enum ProximitySensor
     {
         /** Indicates the left proximity sensor. */
@@ -79,9 +81,10 @@ namespace Zumo2040
         /** Indicates the right proximity sensor. */
         PROX_RIGHT
     };
-}
+} /* namespace Zumo2040 */
 
-/** Driver for the proximity sensors.
+/**
+ * Driver for the proximity sensors.
  *
  * @note The read() method disables the line sensor emitter before measuring,
  *       because the line sensor emitter can interfere with proximity readings.
@@ -165,7 +168,7 @@ class Zumo2040ProximitySensors
         /**
          * @brief Initializes the sensors selected by the given state array.
          *
-         * @param states Sensor activation states in proximity sensor order.
+         * @param sensor Sensor activation states in proximity sensor order.
          */
         void init(Zumo2040::ProximitySensorStatus &sensor);
 
@@ -183,14 +186,13 @@ class Zumo2040ProximitySensors
          */
         void stopIRPuls();
 
+        /** Stores the configuration and measurement results of one proximity sensor. */
         struct SensorData
         {
             /** Sensor input pin or invalid pin value if unused. */
             uint8_t pin;
-
             /** Number of brightness levels detected while the left emitters were active. */
             uint32_t withLeftLeds;
-
             /** Number of brightness levels detected while the right emitters were active. */
             uint32_t withRightLeds;
         };

@@ -58,25 +58,31 @@ namespace Zumo2040
     /** States used in the debounce state machine. */
     enum class ButtonState : uint8_t
     {
+        /** Compares the current button value with the previous value. */
         COMPARE,
+        /** Indicates that a detected input transition is being debounced. */
         DEBOUNCERISING,
     };
 
     /** States of the button. */
     enum class ButtonValue : uint8_t
     {
+        /** Indicates that the button is not pressed. */
         RELEASED,
+        /** Indicates that the button is pressed. */
         PRESSED
     };
-}
+} /* namespace Zumo2040 */
 
 /** Class which represents the button base class. */
 class Zumo2040Button
 {
     public:
 
+        /** Default constructor. */
         Zumo2040Button() = default;
 
+        /** Default destructor. */
         virtual ~Zumo2040Button() = default;
 
         /**
@@ -133,6 +139,7 @@ class Zumo2040Button
 class Zumo2040ButtonA : public Zumo2040Button
 {
     public:
+
         /** Initializes the button input with internal pull-up. */
         Zumo2040ButtonA();
 
@@ -160,6 +167,7 @@ class Zumo2040ButtonA : public Zumo2040Button
 class Zumo2040ButtonB : public Zumo2040Button
 {
     private:
+
         /** Checks whether button is pressed. */
         Zumo2040::ButtonValue isPressed() override;
 };
@@ -176,6 +184,7 @@ class Zumo2040ButtonB : public Zumo2040Button
 class Zumo2040ButtonC : public Zumo2040Button
 {
     private:
+
         /** Checks whether button is pressed. */
         Zumo2040::ButtonValue isPressed() override;
 };
