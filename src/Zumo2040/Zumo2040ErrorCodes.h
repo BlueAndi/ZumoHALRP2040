@@ -52,6 +52,12 @@
  * Types and Classes
  *****************************************************************************/
 
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
 namespace Zumo2040
 {
     /** Defines the error codes for the Zumo2040. */
