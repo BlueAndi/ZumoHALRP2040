@@ -52,17 +52,27 @@
  * Types and Classes
  *****************************************************************************/
 
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
 namespace Zumo2040
 {
+    /** Defines whether an alarm is enabled or disabled. */
     enum AlarmStatus
     {
         /** Indicates that the alarm is disabled. */
         ALARM_DISABLED = false,
-
         /** Indicates that the alarm is enabled. */
         ALARM_ENABLED = true
     };
 
+    /**
+     * Contains the hardware pin assignments and related constants
+     * of the Zumo 2040.
+     */
     namespace Pins
     {
         /** Pin for Button A. */
@@ -121,31 +131,34 @@ namespace Zumo2040
         constexpr uint8_t I2C0_SDA_PIN = 4u;
         /** Buzzer pin. */
         constexpr uint8_t BUZZER_PIN = 7u;
-    }
+    } /* namespace Pins */
 
+    /** Contains the logical levels used for digital pin access. */
     namespace PinLevel
     {
         /** Pin level low. */
         constexpr bool LOW = false;
         /** Pin level high. */
         constexpr bool HIGH = true;
-    }
+    } /* namespace PinLevel */
 
+    /** Contains the direction values used when configuring GPIO pins. */
     namespace PinDirection
     {
         /** Pin direction: Input. */
         constexpr bool IN = false;
         /** Pin direction: Output. */
         constexpr bool OUT = true;
-    }
+    } /* namespace PinDirection */
 
+    /** Contains generic enabled and disabled status values. */
     namespace Status
     {
         /** Indicates the enabled state. */
         constexpr bool ENABLED = true;
         /** Indicates the disabled state. */
         constexpr bool DISABLED = false;
-    }
+    } /* namespace Status */
 } /* namespace Zumo2040 */
 
 /******************************************************************************

@@ -107,7 +107,7 @@ public:
      */
     uint8_t countsFrontWithLeftLeds() const final
     {
-        return static_cast<uint8_t>(m_proximitySensors.getCountsWithLeftLeds(PROX_FRONT));
+        return static_cast<uint8_t>(m_proximitySensors.getCountsWithLeftLeds(Zumo2040::PROX_FRONT));
     }
 
     /**
@@ -118,7 +118,7 @@ public:
      */
     uint8_t countsFrontWithRightLeds() const final
     {
-        return static_cast<uint8_t>(m_proximitySensors.getCountsWithRightLeds(PROX_FRONT));
+        return static_cast<uint8_t>(m_proximitySensors.getCountsWithRightLeds(Zumo2040::PROX_FRONT));
     }
 
     /**

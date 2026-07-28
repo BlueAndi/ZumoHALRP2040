@@ -55,18 +55,28 @@
  * Types and Classes
  *****************************************************************************/
 
-/** Size of the debug information array. */
-static constexpr uint32_t DEBUG_INFO_COUNT = 2u;
-
-/** Number of line sensors. */
-static constexpr uint32_t SENSOR_COUNT = 5u;
-
-/** Indicates the current state of the line sensor emitter. */
-enum EmitterStates
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
+namespace Zumo2040
 {
-    EMITTER_OFF,
-    EMITTER_ON
-};
+    /** Size of the debug information array. */
+    static constexpr uint32_t DEBUG_INFO_COUNT = 2u;
+    /** Number of line sensors. */
+    static constexpr uint32_t SENSOR_COUNT = 5u;
+
+    /** Indicates the current state of the line sensor emitter. */
+    enum EmitterStates
+    {
+        /** Indicates that the line sensor emitter is switched off. */
+        EMITTER_OFF,
+        /** Indicates that the line sensor emitter is switched on. */
+        EMITTER_ON
+    };
+} /* namespace Zumo2040 */
 
 /** Low-level line sensors driver class. */
 class LinesensorsCore
@@ -96,7 +106,7 @@ class LinesensorsCore
          *
          * @return Error code of the initialization.
          */
-        ErrorCode init();
+        Zumo2040::ErrorCode init();
 
         /**
          * @brief Reads the line sensors using the PIO state machine.
@@ -109,7 +119,7 @@ class LinesensorsCore
          * Lower values = brighter surface
          * Higher values = darker surface
          */
-        void read(uint32_t sensorValues[SENSOR_COUNT]);
+        void read(uint32_t sensorValues[Zumo2040::SENSOR_COUNT]);
 
         /**
          * @brief Returns internal debug information from the last measurement.
@@ -131,14 +141,14 @@ class LinesensorsCore
         /**
          * @brief Controls the line sensors emitter.
          *
-         * @param state EMITTER_OFF to deactivate the emitter,
-         * EMITTER_ON to activate it.
+         * @param state Zumo2040::EMITTER_OFF to deactivate the emitter,
+         * Zumo2040::EMITTER_ON to activate it.
          */
-        void setEmitter(EmitterStates state);
+        void setEmitter(Zumo2040::EmitterStates state);
 
     private:
         /** Line sensors error code. */
-        ErrorCode m_errorCode;
+        Zumo2040::ErrorCode m_errorCode;
         /** Selected PIO instance. */
         PIO m_pio;
         /** State machine used for the measurement. */
@@ -151,7 +161,7 @@ class LinesensorsCore
          *  [0] = newPinValues
          *  [1] = newValueCount
          */
-        uint32_t m_debugInformation[DEBUG_INFO_COUNT];
+        uint32_t m_debugInformation[Zumo2040::DEBUG_INFO_COUNT];
 };
 
 /******************************************************************************

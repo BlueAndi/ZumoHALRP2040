@@ -152,7 +152,7 @@ public:
      */
     uint8_t getCalibErrorInfo() const final
     {
-        LinesensorsInfo info;
+        Zumo2040::LinesensorsInfo info;
         info = m_lineSensors.getInfo();
 
         if(info.m_isCalibrated == false)
@@ -162,7 +162,7 @@ public:
 
         for (uint8_t index = 0; index < MAX_SENSORS; ++index)
         {
-            if(info.m_sensorError[index] == LINESENSOR_CALIBRATION_FAILED)
+            if(info.m_sensorError[index] == Zumo2040::LINESENSOR_CALIBRATION_FAILED)
             {
                 return index;
             }

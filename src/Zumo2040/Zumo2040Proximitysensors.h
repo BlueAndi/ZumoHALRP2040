@@ -53,32 +53,44 @@
  * Types and Classes
  *****************************************************************************/
 
-enum class EmitterSide
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
+namespace Zumo2040
 {
-    /** Indicates the left side of the IR emitters. */
-    LEFT,
-    /** Indicates the right side of the IR emitters. */
-    RIGHT
-};
+    /** Identifies the side on which the IR emitters are located. */
+    enum class EmitterSide
+    {
+        /** Indicates the left side of the IR emitters. */
+        LEFT,
+        /** Indicates the right side of the IR emitters. */
+        RIGHT
+    };
 
-struct ProximitySensorStatus
-{
-    /** Sensor activation states in the following order: left, front, right. */
-    bool status[Zumo2040::Pins::PROXIMITY_SENSOR_COUNT];
-};
+    /** Stores the activation states of all proximity sensors. */
+    struct ProximitySensorStatus
+    {
+        /** Sensor activation states in the following order: left, front, right. */
+        bool status[Zumo2040::Pins::PROXIMITY_SENSOR_COUNT];
+    };
 
+    /** Identifies one of the proximity sensors. */
+    enum ProximitySensor
+    {
+        /** Indicates the left proximity sensor. */
+        PROX_LEFT,
+        /** Indicates the front proximity sensor. */
+        PROX_FRONT,
+        /** Indicates the right proximity sensor. */
+        PROX_RIGHT
+    };
+} /* namespace Zumo2040 */
 
-enum ProximitySensor
-{
-    /** Indicates the left proximity sensor. */
-    PROX_LEFT,
-    /** Indicates the front proximity sensor. */
-    PROX_FRONT,
-    /** Indicates the right proximity sensor. */
-    PROX_RIGHT
-};
-
-/** Driver for the proximity sensors.
+/**
+ * Driver for the proximity sensors.
  *
  * @note The read() method disables the line sensor emitter before measuring,
  *       because the line sensor emitter can interfere with proximity readings.
@@ -148,7 +160,7 @@ class Zumo2040ProximitySensors
          * @param sensor Sensor for which the count shall be returned.
          * @return Count measured with the left emitters.
          */
-        uint32_t getCountsWithLeftLeds(ProximitySensor sensor) const;
+        uint32_t getCountsWithLeftLeds(Zumo2040::ProximitySensor sensor) const;
 
         /**
          * @brief Gets the count measured with the right emitters.
@@ -156,15 +168,15 @@ class Zumo2040ProximitySensors
          * @param sensor Sensor for which the count shall be returned.
          * @return Count measured with the right emitters.
          */
-        uint32_t getCountsWithRightLeds(ProximitySensor sensor) const;
+        uint32_t getCountsWithRightLeds(Zumo2040::ProximitySensor sensor) const;
 
     private:
         /**
          * @brief Initializes the sensors selected by the given state array.
          *
-         * @param states Sensor activation states in proximity sensor order.
+         * @param sensor Sensor activation states in proximity sensor order.
          */
-        void init(ProximitySensorStatus &sensor);
+        void init(Zumo2040::ProximitySensorStatus &sensor);
 
         /**
          * @brief Starts the IR pulses on the corresponding side.
@@ -173,21 +185,20 @@ class Zumo2040ProximitySensors
          * @param brightness The brightness level which shall be used
          * for the IR pulses.
          */
-        void startIRPuls(EmitterSide side, uint16_t brightness);
+        void startIRPuls(Zumo2040::EmitterSide side, uint16_t brightness);
 
         /**
          * @brief Stops all of the IR pulses.
          */
         void stopIRPuls();
 
+        /** Stores the configuration and measurement results of one proximity sensor. */
         struct SensorData
         {
             /** Sensor input pin or invalid pin value if unused. */
             uint8_t pin;
-
             /** Number of brightness levels detected while the left emitters were active. */
             uint32_t withLeftLeds;
-
             /** Number of brightness levels detected while the right emitters were active. */
             uint32_t withRightLeds;
         };
@@ -199,6 +210,7 @@ class Zumo2040ProximitySensors
         /** Number of sensors which are initialized. */
         uint32_t m_numSensors;
 };
+
 /******************************************************************************
  * Functions
  *****************************************************************************/

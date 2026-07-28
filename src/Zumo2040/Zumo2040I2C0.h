@@ -78,7 +78,7 @@ class Zumo2040IMU_I2C
          * @param length Number of bytes to read.
          * @return The resulting error code.
          */
-        ErrorCode read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length);
+        Zumo2040::ErrorCode read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length);
 
         /**
          * @brief Writes data to a slave, starting at the specified register.
@@ -89,7 +89,7 @@ class Zumo2040IMU_I2C
          * @param length Number of bytes to write. The maximum value is 15.
          * @return The resulting error code.
          */
-        ErrorCode write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length);
+        Zumo2040::ErrorCode write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length);
 };
 
 /******************************************************************************

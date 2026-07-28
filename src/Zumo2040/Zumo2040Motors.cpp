@@ -128,7 +128,7 @@ void Zumo2040Motors::setLeftSpeed(int16_t speed)
     }
     /* Set the current PWM counter compare value for the left motor channel */
     pwm_set_chan_level(PWM_SLICE_MOTORS,
-                       PwmChannel::LEFT_MOTOR,
+                       Zumo2040::PwmChannel::LEFT_MOTOR,
                        static_cast<uint16_t>(speed));
 }
 
@@ -152,7 +152,7 @@ void Zumo2040Motors::setRightSpeed(int16_t speed)
     }
     /* Set the current PWM counter compare value for the right motor channel */
     pwm_set_chan_level(PWM_SLICE_MOTORS,
-                       PwmChannel::RIGHT_MOTOR,
+                       Zumo2040::PwmChannel::RIGHT_MOTOR,
                        static_cast<uint16_t>(speed));
 }
 

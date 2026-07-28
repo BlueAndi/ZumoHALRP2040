@@ -54,14 +54,25 @@
  * Types and Classes
  *****************************************************************************/
 
-enum PwmChannel
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
+namespace Zumo2040
 {
-    /** Index for the right motor channel on the PWM slice 7 */
-    RIGHT_MOTOR = 0,
-    /** Index for the left motor channel on the PWM slice 7 */
-    LEFT_MOTOR = 1
-};
+    /** Defines the PWM channels used to control the motors. */
+    enum PwmChannel
+    {
+        /** Index for the right motor channel on the PWM slice 7 */
+        RIGHT_MOTOR = 0,
+        /** Index for the left motor channel on the PWM slice 7 */
+        LEFT_MOTOR = 1
+    };
+} /* namespace Zumo2040 */
 
+/** Driver for the motors. */
 class Zumo2040Motors
 {
     public:
@@ -122,7 +133,6 @@ class Zumo2040Motors
          * Default: LOW = forward, HIGH = reverse.
          */
         bool m_flipLeftMotor = false;
-
         /**
          * Indicates whether the right motor direction pin logic is inverted.
          * Default: LOW = forward, HIGH = reverse.
