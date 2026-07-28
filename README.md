@@ -33,7 +33,7 @@ Hardware abstraction layer for the Pololu Zumo2040 robot (see <https://www.polol
 ## How to integrate the library?
 ```
 lib_deps =
-    BlueAndi/ZumoHALRP2040 @ ~1.0.0
+    BlueAndi/ZumoHALRP2040 @ ~1.0.1
 ```
 
 ### Example
