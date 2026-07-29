@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['gear_5fratio_0',['GEAR_RATIO',['../namespaceRobotConstants.html#a97e3719b551bbcc8cf7659aa6c5e69a5',1,'RobotConstants']]],
+  ['getaccelerationvalues_1',['getAccelerationValues',['../classIMU.html#a7647577516d68d8162a3374ac9bf8ac7',1,'IMU']]],
+  ['getbatteryvoltage_2',['getBatteryVoltage',['../classPower.html#ab51750c9377f4d8e370044ee48cb189a',1,'Power']]],
+  ['getcaliberrorinfo_3',['getCalibErrorInfo',['../classLineSensors.html#a2bf647de090ca10e18901968e225f6a3',1,'LineSensors']]],
+  ['getcountsandresetleft_4',['getCountsAndResetLeft',['../classEncoders.html#a9ca2ac39501420568de628ff474e7fa0',1,'Encoders']]],
+  ['getcountsandresetright_5',['getCountsAndResetRight',['../classEncoders.html#a55396f961f0fb0908596be053ceecb2b',1,'Encoders']]],
+  ['getcountsleft_6',['getCountsLeft',['../classEncoders.html#a0c965ee0082d447369cc3de2f7472594',1,'Encoders']]],
+  ['getcountsright_7',['getCountsRight',['../classEncoders.html#afe5c7ad7001d4aa24b8a9635529512bc',1,'Encoders']]],
+  ['getleftspeed_8',['getLeftSpeed',['../classMotors.html#ad508717593e7be4030b913577783ef0b',1,'Motors']]],
+  ['getmagnetometervalues_9',['getMagnetometerValues',['../classIMU.html#a3bd0afaaebf0beaea62916c2fd2ff88c',1,'IMU']]],
+  ['getmaxspeed_10',['getmaxspeed',['../classMotors.html#aa318ec644fb62283b92d5c74176a6595',1,'Motors::getMaxSpeed()'],['../classSettings.html#aeb17f580fe3addbfe3216cc4658797ff',1,'Settings::getMaxSpeed()']]],
+  ['getnumbrightnesslevels_11',['getNumBrightnessLevels',['../classProximitySensors.html#a6dd09995aac47d262520d8961e7f438c',1,'ProximitySensors']]],
+  ['getnumlinesensors_12',['getNumLineSensors',['../classLineSensors.html#a830b67f91c13c891a86b8eb78b9f6bc5',1,'LineSensors']]],
+  ['getnumsensors_13',['getNumSensors',['../classProximitySensors.html#a04cb2e33610373b97557a0d8b4eadde4',1,'ProximitySensors']]],
+  ['getrightspeed_14',['getRightSpeed',['../classMotors.html#a9ec783895562a83ad75d7515985014ce',1,'Motors']]],
+  ['getsensorvaluemax_15',['getSensorValueMax',['../classLineSensors.html#a24b47479ac5f1be14fe21a45983b04d2',1,'LineSensors']]],
+  ['getsensorvalues_16',['getSensorValues',['../classLineSensors.html#a14e63fdf77c082bb89b9ecf8ddb0683d',1,'LineSensors']]],
+  ['getturnrates_17',['getTurnRates',['../classIMU.html#aeadcef5ba284f183ca276ea48640fee8',1,'IMU']]],
+  ['gotoxy_18',['gotoXY',['../classDisplay.html#a5270ccb4d29dd7e1d7c8e75cdcd364d3',1,'Display']]],
+  ['gyrodataready_19',['gyroDataReady',['../classIMU.html#a9dc527b960450948c7f4f79aebdc5694',1,'IMU']]]
+];
