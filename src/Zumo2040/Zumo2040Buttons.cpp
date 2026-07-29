@@ -59,7 +59,7 @@
  *
  * @return PRESSED if value is RELEASED, otherwise RELEASED.
  */
-static ButtonValue invert(ButtonValue value);
+static Zumo2040::ButtonValue invert(Zumo2040::ButtonValue value);
 
 /******************************************************************************
  * Local Variables
@@ -67,7 +67,6 @@ static ButtonValue invert(ButtonValue value);
 
 /** Time in us for the pin to stabilize after switching the pin mode. */
 constexpr uint8_t STABILIZATION_TIME_US = 1u;
-
 /** Time for debouncing in ms. */
 constexpr uint8_t DEBOUNCE_TIME_MS = 15u;
 
@@ -107,18 +106,18 @@ Zumo2040ButtonA::Zumo2040ButtonA()
  * Private Methods
  *****************************************************************************/
 
-bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue& prevValue, uint32_t& prevTime, ButtonState& state)
+bool Zumo2040Button::getSingleDebouncedRisingEdge(Zumo2040::ButtonValue value, Zumo2040::ButtonValue& prevValue, uint32_t& prevTime, Zumo2040::ButtonState& state)
 {
     uint32_t curTime = millis();
 
     switch (state)
     {
-    case ButtonState::COMPARE:
+    case Zumo2040::ButtonState::COMPARE:
         /* Compare previous and current value to detect a possible rising edge */
-        if (ButtonValue::RELEASED == prevValue && ButtonValue::PRESSED == value)
+        if ((Zumo2040::ButtonValue::RELEASED == prevValue) && (Zumo2040::ButtonValue::PRESSED == value))
         {
             /* Possible rising edge detected */
-            state = ButtonState::DEBOUNCERISING;
+            state = Zumo2040::ButtonState::DEBOUNCERISING;
             /* Store timestamp for debounce timing */
             prevTime = curTime;
             prevValue = value;
@@ -128,17 +127,17 @@ bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue
             prevValue = value;
         }
         break;
-    case ButtonState::DEBOUNCERISING:
+    case Zumo2040::ButtonState::DEBOUNCERISING:
 
         if (prevValue != value)
         {
             /* Bouncing detected */
-            state = ButtonState::COMPARE;
+            state = Zumo2040::ButtonState::COMPARE;
             prevValue = value;
         }
-        else if (curTime - prevTime >= DEBOUNCE_TIME_MS)
+        else if ((curTime - prevTime) >= DEBOUNCE_TIME_MS)
         {
-            state = ButtonState::COMPARE;
+            state = Zumo2040::ButtonState::COMPARE;
             prevValue = value;
             /* Stable rising edge detected after debounce time */
             return true;
@@ -149,29 +148,29 @@ bool Zumo2040Button::getSingleDebouncedRisingEdge(ButtonValue value, ButtonValue
     return false;
 }
 
-ButtonValue Zumo2040ButtonA::isPressed()
+Zumo2040::ButtonValue Zumo2040ButtonA::isPressed()
 {
     /* Buttons pin level is low when pressed, high otherwise */
-    ButtonValue value = (digitalRead(Zumo2040::Pins::BUTTON_A_PIN) == LOW)
-                        ? ButtonValue::PRESSED
-                        : ButtonValue::RELEASED;
+    Zumo2040::ButtonValue value = (digitalRead(Zumo2040::Pins::BUTTON_A_PIN) == LOW)
+                        ? Zumo2040::ButtonValue::PRESSED
+                        : Zumo2040::ButtonValue::RELEASED;
 
     return value;
 }
 
-ButtonValue Zumo2040ButtonB::isPressed()
+Zumo2040::ButtonValue Zumo2040ButtonB::isPressed()
 {
     /* Button B is not connected to a standard GPIO and therefore cannot be read
      * using the usual digitalRead() function. It can, however, be read via
      * BOOTSEL.
      */
-    ButtonValue value = BOOTSEL ? ButtonValue::PRESSED
-                                : ButtonValue::RELEASED;
+    Zumo2040::ButtonValue value = BOOTSEL ? Zumo2040::ButtonValue::PRESSED
+                                : Zumo2040::ButtonValue::RELEASED;
 
     return value;
 }
 
-ButtonValue Zumo2040ButtonC::isPressed()
+Zumo2040::ButtonValue Zumo2040ButtonC::isPressed()
 {
     /* Save the previously configured output level of the pin.
      * This is required because pinMode() (via gpio_init()) clears the output value,
@@ -183,9 +182,9 @@ ButtonValue Zumo2040ButtonC::isPressed()
     pinMode(Zumo2040::Pins::BUTTON_C_OLED_DATA_COMMAND_PIN, INPUT_PULLUP);
     delayMicroseconds(STABILIZATION_TIME_US);
     /* Buttons pin level is low when pressed, high otherwise */
-    ButtonValue value = (digitalRead(Zumo2040::Pins::BUTTON_C_OLED_DATA_COMMAND_PIN) == LOW)
-                        ? ButtonValue::PRESSED
-                        : ButtonValue::RELEASED;
+    Zumo2040::ButtonValue value = (digitalRead(Zumo2040::Pins::BUTTON_C_OLED_DATA_COMMAND_PIN) == LOW)
+                        ? Zumo2040::ButtonValue::PRESSED
+                        : Zumo2040::ButtonValue::RELEASED;
     /* Restore output mode so that the OLED works properly. */
     pinMode(Zumo2040::Pins::BUTTON_C_OLED_DATA_COMMAND_PIN, OUTPUT);
     /* Restore previous output level. */
@@ -202,9 +201,9 @@ ButtonValue Zumo2040ButtonC::isPressed()
  * Local Functions
  *****************************************************************************/
 
-static ButtonValue invert(ButtonValue value)
+static Zumo2040::ButtonValue invert(Zumo2040::ButtonValue value)
 {
-    return (value == ButtonValue::PRESSED)
-           ? ButtonValue::RELEASED
-           : ButtonValue::PRESSED;
+    return (value == Zumo2040::ButtonValue::PRESSED)
+           ? Zumo2040::ButtonValue::RELEASED
+           : Zumo2040::ButtonValue::PRESSED;
 }

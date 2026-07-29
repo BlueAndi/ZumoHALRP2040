@@ -53,15 +53,23 @@
  * Types and Classes
  *****************************************************************************/
 
-/** Defines the encoder sides. */
-enum EncoderSide
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
+namespace Zumo2040
 {
-    /** Left encoder. */
-    LEFT,
-
-    /** Right encoder. */
-    RIGHT
-};
+    /** Defines the encoder sides. */
+    enum EncoderSide
+    {
+        /** Left encoder. */
+        LEFT,
+        /** Right encoder. */
+        RIGHT
+    };
+} /* namespace Zumo2040 */
 
 /** Low-level encoder driver class. */
 class EncoderCore
@@ -87,7 +95,7 @@ class EncoderCore
          *
          * @return The error code of the initialization.
          */
-        ErrorCode init();
+        Zumo2040::ErrorCode init();
 
         /**
          * @brief Get the count of the selected encoder.
@@ -103,29 +111,29 @@ class EncoderCore
          * The exact gear ratios of the different motors can be found here:
          * https://www.pololu.com/file/0J1487/pololu-micro-metal-gearmotors-rev-6-2.pdf
          *
-         * @param side LEFT for the left encoder, RIGHT for the right encoder.
+         * @param side Zumo2040::LEFT for the left encoder, Zumo2040::RIGHT for the right encoder.
          *
          * @return Count of the encoder.
          */
-        int32_t getCount(EncoderSide side);
+        int32_t getCount(Zumo2040::EncoderSide side);
 
         /**
          * @brief Reset the count of the selected encoder.
          *
-         * @param side LEFT for the left encoder, RIGHT for the right encoder.
+         * @param side Zumo2040::LEFT for the left encoder, Zumo2040::RIGHT for the right encoder.
          */
-        void resetCount(EncoderSide side);
+        void resetCount(Zumo2040::EncoderSide side);
 
         /**
          * @brief Get the current error code.
          *
          * @return Current error code.
          */
-        ErrorCode getError();
+        Zumo2040::ErrorCode getError();
 
     private:
         /** Encoder error code. */
-        ErrorCode m_errorCode;
+        Zumo2040::ErrorCode m_errorCode;
         /** Selected PIO instance. */
         PIO m_pio;
         /** State machine used for the left encoder. */

@@ -52,96 +52,77 @@
  * Types and Classes
  *****************************************************************************/
 
-/** Defines the error codes for the Zumo2040. */
-enum ErrorCode
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
+namespace Zumo2040
 {
-    /** No error. */
-    NONE,
-
-    /** The program could not be added to the PIO instance. */
-    CANT_ADD_PROGRAM,
-
-    /** No unused state machine could be claimed. */
-    CANT_CLAIM_SM,
-
-    /** No unused state machine could be claimed for the left encoder. */
-    ENCODER_CANT_CLAIM_SM_LEFT,
-
-    /** No unused state machine could be claimed for the right encoder. */
-    ENCODER_CANT_CLAIM_SM_RIGHT,
-
-    /** The calibration of the line sensors failed. */
-    LINESENSOR_CALIBRATION_FAILED,
-
-    /** The line sensors are not calibrated. */
-    LINESENSOR_IS_NOT_CALIBRATED,
-
-    /** The read line calculation has zero as divisor. */
-    LINESENSOR_READ_LINE_ZERO_DIVISOR,
-
-    /** The core initialization failed. */
-    LINESENSOR_CORE_INITIALIZATION_FAILED,
-
-    /** Line sensor bounds calculation failed. */
-    LINESENSOR_BOUND_CALCULATION_FAILED,
-
-    /** I2C read operation failed. */
-    I2C_READ_FAILED,
-
-    /** I2C read argument is invalid. */
-    I2C_READ_INVALID_ARGUMENT,
-
-    /** I2C write operation failed. */
-    I2C_WRITE_FAILED,
-
-    /** I2C write argument is invalid. */
-    I2C_WRITE_INVALID_ARGUMENT,
-
-    /** Unknown IMU detected. */
-    IMU_UNKNOWN,
-
-    /** IMU default configuration failed. */
-    IMU_DEFAULT_CONFIG_FAILED,
-
-    /** IMU turn-sensing configuration failed. */
-    IMU_CONFIG_FOR_TURN_SENSING_FAILED,
-
-    /** IMU compass-heading configuration failed. */
-    IMU_CONFIG_FOR_COMPASS_HEADING_FAILED,
-
-    /** Reading IMU axis values failed. */
-    IMU_READ_AXES_FAILED,
-
-    /** Reading accelerometer values failed. */
-    IMU_READ_ACC_FAILED,
-
-    /** Reading gyroscope values failed. */
-    IMU_READ_GYRO_FAILED,
-
-    /** Reading magnetometer values failed. */
-    IMU_READ_MAGNET_FAILED,
-
-    /** IMU calibration failed. */
-    IMU_CALIBRATION_FAILED,
-
-    /** Cannot return the offset because the IMU is not calibrated. */
-    IMU_CANT_GET_OFFSET_NOT_CALIBRATED,
-
-    /** A frequency of zero is not allowed. */
-    BUZZER_INVALID_FREQ_ZERO,
-
-    /** The frequency is too small. */
-    BUZZER_INVALID_FREQ_TOO_SMALL,
-
-    /** The alarm for the callback could not be set. */
-    BUZZER_COULD_NOT_SET_ALARM,
-
-    /** A duration of zero is not allowed. */
-    BUZZER_INVALID_DURATION_ZERO,
-
-    /** The given note sequence pointer is a nullptr. */
-    BUZZER_INVALID_MELODY_NULLPTR
-};
+    /** Defines the error codes for the Zumo2040. */
+    enum ErrorCode
+    {
+        /** No error. */
+        NONE,
+        /** The program could not be added to the PIO instance. */
+        CANT_ADD_PROGRAM,
+        /** No unused state machine could be claimed. */
+        CANT_CLAIM_SM,
+        /** No unused state machine could be claimed for the left encoder. */
+        ENCODER_CANT_CLAIM_SM_LEFT,
+        /** No unused state machine could be claimed for the right encoder. */
+        ENCODER_CANT_CLAIM_SM_RIGHT,
+        /** The calibration of the line sensors failed. */
+        LINESENSOR_CALIBRATION_FAILED,
+        /** The line sensors are not calibrated. */
+        LINESENSOR_IS_NOT_CALIBRATED,
+        /** The read line calculation has zero as divisor. */
+        LINESENSOR_READ_LINE_ZERO_DIVISOR,
+        /** The core initialization failed. */
+        LINESENSOR_CORE_INITIALIZATION_FAILED,
+        /** Line sensor bounds calculation failed. */
+        LINESENSOR_BOUND_CALCULATION_FAILED,
+        /** I2C read operation failed. */
+        I2C_READ_FAILED,
+        /** I2C read argument is invalid. */
+        I2C_READ_INVALID_ARGUMENT,
+        /** I2C write operation failed. */
+        I2C_WRITE_FAILED,
+        /** I2C write argument is invalid. */
+        I2C_WRITE_INVALID_ARGUMENT,
+        /** Unknown IMU detected. */
+        IMU_UNKNOWN,
+        /** IMU default configuration failed. */
+        IMU_DEFAULT_CONFIG_FAILED,
+        /** IMU turn-sensing configuration failed. */
+        IMU_CONFIG_FOR_TURN_SENSING_FAILED,
+        /** IMU compass-heading configuration failed. */
+        IMU_CONFIG_FOR_COMPASS_HEADING_FAILED,
+        /** Reading IMU axis values failed. */
+        IMU_READ_AXES_FAILED,
+        /** Reading accelerometer values failed. */
+        IMU_READ_ACC_FAILED,
+        /** Reading gyroscope values failed. */
+        IMU_READ_GYRO_FAILED,
+        /** Reading magnetometer values failed. */
+        IMU_READ_MAGNET_FAILED,
+        /** IMU calibration failed. */
+        IMU_CALIBRATION_FAILED,
+        /** Cannot return the offset because the IMU is not calibrated. */
+        IMU_CANT_GET_OFFSET_NOT_CALIBRATED,
+        /** A frequency of zero is not allowed. */
+        BUZZER_INVALID_FREQ_ZERO,
+        /** The frequency is too small. */
+        BUZZER_INVALID_FREQ_TOO_SMALL,
+        /** The alarm for the callback could not be set. */
+        BUZZER_COULD_NOT_SET_ALARM,
+        /** A duration of zero is not allowed. */
+        BUZZER_INVALID_DURATION_ZERO,
+        /** The given note sequence pointer is a nullptr. */
+        BUZZER_INVALID_MELODY_NULLPTR
+    };
+} /* namespace Zumo2040 */
 
 /******************************************************************************
  * Functions

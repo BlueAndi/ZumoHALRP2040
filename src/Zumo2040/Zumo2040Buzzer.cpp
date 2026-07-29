@@ -225,26 +225,26 @@ constexpr bool REST = true;
  *****************************************************************************/
 
 Zumo2040Buzzer::Zumo2040Buzzer() : m_buzzerSequence(nullptr),
-                                   m_buzzerStatus(BUZZER_DISABLED),
+                                   m_buzzerStatus(Zumo2040::BUZZER_DISABLED),
                                    m_alarmStatus(Zumo2040::AlarmStatus::ALARM_DISABLED),
                                    m_alarmID(ALARM_ID_ZERO),
-                                   m_playmode(PLAY_AUTOMATIC),
-                                   m_error(NONE),
+                                   m_playmode(Zumo2040::PLAY_AUTOMATIC),
+                                   m_error(Zumo2040::NONE),
                                    m_octave(DEFAULT_OCTAVE),
                                    m_wholeNoteDuration(DEFAULT_WHOLE_NOTE_DURATION),
                                    m_noteType(DEFAULT_NOTE_TYPE),
                                    m_duration(DEFAULT_DURATION),
                                    m_volume(DEFAULT_VOLUME),
-                                   m_staccato(STACCATO_DISABLED),
+                                   m_staccato(Zumo2040::STACCATO_DISABLED),
                                    m_staccatoRestDuration(U_INTEGER_32_ZERO)
 {
 }
 
-ErrorCode Zumo2040Buzzer::playMode(BuzzerPlaymode mode)
+Zumo2040::ErrorCode Zumo2040Buzzer::playMode(Zumo2040::BuzzerPlaymode mode)
 {
     m_playmode = mode;
 
-    if ((PLAY_AUTOMATIC == mode) && (BUZZER_DISABLED == m_buzzerStatus))
+    if ((Zumo2040::PLAY_AUTOMATIC == mode) && (Zumo2040::BUZZER_DISABLED == m_buzzerStatus))
     {
         return nextNote();
     }
@@ -252,37 +252,37 @@ ErrorCode Zumo2040Buzzer::playMode(BuzzerPlaymode mode)
     return m_error;
 }
 
-BuzzerStatus Zumo2040Buzzer::playCheck()
+Zumo2040::BuzzerStatus Zumo2040Buzzer::playCheck()
 {
-    if ((BUZZER_DISABLED == m_buzzerStatus) && (nullptr != m_buzzerSequence) && (DONT_PLAY_AUTOMATIC == m_playmode))
+    if ((Zumo2040::BUZZER_DISABLED == m_buzzerStatus) && (nullptr != m_buzzerSequence) && (Zumo2040::DONT_PLAY_AUTOMATIC == m_playmode))
     {
-        ErrorCode error = nextNote();
+        Zumo2040::ErrorCode error = nextNote();
 
-        if (NONE != error)
+        if (Zumo2040::NONE != error)
         {
             stopPlaying();
-            return BUZZER_DISABLED;
+            return Zumo2040::BUZZER_DISABLED;
         }
     }
 
-    return (nullptr != m_buzzerSequence) ? BUZZER_ENABLED : BUZZER_DISABLED;
+    return (nullptr != m_buzzerSequence) ? Zumo2040::BUZZER_ENABLED : Zumo2040::BUZZER_DISABLED;
 }
 
-ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t volume)
+Zumo2040::ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t volume)
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
     if (U_INTEGER_16_ZERO == freq)
     {
-        m_error = BUZZER_INVALID_FREQ_ZERO;
+        m_error = Zumo2040::BUZZER_INVALID_FREQ_ZERO;
         return m_error;
     }
     else if (U_INTEGER_32_ZERO == dur)
     {
-        m_error = BUZZER_INVALID_DURATION_ZERO;
+        m_error = Zumo2040::BUZZER_INVALID_DURATION_ZERO;
         return m_error;
     }
 
@@ -300,7 +300,7 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
         freq &= ~DIV_BY_10_MASK;
         if (U_INTEGER_16_ZERO == freq)
         {
-            m_error = BUZZER_INVALID_FREQ_ZERO;
+            m_error = Zumo2040::BUZZER_INVALID_FREQ_ZERO;
             return m_error;
         }
 
@@ -333,7 +333,7 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
 
         if (MAX_DIV < clkDiv)
         {
-            m_error = BUZZER_INVALID_FREQ_TOO_SMALL;
+            m_error = Zumo2040::BUZZER_INVALID_FREQ_TOO_SMALL;
             return m_error;
         }
 
@@ -395,7 +395,7 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
     pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, level);
     /* Enable the PWM. */
     pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::ENABLED);
-    m_buzzerStatus = BUZZER_ENABLED;
+    m_buzzerStatus = Zumo2040::BUZZER_ENABLED;
 
     /* Create the alarm that calls the callback function timerDone() after
      * the specified duration. The callback then disables the buzzer output.
@@ -407,36 +407,36 @@ ErrorCode Zumo2040Buzzer::playFrequency(uint16_t freq, uint32_t dur, uint16_t vo
     {
         pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::DISABLED);
 
-        m_buzzerStatus = BUZZER_DISABLED;
+        m_buzzerStatus = Zumo2040::BUZZER_DISABLED;
         m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
         m_alarmID = ALARM_ID_ZERO;
 
-        m_error = BUZZER_COULD_NOT_SET_ALARM;
+        m_error = Zumo2040::BUZZER_COULD_NOT_SET_ALARM;
         return m_error;
     }
 
     m_alarmStatus = Zumo2040::AlarmStatus::ALARM_ENABLED;
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040Buzzer::play(const char* notes)
+Zumo2040::ErrorCode Zumo2040Buzzer::play(const char* notes)
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
     if (nullptr == notes)
     {
-        m_error = BUZZER_INVALID_MELODY_NULLPTR;
+        m_error = Zumo2040::BUZZER_INVALID_MELODY_NULLPTR;
         return m_error;
     }
     m_buzzerSequence = notes;
     /* Reset the staccato rest duration to be sure there are no old temporary values. */
     m_staccatoRestDuration = U_INTEGER_32_ZERO;
 
-    if (PLAY_AUTOMATIC == m_playmode)
+    if (Zumo2040::PLAY_AUTOMATIC == m_playmode)
     {
         return nextNote();
     }
@@ -456,7 +456,7 @@ void Zumo2040Buzzer::stopPlaying()
         cancel_alarm(m_alarmID);
     }
 
-    m_buzzerStatus = BUZZER_DISABLED;
+    m_buzzerStatus = Zumo2040::BUZZER_DISABLED;
     m_buzzerSequence = nullptr;
     m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
     m_alarmID = ALARM_ID_ZERO;
@@ -465,10 +465,10 @@ void Zumo2040Buzzer::stopPlaying()
 
 bool Zumo2040Buzzer::isPlaying() const
 {
-    return ((BUZZER_ENABLED == m_buzzerStatus) || (nullptr != m_buzzerSequence));
+    return ((Zumo2040::BUZZER_ENABLED == m_buzzerStatus) || (nullptr != m_buzzerSequence));
 }
 
-ErrorCode Zumo2040Buzzer::getLastError() const
+Zumo2040::ErrorCode Zumo2040Buzzer::getLastError() const
 {
     return m_error;
 }
@@ -498,11 +498,11 @@ int64_t Zumo2040Buzzer::timerDone(alarm_id_t id, void* user_data)
     pwm_set_chan_level(BUZZER_PWM_SLICE, BUZZER_CHAN, U_INTEGER_16_ZERO);
     pwm_set_enabled(BUZZER_PWM_SLICE, Zumo2040::Status::DISABLED);
 
-    buzzer->m_buzzerStatus = BUZZER_DISABLED;
+    buzzer->m_buzzerStatus = Zumo2040::BUZZER_DISABLED;
     buzzer->m_alarmStatus = Zumo2040::AlarmStatus::ALARM_DISABLED;
     buzzer->m_alarmID = ALARM_ID_ZERO;
 
-    if ((buzzer->m_buzzerSequence) && (buzzer->m_playmode == PLAY_AUTOMATIC))
+    if ((buzzer->m_buzzerSequence) && (buzzer->m_playmode == Zumo2040::PLAY_AUTOMATIC))
     {
         buzzer->nextNote();
     }
@@ -510,9 +510,9 @@ int64_t Zumo2040Buzzer::timerDone(alarm_id_t id, void* user_data)
     return 0;
 }
 
-ErrorCode Zumo2040Buzzer::playNote(uint8_t note, uint32_t dur, uint16_t volume)
+Zumo2040::ErrorCode Zumo2040Buzzer::playNote(uint8_t note, uint32_t dur, uint16_t volume)
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
@@ -666,16 +666,16 @@ uint32_t Zumo2040Buzzer::getNumber()
     return num;
 }
 
-ErrorCode Zumo2040Buzzer::nextNote()
+Zumo2040::ErrorCode Zumo2040Buzzer::nextNote()
 {
-    if (NONE != m_error)
+    if (Zumo2040::NONE != m_error)
     {
         return m_error;
     }
 
     if (nullptr == m_buzzerSequence)
     {
-        return NONE;
+        return Zumo2040::NONE;
     }
 
     bool rest = NO_REST;
@@ -736,12 +736,12 @@ ErrorCode Zumo2040Buzzer::nextNote()
             c = currentCharacter();
             if ('l' == c)
             {
-                m_staccato = STACCATO_DISABLED;
+                m_staccato = Zumo2040::STACCATO_DISABLED;
                 m_buzzerSequence++;
             }
             else if ('s' == c)
             {
-                m_staccato = STACCATO_ENABLED;
+                m_staccato = Zumo2040::STACCATO_ENABLED;
                 m_staccatoRestDuration = U_INTEGER_32_ZERO;
                 m_buzzerSequence++;
             }
@@ -793,7 +793,7 @@ ErrorCode Zumo2040Buzzer::nextNote()
             m_noteType = DEFAULT_NOTE_TYPE;
             m_duration = DEFAULT_DURATION;
             m_volume = DEFAULT_VOLUME;
-            m_staccato = STACCATO_DISABLED;
+            m_staccato = Zumo2040::STACCATO_DISABLED;
             m_staccatoRestDuration = U_INTEGER_32_ZERO;
 
             /* Reset the temporary variables that depend on the defaults. */
@@ -830,7 +830,7 @@ ErrorCode Zumo2040Buzzer::nextNote()
 
         default:
             m_buzzerSequence = nullptr;
-            return NONE;
+            return Zumo2040::NONE;
     }
 
     note += tmpOctave * NOTES_PER_OCTAVE;
@@ -885,7 +885,7 @@ ErrorCode Zumo2040Buzzer::nextNote()
         dot_add /= DIV_BY_2_I;
     }
 
-    if (STACCATO_ENABLED == m_staccato)
+    if (Zumo2040::STACCATO_ENABLED == m_staccato)
     {
         m_staccatoRestDuration = tmp_duration / DIV_BY_2_I;
         tmp_duration -= m_staccatoRestDuration;

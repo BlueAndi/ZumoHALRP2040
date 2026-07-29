@@ -54,38 +54,43 @@
  * Types and Classes
  *****************************************************************************/
 
-/** Represents a 3-axis IMU sensor value vector. */
-struct IMUvector
+/**
+ * @brief Contains public types and constants of the Zumo 2040 HAL.
+ *
+ * The namespace prevents name collisions with application code and
+ * other libraries.
+ */
+namespace Zumo2040
 {
-    /** Represents the x-axis. */
-    int16_t x;
+    /** Represents a 3-axis IMU sensor value vector. */
+    struct IMUvector
+    {
+        /** Represents the x-axis. */
+        int16_t x;
+        /** Represents the y-axis. */
+        int16_t y;
+        /** Represents the z-axis. */
+        int16_t z;
+    };
 
-    /** Represents the y-axis. */
-    int16_t y;
+    /** Indicates whether new IMU data is available. */
+    enum DataStatus
+    {
+        /** Indicates that there is no new data available. */
+        NO_NEW_DATA = false,
+        /** Indicates that there is new data available. */
+        NEW_DATA = true
+    };
 
-    /** Represents the z-axis. */
-    int16_t z;
-};
-
-/** Indicates whether new IMU data is available. */
-enum DataStatus
-{
-    /** Indicates that there is no new data available. */
-    NO_NEW_DATA = false,
-
-    /** Indicates that there is new data available. */
-    NEW_DATA = true
-};
-
-/** Indicates the IMU calibration status. */
-enum IMUCalibrationStatus
-{
-    /** Indicates that the IMU is not calibrated. */
-    IMU_NOT_CALIBRATED = false,
-
-    /** Indicates that the IMU is calibrated. */
-    IMU_CALIBRATED = true
-};
+    /** Indicates the IMU calibration status. */
+    enum IMUCalibrationStatus
+    {
+        /** Indicates that the IMU is not calibrated. */
+        IMU_NOT_CALIBRATED = false,
+        /** Indicates that the IMU is calibrated. */
+        IMU_CALIBRATED = true
+    };
+} /* namespace Zumo2040 */
 
 /** Driver for the IMU. */
 class Zumo2040IMU
@@ -108,7 +113,7 @@ class Zumo2040IMU
          *
          * @return The resulting error code.
          */
-        ErrorCode checkIMU();
+        Zumo2040::ErrorCode checkIMU();
 
         /**
          * @brief Configures the IMU with the default configuration.
@@ -129,7 +134,7 @@ class Zumo2040IMU
          *
          * @return The resulting error code.
          */
-        ErrorCode enableDefault();
+        Zumo2040::ErrorCode enableDefault();
 
         /**
          * @brief Configures the IMU with settings optimized for turn sensing.
@@ -139,7 +144,7 @@ class Zumo2040IMU
          *
          * @return The resulting error code.
          */
-        ErrorCode configureForTurnSensing();
+        Zumo2040::ErrorCode configureForTurnSensing();
 
         /**
          * @brief Configures the IMU with settings optimized for compass heading.
@@ -149,55 +154,55 @@ class Zumo2040IMU
          *
          * @return The resulting error code.
          */
-        ErrorCode configureForCompassHeading();
+        Zumo2040::ErrorCode configureForCompassHeading();
 
         /**
          * @brief Reads the accelerometer data from the LSM6DSO.
          *
-         * @param Reference to the vector where the results are stored.
+         * @param data Reference to the vector where the results are stored.
          *
          * @return The resulting error code.
          */
-        ErrorCode readAcc(IMUvector& data);
+        Zumo2040::ErrorCode readAcc(Zumo2040::IMUvector& data);
 
         /**
          * @brief Reads the gyroscope data from the LSM6DSO.
          *
-         * @param Reference to the vector where the results are stored.
+         * @param data Reference to the vector where the results are stored.
          *
          * @return The resulting error code.
          */
-        ErrorCode readGyro(IMUvector& data);
+        Zumo2040::ErrorCode readGyro(Zumo2040::IMUvector& data);
 
         /**
          * @brief Reads the magnetometer data from the LIS3MDL.
          *
-         * @param Reference to the vector where the results are stored.
+         * @param data Reference to the vector where the results are stored.
          *
          * @return The resulting error code.
          */
-        ErrorCode readMag(IMUvector& data);
+        Zumo2040::ErrorCode readMag(Zumo2040::IMUvector& data);
 
         /**
          * @brief Checks whether new acceleration data is available.
          *
          * @return Data status indicating whether new data is available.
          */
-        DataStatus accDataReady();
+        Zumo2040::DataStatus accDataReady();
 
         /**
          * @brief Checks whether new angular velocity data is available.
          *
          * @return Data status indicating whether new data is available.
          */
-        DataStatus gyroDataReady();
+        Zumo2040::DataStatus gyroDataReady();
 
         /**
          * @brief Checks whether new magnetic field data is available.
          *
          * @return Data status indicating whether new data is available.
          */
-        DataStatus magDataReady();
+        Zumo2040::DataStatus magDataReady();
 
         /**
          * @brief Calibrates the IMU for line-following behavior.
@@ -206,14 +211,14 @@ class Zumo2040IMU
          *
          * @return The resulting error code.
          */
-        ErrorCode calibrateLineFollower();
+        Zumo2040::ErrorCode calibrateLineFollower();
 
         /**
          * @brief Gets the last error code.
          *
          * @return The last error code.
          */
-        ErrorCode getLastError() const;
+        Zumo2040::ErrorCode getLastError() const;
 
         /**
          * @brief Gets the accelerometer x-axis offset.
@@ -253,7 +258,7 @@ class Zumo2040IMU
          * @param value Value to write to the register.
          * @return The resulting error code.
          */
-        ErrorCode writeOneByte(uint8_t addr, uint8_t reg, uint8_t value);
+        Zumo2040::ErrorCode writeOneByte(uint8_t addr, uint8_t reg, uint8_t value);
 
         /**
          * @brief Reads six consecutive registers containing the x-, y-, and z-axis values
@@ -264,10 +269,10 @@ class Zumo2040IMU
          * @param data Reference to the vector where the results are stored.
          * @return The resulting error code.
          */
-        ErrorCode readAxes16Bit(uint8_t addr, uint8_t startReg, IMUvector& data);
+        Zumo2040::ErrorCode readAxes16Bit(uint8_t addr, uint8_t startReg, Zumo2040::IMUvector& data);
 
         /** Last occurred error code. */
-        ErrorCode m_error;
+        Zumo2040::ErrorCode m_error;
 
         /** Offset of the accelerometer x-axis. */
         int16_t m_rawAccelerometerOffsetX;
@@ -276,7 +281,7 @@ class Zumo2040IMU
         int16_t m_rawGyroOffsetZ;
 
         /** Indicates whether the IMU is calibrated. */
-        IMUCalibrationStatus m_calStatus;
+        Zumo2040::IMUCalibrationStatus m_calStatus;
 
         /** Driver for the IMU I2C communication. */
         Zumo2040IMU_I2C m_i2c;

@@ -58,27 +58,21 @@
 
 /** Unsigned 32-bit integer zero. */
 constexpr uint32_t U_INTEGER_32_ZERO = 0u;
-
-/** I2C clock speed in Hz.
- *  400 kHz corresponds to I2C fast mode, which is the fastest I2C mode supported by the IMU.
+/**
+ * I2C clock speed in Hz.
+ * 400 kHz corresponds to I2C fast mode, which is the fastest I2C mode supported by the IMU.
  */
 constexpr uint32_t I2C_CLOCK_SPEED_HZ = 400000u;
-
 /** Timeout for the I2C transfer. */
 constexpr uint32_t I2C_TIMEOUT_US = 1000u;
-
 /** Size of the register address in bytes. */
 constexpr uint32_t REGISTER_ADDRESS_SIZE_BYTES = 1u;
-
 /** Maximum number of data bytes that can be transmitted in one write call. */
 constexpr uint32_t MAX_SIZE_WRITE_DATA_BYTES = 15u;
-
 /** Size of the buffer that holds the register address and the data to write. */
 constexpr uint32_t WRITE_BUFFER_SIZE = MAX_SIZE_WRITE_DATA_BYTES + REGISTER_ADDRESS_SIZE_BYTES;
-
 /** Do not stop the I2C transfer after the current transmission. */
 constexpr bool I2C_NO_STOP = true;
-
 /** Stop the I2C transfer after the current transmission. */
 constexpr bool I2C_STOP = false;
 
@@ -105,12 +99,12 @@ Zumo2040IMU_I2C::~Zumo2040IMU_I2C()
     gpio_disable_pulls(Zumo2040::Pins::I2C0_SCL_PIN);
 }
 
-ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length)
+Zumo2040::ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, uint32_t length)
 {
     int test = PICO_ERROR_GENERIC;
     if ((nullptr == data) || (U_INTEGER_32_ZERO == length))
     {
-        return I2C_READ_INVALID_ARGUMENT;
+        return Zumo2040::I2C_READ_INVALID_ARGUMENT;
     }
 
     /* Write the register address to the slave. This is needed so the slave knows
@@ -121,7 +115,7 @@ ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, u
      /* Check whether the expected number of bytes was written. */
     if (static_cast<int>(REGISTER_ADDRESS_SIZE_BYTES) != test)
     {
-        return I2C_READ_FAILED;
+        return Zumo2040::I2C_READ_FAILED;
     }
 
     /* Read length bytes starting from the previously configured register. */
@@ -130,20 +124,20 @@ ErrorCode Zumo2040IMU_I2C::read(uint8_t addr, uint8_t startReg, uint8_t* data, u
     /* Check whether the expected number of bytes was read. */
     if (static_cast<int>(length) != test)
     {
-        return I2C_READ_FAILED;
+        return Zumo2040::I2C_READ_FAILED;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
-ErrorCode Zumo2040IMU_I2C::write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length)
+Zumo2040::ErrorCode Zumo2040IMU_I2C::write(uint8_t addr, uint8_t startReg, const uint8_t* data, uint32_t length)
 {
     int test = PICO_ERROR_GENERIC;
     uint8_t buffer[WRITE_BUFFER_SIZE];
 
     if ((nullptr == data) || (MAX_SIZE_WRITE_DATA_BYTES < length) || (U_INTEGER_32_ZERO == length))
     {
-        return I2C_WRITE_INVALID_ARGUMENT;
+        return Zumo2040::I2C_WRITE_INVALID_ARGUMENT;
     }
 
     /* The first byte to transmit is the register address. */
@@ -162,10 +156,10 @@ ErrorCode Zumo2040IMU_I2C::write(uint8_t addr, uint8_t startReg, const uint8_t* 
     /* Check whether the expected number of bytes was written. */
     if (static_cast<int>(writeLength) != test)
     {
-        return I2C_WRITE_FAILED;
+        return Zumo2040::I2C_WRITE_FAILED;
     }
 
-    return NONE;
+    return Zumo2040::NONE;
 }
 
 

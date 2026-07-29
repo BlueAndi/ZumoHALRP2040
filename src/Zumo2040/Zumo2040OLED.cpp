@@ -53,13 +53,15 @@
 /******************************************************************************
  * Local Variables
  *****************************************************************************/
+
+/** Contains the transfer mode values used by the SH1106 OLED controller. */
 namespace Sh1106Modes
 {
     /** Indicates the command mode. */
     constexpr bool COMMAND = 0;
     /** Indicates the data mode. */
     constexpr bool DATA = 1;
-}
+} /* namespace Sh1106Modes */
 
 /** Stabilization time in us for the OLED reset. */
 constexpr uint8_t STABILIZATION_TIME_US = 10u;

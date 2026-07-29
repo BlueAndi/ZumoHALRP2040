@@ -61,7 +61,6 @@
  *
  * @param[in] onOff  Turn on LED with true, turn it off with false.
  */
-
 void setLedYellow(bool onOff);
 
 /**
@@ -69,7 +68,6 @@ void setLedYellow(bool onOff);
  *
  * @param[in] onOff  Turn on LED with true, turn it off with false.
  */
-
 void setLedGreen(bool onOff);
 
 /**
@@ -77,7 +75,6 @@ void setLedGreen(bool onOff);
  *
  * @param[in] onOff  Turn on LED with true, turn it off with false.
  */
-
 void setLedRed(bool onOff);
 
 #endif /* ZUMO2040LED_H */

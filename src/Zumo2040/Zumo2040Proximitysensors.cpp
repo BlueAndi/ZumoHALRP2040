@@ -134,11 +134,11 @@ Zumo2040ProximitySensors::~Zumo2040ProximitySensors()
 void Zumo2040ProximitySensors::initLeftSensor()
 {
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
-    ProximitySensorStatus sensor;
+    Zumo2040::ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Zumo2040::Status::ENABLED;
-    sensor.status[PROX_FRONT] = Zumo2040::Status::DISABLED;
-    sensor.status[PROX_RIGHT] = Zumo2040::Status::DISABLED;
+    sensor.status[Zumo2040::PROX_LEFT] = Zumo2040::Status::ENABLED;
+    sensor.status[Zumo2040::PROX_FRONT] = Zumo2040::Status::DISABLED;
+    sensor.status[Zumo2040::PROX_RIGHT] = Zumo2040::Status::DISABLED;
 
     init(sensor);
 }
@@ -146,11 +146,11 @@ void Zumo2040ProximitySensors::initLeftSensor()
 void Zumo2040ProximitySensors::initFrontSensor()
 {
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
-    ProximitySensorStatus sensor;
+    Zumo2040::ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Zumo2040::Status::DISABLED;
-    sensor.status[PROX_FRONT] = Zumo2040::Status::ENABLED;
-    sensor.status[PROX_RIGHT] = Zumo2040::Status::DISABLED;
+    sensor.status[Zumo2040::PROX_LEFT] = Zumo2040::Status::DISABLED;
+    sensor.status[Zumo2040::PROX_FRONT] = Zumo2040::Status::ENABLED;
+    sensor.status[Zumo2040::PROX_RIGHT] = Zumo2040::Status::DISABLED;
 
     init(sensor);
 }
@@ -158,11 +158,11 @@ void Zumo2040ProximitySensors::initFrontSensor()
 void Zumo2040ProximitySensors::initRightSensor()
 {
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
-    ProximitySensorStatus sensor;
+    Zumo2040::ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Zumo2040::Status::DISABLED;
-    sensor.status[PROX_FRONT] = Zumo2040::Status::DISABLED;
-    sensor.status[PROX_RIGHT] = Zumo2040::Status::ENABLED;
+    sensor.status[Zumo2040::PROX_LEFT] = Zumo2040::Status::DISABLED;
+    sensor.status[Zumo2040::PROX_FRONT] = Zumo2040::Status::DISABLED;
+    sensor.status[Zumo2040::PROX_RIGHT] = Zumo2040::Status::ENABLED;
 
     init(sensor);
 }
@@ -170,11 +170,11 @@ void Zumo2040ProximitySensors::initRightSensor()
 void Zumo2040ProximitySensors::initAllSensors()
 {
     /* The state sequence is the same as in the PROXIMITY_SENSOR_PINS array (left, front, right). */
-    ProximitySensorStatus sensor;
+    Zumo2040::ProximitySensorStatus sensor;
     /* Set the activation states of the proximity sensors. */
-    sensor.status[PROX_LEFT] = Zumo2040::Status::ENABLED;
-    sensor.status[PROX_FRONT] = Zumo2040::Status::ENABLED;
-    sensor.status[PROX_RIGHT] = Zumo2040::Status::ENABLED;
+    sensor.status[Zumo2040::PROX_LEFT] = Zumo2040::Status::ENABLED;
+    sensor.status[Zumo2040::PROX_FRONT] = Zumo2040::Status::ENABLED;
+    sensor.status[Zumo2040::PROX_RIGHT] = Zumo2040::Status::ENABLED;
 
     init(sensor);
 }
@@ -216,7 +216,7 @@ void Zumo2040ProximitySensors::read()
 
     for (uint32_t idx = U_INTEGER_32_ZERO; idx < NUM_BRIGHTNESS_LEVELS; idx++)
     {
-        startIRPuls(EmitterSide::LEFT, BRIGHTNESS_LEVELS[idx]);
+        startIRPuls(Zumo2040::EmitterSide::LEFT, BRIGHTNESS_LEVELS[idx]);
         sleep_us(PULSE_ON_DELAY_US);
 
         for (uint32_t pinIDX = U_INTEGER_32_ZERO; pinIDX < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; pinIDX++)
@@ -234,7 +234,7 @@ void Zumo2040ProximitySensors::read()
         stopIRPuls();
         sleep_us(PULSE_OFF_DELAY_US);
 
-        startIRPuls(EmitterSide::RIGHT, BRIGHTNESS_LEVELS[idx]);
+        startIRPuls(Zumo2040::EmitterSide::RIGHT, BRIGHTNESS_LEVELS[idx]);
         sleep_us(PULSE_ON_DELAY_US);
 
         for (uint32_t pinIDX = U_INTEGER_32_ZERO; pinIDX < Zumo2040::Pins::PROXIMITY_SENSOR_COUNT; pinIDX++)
@@ -254,12 +254,12 @@ void Zumo2040ProximitySensors::read()
     }
 }
 
-uint32_t Zumo2040ProximitySensors::getCountsWithLeftLeds(ProximitySensor sensor) const
+uint32_t Zumo2040ProximitySensors::getCountsWithLeftLeds(Zumo2040::ProximitySensor sensor) const
 {
     return m_data[sensor].withLeftLeds;
 }
 
-uint32_t Zumo2040ProximitySensors::getCountsWithRightLeds(ProximitySensor sensor) const
+uint32_t Zumo2040ProximitySensors::getCountsWithRightLeds(Zumo2040::ProximitySensor sensor) const
 {
     return m_data[sensor].withRightLeds;
 }
@@ -272,7 +272,7 @@ uint32_t Zumo2040ProximitySensors::getCountsWithRightLeds(ProximitySensor sensor
  * Private Methods
  *****************************************************************************/
 
-void Zumo2040ProximitySensors::init(ProximitySensorStatus &sensor)
+void Zumo2040ProximitySensors::init(Zumo2040::ProximitySensorStatus &sensor)
 {
     m_numSensors = U_INTEGER_32_ZERO;
 
@@ -298,7 +298,7 @@ void Zumo2040ProximitySensors::init(ProximitySensorStatus &sensor)
     }
 }
 
-void Zumo2040ProximitySensors::startIRPuls(EmitterSide side, uint16_t brightness)
+void Zumo2040ProximitySensors::startIRPuls(Zumo2040::EmitterSide side, uint16_t brightness)
 {
     uint16_t level = brightness;
 
@@ -310,7 +310,7 @@ void Zumo2040ProximitySensors::startIRPuls(EmitterSide side, uint16_t brightness
     uint16_t rightLevel = U_INTEGER_16_ZERO;
     uint16_t leftLevel = U_INTEGER_16_ZERO;
 
-    if (EmitterSide::LEFT == side)
+    if (Zumo2040::EmitterSide::LEFT == side)
     {
         leftLevel = level;
     }

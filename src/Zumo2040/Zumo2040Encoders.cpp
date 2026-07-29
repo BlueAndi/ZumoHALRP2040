@@ -64,36 +64,36 @@ Zumo2040Encoder::Zumo2040Encoder()
     init();
 }
 
-ErrorCode Zumo2040Encoder::init()
+Zumo2040::ErrorCode Zumo2040Encoder::init()
 {
     return m_core.init();
 }
 
 int32_t Zumo2040Encoder::getCountLeft()
 {
-    return m_core.getCount(LEFT);
+    return m_core.getCount(Zumo2040::LEFT);
 }
 
 int32_t Zumo2040Encoder::getCountRight()
 {
-    return m_core.getCount(RIGHT);
+    return m_core.getCount(Zumo2040::RIGHT);
 }
 
 int32_t Zumo2040Encoder::getCountAndResetLeft()
 {
-    int32_t count = m_core.getCount(LEFT);
-    m_core.resetCount(LEFT);
+    int32_t count = m_core.getCount(Zumo2040::LEFT);
+    m_core.resetCount(Zumo2040::LEFT);
     return count;
 }
 
 int32_t Zumo2040Encoder::getCountAndResetRight()
 {
-    int32_t count = m_core.getCount(RIGHT);
-    m_core.resetCount(RIGHT);
+    int32_t count = m_core.getCount(Zumo2040::RIGHT);
+    m_core.resetCount(Zumo2040::RIGHT);
     return count;
 }
 
-ErrorCode Zumo2040Encoder::getError()
+Zumo2040::ErrorCode Zumo2040Encoder::getError()
 {
     return m_core.getError();
 }
